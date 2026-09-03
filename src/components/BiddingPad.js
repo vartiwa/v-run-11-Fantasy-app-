@@ -1,29 +1,35 @@
 "use client";
 
 import { Oswald } from "next/font/google";
+import { formatLakhsAndCrores, getDynamicBidIncrements } from "@/lib/formatCurrency";
 
 const oswald = Oswald({ subsets: ["latin"], weight: ["600", "700"] });
 
-const BID_AMOUNTS = [5, 10, 20, 50, 100];
+const getFranchiseName = (id = "") => id.split(" - ")[0];
 
 export default function BiddingPad({
   onBid,
   onSell,
-  onPass,
   onNextLot,
   onExtendTimer,
   onResetTimer,
   status,
   currentBid = 0,
+  basePrice = 50,
   myBudget = 10000,
   highestBidder = "",
   myTeamName = "",
   isHost = false,
   isNeutralAuctioneer = false,
+  allowPlayerHammer = true,
 }) {
   const isLocked = status === "sold" || status === "unsold";
   const isWinning = highestBidder && highestBidder === myTeamName;
   const hasBids = highestBidder && highestBidder !== "No Bids Yet";
+  const canUseHammer = isHost || isNeutralAuctioneer || allowPlayerHammer;
+
+  // Dynamic Bidding Increments based on player tier (50L, 1Cr, 2Cr) and current bid
+  const increments = getDynamicBidIncrements(basePrice, currentBid);
 
   return (
     <div className="relative w-full bg-gradient-to-b from-white via-[#fdfcf9] to-[#f8f6f0] border border-[#dcd6c8] rounded-3xl p-4.5 flex flex-col justify-between select-none shadow-[0_2px_4px_rgba(0,0,0,0.02),0_10px_24px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] text-[#121417]">
@@ -33,12 +39,12 @@ export default function BiddingPad({
           <div>
             <div className="flex items-center gap-2">
               <h4 className={`text-sm font-bold uppercase tracking-wider text-[#121417] ${oswald.className}`}>
-                {isNeutralAuctioneer ? "Auctioneer Gavel Console" : "Tactile Bid Pad"}
+                {isNeutralAuctioneer ? "Auctioneer Gavel Console" : "Tactile Bidding Paddle"}
               </h4>
               {isHost && (
                 <span className="text-[10px] bg-gradient-to-b from-[#fbf5e6] to-[#eddcb7] text-[#5c4308] border border-[#d4be8c] px-2.5 py-0.5 rounded-lg font-mono font-black uppercase flex items-center gap-1 shadow-2xs">
                   <span>👑</span>
-                  <span>Room Authority</span>
+                  <span>Host Authority</span>
                 </span>
               )}
             </div>
@@ -51,7 +57,7 @@ export default function BiddingPad({
                   <span>You hold the highest bid!</span>
                 </span>
               ) : (
-                "Raise paddle increment to outbid opposing franchises"
+                "Raise paddle increments based on player base tier"
               )}
             </p>
           </div>
@@ -62,7 +68,7 @@ export default function BiddingPad({
                 YOUR PURSE
               </span>
               <span className="text-base font-bold font-mono text-[#124032] leading-none mt-0.5">
-                ₹{(myBudget / 100).toFixed(2)} Cr
+                {formatLakhsAndCrores(myBudget, true)}
               </span>
             </div>
           ) : (
@@ -77,30 +83,37 @@ export default function BiddingPad({
           )}
         </div>
 
-        {/* 3D Physical Quick Bid Buttons (For Bidders) */}
+        {/* Dynamic 3D Physical Quick Bid Buttons (For Bidders & Playing Hosts) */}
         {!isNeutralAuctioneer && (
           <div className="mt-3">
-            <span className="text-[10px] uppercase font-mono font-bold text-[#767c84] tracking-wider block mb-2">
-              RAISE PADDLE INCREMENT (+LAKHS)
-            </span>
-            <div className="grid grid-cols-5 gap-2">
-              {BID_AMOUNTS.map((amount) => {
-                const nextTotal = currentBid + amount;
+            <div className="flex justify-between items-center mb-2">
+              <span className="text-[10px] uppercase font-mono font-bold text-[#767c84] tracking-wider">
+                RAISE BID (TIER: {basePrice >= 200 ? "MARQUEE 2 CR" : basePrice >= 100 ? "SENIOR 1 CR" : "50 LAKHS"})
+              </span>
+              <span className="text-[10px] font-mono text-[#124032] font-bold">
+                Current: {formatLakhsAndCrores(currentBid, true)}
+              </span>
+            </div>
+
+            <div className="grid grid-cols-4 sm:grid-cols-5 gap-2">
+              {increments.map((inc) => {
+                const nextTotal = currentBid + inc.amount;
                 const canAfford = nextTotal <= myBudget;
                 const disabled = isLocked || !canAfford || isWinning;
 
                 return (
                   <button
-                    key={amount}
-                    onClick={() => onBid(amount)}
+                    key={inc.amount}
+                    onClick={() => onBid(inc.amount)}
                     disabled={disabled}
                     className="group relative bg-gradient-to-b from-white via-[#faf9f5] to-[#f0ece1] hover:to-[#e8e2d4] text-[#121417] p-2.5 rounded-2xl flex flex-col items-center justify-center transition-all border border-[#d8d1c0] border-b-[3px] border-b-[#b8af9c] disabled:opacity-30 disabled:cursor-not-allowed active:translate-y-0.5 active:border-b-[1px] cursor-pointer shadow-[0_2px_4px_rgba(0,0,0,0.04)]"
+                    title={inc.subtitle}
                   >
                     <span className="text-sm font-bold font-mono leading-none text-[#124032] group-hover:scale-105 transition-transform">
-                      +{amount}L
+                      {inc.label}
                     </span>
                     <span className="text-[9px] text-[#767c84] mt-1 font-mono font-semibold">
-                      ₹{(nextTotal / 100).toFixed(2)}Cr
+                      {formatLakhsAndCrores(nextTotal, true)}
                     </span>
                   </button>
                 );
@@ -110,9 +123,9 @@ export default function BiddingPad({
         )}
       </div>
 
-      {/* 🌟 3D BEVELED HOST AUCTIONEER CONSOLE */}
+      {/* 🌟 3D BEVELED GAVEL CONSOLE (Available to Host, Neutral Auctioneer & Players) */}
       <div className="pt-3 mt-3 border-t border-[#e8e2d4] flex flex-col gap-2">
-        {isHost ? (
+        {canUseHammer ? (
           <div className="space-y-2">
             {/* Heavy Cast-Iron / Brass Gavel Strike Action */}
             <button
@@ -133,12 +146,12 @@ export default function BiddingPad({
                   : status === "unsold"
                   ? "Player Passed (Unsold)"
                   : hasBids
-                  ? `Hammer Down (Award to ${highestBidder.split(" - ")[0]} at ₹${(currentBid / 100).toFixed(2)} Cr)`
+                  ? `Hammer Down (Award to ${getFranchiseName(highestBidder)} at ${formatLakhsAndCrores(currentBid, false)})`
                   : "Pass (Mark Unsold)"}
               </span>
             </button>
 
-            {/* Secondary Precision Tactile Controls */}
+            {/* Precision Tactile Clock & Lot Controls */}
             <div className="grid grid-cols-3 gap-2 pt-0.5 text-[11px] font-mono">
               <button
                 onClick={onExtendTimer}
@@ -169,15 +182,15 @@ export default function BiddingPad({
         ) : (
           <div className="w-full py-3.5 px-4 rounded-2xl bg-gradient-to-b from-[#faf8f2] to-[#f0ece1] border border-[#dcd6c8] text-center text-xs font-mono text-[#555a60] shadow-[inset_0_1px_3px_rgba(0,0,0,0.03)]">
             {status === "sold" ? (
-              <span className="text-[#124032] font-black">Player Sold by Auctioneer Gavel</span>
+              <span className="text-[#124032] font-black">Player Sold by Auction Gavel</span>
             ) : status === "unsold" ? (
-              <span className="text-rose-700 font-black">Player Passed Unsold by Auctioneer</span>
+              <span className="text-rose-700 font-black">Player Passed Unsold</span>
             ) : isWinning ? (
               <span className="text-[#124032] font-black">You currently hold the winning bid!</span>
             ) : hasBids ? (
-              <span className="text-[#121417] font-bold">Awaiting Auctioneer's Gavel</span>
+              <span className="text-[#121417] font-bold">Highest Bid: {formatLakhsAndCrores(currentBid, false)} • Awaiting Gavel</span>
             ) : (
-              <span className="text-[#8c8577]">Waiting for opening nomination</span>
+              <span className="text-[#8c8577]">Waiting for opening bid</span>
             )}
           </div>
         )}

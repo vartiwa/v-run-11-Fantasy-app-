@@ -7,6 +7,17 @@ const oswald = Oswald({ subsets: ["latin"], weight: ["500", "600", "700"] });
 
 const CAPACITY_OPTIONS = [2, 4, 6, 8];
 
+const FRANCHISE_PRESETS = [
+  { name: "Mumbai Titans", emoji: "🏏" },
+  { name: "Chennai Super Kings", emoji: "🦁" },
+  { name: "Royal Bengaluru", emoji: "👑" },
+  { name: "Kolkata Knights", emoji: "⚔️" },
+  { name: "Delhi Capitals", emoji: "🦅" },
+  { name: "Gujarat Power", emoji: "⚡" },
+  { name: "Rajasthan Warriors", emoji: "🐘" },
+  { name: "Hyderabad Sun", emoji: "☀️" },
+];
+
 const QUICK_AUCTIONEER_NAMES = [
   "Auctioneer",
   "Commissioner",
@@ -14,6 +25,8 @@ const QUICK_AUCTIONEER_NAMES = [
   "Richard Madley",
   "Mallika Sagar",
 ];
+
+const QUICK_BIDDER_NAMES = ["Bidder 1", "Bidder 2", "Bidder 3", "Bidder 4", "Bidder 5", "Bidder 6"];
 
 export default function PrivateRoomModal({
   isOpen,
@@ -26,6 +39,9 @@ export default function PrivateRoomModal({
     if (initialRoomId && initialRoomId !== "MAIN-ARENA") return initialRoomId;
     return `DRAFT-${Math.floor(1000 + Math.random() * 9000)}`;
   });
+  const [isNeutralAuctioneer, setIsNeutralAuctioneer] = useState(true);
+  const [selectedFranchise, setSelectedFranchise] = useState("Mumbai Titans");
+  const [allowPlayerHammer, setAllowPlayerHammer] = useState(true);
   const [managerName, setManagerName] = useState("Auctioneer");
 
   if (!isOpen) return null;
@@ -33,14 +49,15 @@ export default function PrivateRoomModal({
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!roomId.trim() || !managerName.trim()) return;
+    if (!isNeutralAuctioneer && !selectedFranchise) return;
 
-    // The host is strictly the neutral auctioneer (no franchise slot occupied)
     onJoinRoom({
       roomId: roomId.trim().toUpperCase(),
       managerName: managerName.trim(),
-      franchise: "Auctioneer",
+      franchise: isNeutralAuctioneer ? "Auctioneer" : selectedFranchise,
       capacity,
-      isNeutralAuctioneer: true,
+      isNeutralAuctioneer,
+      allowPlayerHammer,
     });
   };
 
@@ -64,30 +81,99 @@ export default function PrivateRoomModal({
         <div className="mb-5">
           <div className="inline-flex items-center gap-2 bg-[#f5f2e9] border border-[#dfd9cb] px-3 py-1 rounded-xl shadow-[inset_0_1px_2px_rgba(0,0,0,0.03)] text-[10px] uppercase font-mono font-bold text-[#124032] tracking-wider mb-2">
             <span className="w-2 h-2 rounded-full bg-[#124032] animate-pulse" />
-            <span>Auctioneer Dictator Desk • Supreme Room Authority</span>
+            <span>Auction Room Setup • Supreme Gavel Authority</span>
           </div>
 
           <h3 className={`text-2xl md:text-3xl font-bold text-[#121417] uppercase tracking-tight ${oswald.className}`}>
             Host Auction Draft Room
           </h3>
-
-          <div className="mt-2 bg-[#f0f7f3] border border-[#b8dfc9] rounded-2xl p-3 text-xs text-[#124032] font-mono leading-relaxed">
-            <p className="font-bold flex items-center gap-1.5 mb-0.5">
-              <span>🔨</span>
-              <span>Host Rule: You are the dedicated Auctioneer</span>
-            </p>
-            <p className="text-[11px] text-[#235845]">
-              As Host, you do not take a team. You dictate the auction, nominate lots, extend the clock, and strike the gavel. All franchise teams are 100% reserved for the bidders who join!
-            </p>
-          </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           
-          {/* 1. CAPACITY OF BIDDING TEAMS */}
+          {/* 1. ROLE SELECTION (Option to NOT be neutral auctioneer) */}
           <div>
             <label className="text-[11px] font-mono font-bold text-[#555a60] uppercase tracking-wider block mb-1.5">
-              1. How many franchise teams will bid?
+              1. Your Role in the Room
+            </label>
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setIsNeutralAuctioneer(true);
+                  if (!managerName || managerName.startsWith("Bidder")) setManagerName("Auctioneer");
+                }}
+                className={`p-3 rounded-2xl text-xs font-mono font-bold border transition-all text-left cursor-pointer flex flex-col justify-between ${
+                  isNeutralAuctioneer
+                    ? "bg-[#124032] text-white border-[#124032] shadow-xs"
+                    : "bg-white text-[#121417] border-[#d8d1c0] hover:bg-[#f4f1e8]"
+                }`}
+              >
+                <div className="flex items-center gap-1.5">
+                  <span>🔨</span>
+                  <span>Neutral Auctioneer</span>
+                </div>
+                <span className={`text-[10px] mt-1 font-normal ${isNeutralAuctioneer ? "text-emerald-100" : "text-[#767c84]"}`}>
+                  No franchise. Purely dictate lots & strike gavel.
+                </span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setIsNeutralAuctioneer(false);
+                  if (managerName === "Auctioneer") setManagerName("Bidder 1");
+                }}
+                className={`p-3 rounded-2xl text-xs font-mono font-bold border transition-all text-left cursor-pointer flex flex-col justify-between ${
+                  !isNeutralAuctioneer
+                    ? "bg-[#124032] text-white border-[#124032] shadow-xs"
+                    : "bg-white text-[#121417] border-[#d8d1c0] hover:bg-[#f4f1e8]"
+                }`}
+              >
+                <div className="flex items-center gap-1.5">
+                  <span>🏏</span>
+                  <span>Player & Host (With Gavel)</span>
+                </div>
+                <span className={`text-[10px] mt-1 font-normal ${!isNeutralAuctioneer ? "text-emerald-100" : "text-[#767c84]"}`}>
+                  Own a franchise, bid for players AND strike gavel!
+                </span>
+              </button>
+            </div>
+          </div>
+
+          {/* 2. CHOOSE FRANCHISE (IF PLAYING HOST) */}
+          {!isNeutralAuctioneer && (
+            <div>
+              <label className="text-[11px] font-mono font-bold text-[#555a60] uppercase tracking-wider block mb-1.5">
+                2. Choose Your Franchise
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {FRANCHISE_PRESETS.map((franchise) => {
+                  const isSelected = selectedFranchise === franchise.name;
+                  return (
+                    <button
+                      key={franchise.name}
+                      type="button"
+                      onClick={() => setSelectedFranchise(franchise.name)}
+                      className={`p-2.5 rounded-2xl text-xs font-bold flex items-center justify-between border transition-all cursor-pointer ${
+                        isSelected
+                          ? "bg-[#124032] text-white border-[#124032] shadow-xs"
+                          : "bg-white text-[#121417] border-[#d8d1c0] hover:bg-[#f4f1e8]"
+                      }`}
+                    >
+                      <span className="truncate">{franchise.emoji} {franchise.name}</span>
+                      {isSelected && <span className="text-[10px] font-black uppercase">✓</span>}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* 3. CAPACITY OF BIDDING TEAMS */}
+          <div>
+            <label className="text-[11px] font-mono font-bold text-[#555a60] uppercase tracking-wider block mb-1.5">
+              {isNeutralAuctioneer ? "2. How many franchise teams will bid?" : "3. Room Capacity"}
             </label>
             <div className="grid grid-cols-4 gap-2">
               {CAPACITY_OPTIONS.map((cap) => (
@@ -105,15 +191,12 @@ export default function PrivateRoomModal({
                 </button>
               ))}
             </div>
-            <p className="text-[10px] text-[#8c8577] font-mono mt-1">
-              Bidders will pick teams like Mumbai, Chennai, Bengaluru, Kolkata, etc.
-            </p>
           </div>
 
-          {/* 2. ROOM PIN CODE */}
+          {/* 4. ROOM PIN CODE */}
           <div>
             <label className="text-[11px] font-mono font-bold text-[#555a60] uppercase tracking-wider block mb-1.5">
-              2. Room Code (Private PIN)
+              {isNeutralAuctioneer ? "3. Room Code (Private PIN)" : "4. Room Code"}
             </label>
             <div className="flex gap-2">
               <input
@@ -135,20 +218,20 @@ export default function PrivateRoomModal({
             </div>
           </div>
 
-          {/* 3. AUCTIONEER NAME + PRESETS */}
+          {/* 5. MANAGER / AUCTIONEER NAME + PRESETS */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-[11px] font-mono font-bold text-[#555a60] uppercase tracking-wider">
-                3. Your Auctioneer Name
+                {isNeutralAuctioneer ? "4. Your Auctioneer Name" : "5. Your Manager Name"}
               </label>
               <span className="text-[10px] text-[#8c8577] font-mono">
-                Dictates the gavel & lots
+                {isNeutralAuctioneer ? "Dictates gavel & lots" : "Appears on team squad"}
               </span>
             </div>
 
             <input
               type="text"
-              placeholder="e.g. Auctioneer / Commissioner"
+              placeholder={isNeutralAuctioneer ? "e.g. Auctioneer / Commissioner" : "e.g. Bidder 1 or Rahul"}
               value={managerName}
               onChange={(e) => setManagerName(e.target.value)}
               className="w-full bg-white text-[#121417] text-xs px-4 py-3 rounded-2xl border border-[#d8d1c0] focus:outline-none focus:border-[#124032] shadow-2xs font-mono font-semibold"
@@ -158,7 +241,7 @@ export default function PrivateRoomModal({
             {/* Quick Presets Buttons */}
             <div className="flex flex-wrap gap-1.5 mt-2">
               <span className="text-[10px] font-mono text-[#8c8577] self-center mr-1">Quick:</span>
-              {QUICK_AUCTIONEER_NAMES.map((quickName) => (
+              {(isNeutralAuctioneer ? QUICK_AUCTIONEER_NAMES : QUICK_BIDDER_NAMES).map((quickName) => (
                 <button
                   key={quickName}
                   type="button"
@@ -175,13 +258,35 @@ export default function PrivateRoomModal({
             </div>
           </div>
 
+          {/* 6. ALLOW PLAYERS TO USE HAMMER CHECKBOX */}
+          <div className="pt-1">
+            <label className="flex items-center gap-2.5 bg-[#faf8f2] border border-[#dcd6c8] p-3 rounded-2xl cursor-pointer hover:bg-[#f5f1e6] transition-colors">
+              <input
+                type="checkbox"
+                checked={allowPlayerHammer}
+                onChange={(e) => setAllowPlayerHammer(e.target.checked)}
+                className="w-4 h-4 text-[#124032] accent-[#124032] rounded cursor-pointer"
+              />
+              <div>
+                <span className="text-xs font-mono font-bold text-[#121417] block">
+                  Allow any player to strike the hammer (Open Gavel)
+                </span>
+                <span className="text-[10px] font-mono text-[#767c84] block">
+                  If enabled, players can also click Hammer Down or Pass when bidding concludes
+                </span>
+              </div>
+            </label>
+          </div>
+
           {/* SUBMIT BUTTON */}
           <button
             type="submit"
-            disabled={!roomId.trim() || !managerName.trim()}
+            disabled={!roomId.trim() || !managerName.trim() || (!isNeutralAuctioneer && !selectedFranchise)}
             className="w-full bg-gradient-to-b from-[#185341] to-[#0e3328] hover:to-[#09241c] disabled:opacity-40 text-white font-mono font-bold text-xs py-3.5 rounded-2xl uppercase tracking-wider transition-all border border-[#1b5e4a] border-b-4 border-b-[#071c15] shadow-md active:translate-y-1 active:border-b-0 mt-3 cursor-pointer"
           >
-            🔨 Open Auction Floor as Supreme Auctioneer ({capacity} Bidding Teams) →
+            {isNeutralAuctioneer
+              ? `🔨 Open Auction Floor as Auctioneer (${capacity} Teams) →`
+              : `🏏 Open Draft Floor as Playing Host (${selectedFranchise}) →`}
           </button>
         </form>
       </div>

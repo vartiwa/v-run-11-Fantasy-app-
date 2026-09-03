@@ -2,6 +2,7 @@
 
 import { Oswald } from "next/font/google";
 import PlayerAvatar from "./PlayerAvatar";
+import { formatLakhsAndCrores } from "@/lib/formatCurrency";
 
 const oswald = Oswald({ subsets: ["latin"], weight: ["500", "600", "700"] });
 
@@ -41,6 +42,9 @@ export default function PlayerCard({
               OVERSEAS
             </span>
           )}
+          <span className="text-[10px] font-mono font-bold text-[#124032] bg-[#eef5f1] border border-[#c3ded0] px-2 py-0.5 rounded-lg shadow-xs uppercase">
+            {basePrice >= 200 ? "Marquee (2 Cr)" : basePrice >= 100 ? "Senior (1 Cr)" : "Emerging (50L)"}
+          </span>
         </div>
 
         <div className="flex items-center gap-2">
@@ -79,9 +83,9 @@ export default function PlayerCard({
           </h3>
 
           <div className="text-xs font-mono text-[#555a60] mt-1 flex items-center gap-2">
-            <span className="text-[11px] text-[#767c84]">RESERVE PRICE:</span>
+            <span className="text-[11px] text-[#767c84]">BASE PRICE:</span>
             <span className="font-bold text-[#121417] bg-white px-2 py-0.5 rounded-md border border-[#ded8cb] shadow-2xs">
-              ₹{(basePrice / 100).toFixed(2)} CR
+              {formatLakhsAndCrores(basePrice, false)}
             </span>
           </div>
         </div>
@@ -135,7 +139,7 @@ export default function PlayerCard({
 
         <div className="text-right">
           <span className={`text-3xl font-bold text-[#121417] tracking-tight leading-none block drop-shadow-2xs ${oswald.className}`}>
-            ₹{(currentBid / 100).toFixed(2)} CR
+            {formatLakhsAndCrores(currentBid, false)}
           </span>
         </div>
       </div>

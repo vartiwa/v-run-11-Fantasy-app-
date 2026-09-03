@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { formatLakhsAndCrores } from "@/lib/formatCurrency";
 
 export default function BroadcastMarquee({
   auctionData = {},
@@ -54,7 +55,7 @@ export default function BroadcastMarquee({
             <span className="text-[11px] text-[#767c84]">RECORD LOT:</span>
             <strong className="text-[#124032] bg-white px-2.5 py-0.5 rounded-md border border-[#ded8cb] shadow-2xs font-bold">
               {stats.topBuy.price > 0
-                ? `${stats.topBuy.name} (₹${(stats.topBuy.price / 100).toFixed(2)} Cr • ${stats.topBuy.team})`
+                ? `${stats.topBuy.name} (${formatLakhsAndCrores(stats.topBuy.price, true)} • ${stats.topBuy.team})`
                 : "None yet"}
             </strong>
           </div>

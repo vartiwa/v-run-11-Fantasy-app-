@@ -18,6 +18,7 @@ import JoinCodeModal from "@/components/JoinCodeModal";
 import ActivityFeed from "@/components/ActivityFeed";
 import { playersList } from "@/data/players";
 import { sounds } from "@/lib/soundEffects";
+import { formatLakhsAndCrores } from "@/lib/formatCurrency";
 
 const oswald = Oswald({ subsets: ["latin"], weight: ["400", "700"] });
 const inter = Inter({ subsets: ["latin"] });
@@ -38,6 +39,15 @@ export default function Home() {
   // Multi-Room State
   const [roomId, setRoomId] = useState("MAIN-ARENA");
   const [roomCapacity, setRoomCapacity] = useState(8);
+  const [roomAllowPlayerHammer, setRoomAllowPlayerHammer] = useState(true);
+
+  useEffect(() => {
+    if (!roomId) return;
+    const unsub = onValue(ref(db, `rooms/${roomId}/allowPlayerHammer`), (snap) => {
+      if (snap.exists()) setRoomAllowPlayerHammer(!!snap.val());
+    });
+    return () => unsub();
+  }, [roomId]);
 
   // Ensure seamless anonymous authentication on client mount
   useEffect(() => {
@@ -175,6 +185,7 @@ export default function Home() {
     franchise,
     capacity = 8,
     isNeutralAuctioneer = false,
+    allowPlayerHammer = true,
   }) => {
     let user = currentUser;
     if (!user) {
@@ -198,6 +209,7 @@ export default function Home() {
       setHostUid(userUid);
       await set(ref(db, `rooms/${targetRoom}/capacity`), capacity);
       setRoomCapacity(capacity);
+      await set(ref(db, `rooms/${targetRoom}/allowPlayerHammer`), !!allowPlayerHammer);
     } else {
       setHostUid(hostSnap.val());
       const capSnap = await get(ref(db, `rooms/${targetRoom}/capacity`));
@@ -753,7 +765,7 @@ export default function Home() {
           >
             Auction Floor
           </button>
-          {!isHost && (
+          {!teamName.startsWith("Auctioneer - ") && (
             <button
               onClick={() => setActiveTab("squad")}
               className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
@@ -788,7 +800,7 @@ export default function Home() {
             </span>
           </div>
 
-          {isHost ? (
+          {teamName.startsWith("Auctioneer - ") ? (
             <div className="text-right bg-gradient-to-b from-[#fbf5e6] to-[#eddcb7] border-2 border-[#d4be8c] px-4 py-1 rounded-2xl shadow-2xs">
               <span className="text-[9px] uppercase font-mono text-[#5c4308] block font-black leading-none">
                 Role
@@ -799,11 +811,18 @@ export default function Home() {
             </div>
           ) : (
             <div className="text-right bg-gradient-to-b from-white via-[#fbf9f4] to-[#f2ede0] border-2 border-[#d0c6ad] px-4 py-1 rounded-2xl shadow-[inset_0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.02)]">
-              <span className="text-[9px] uppercase font-mono text-[#8c8577] block font-bold leading-none">
-                Purse Available
-              </span>
-              <span className="text-sm font-black font-mono text-[#124032] leading-none">
-                ₹{(myBudget / 100).toFixed(2)} Cr
+              <div className="flex items-center justify-end gap-1">
+                <span className="text-[9px] uppercase font-mono text-[#8c8577] block font-bold leading-none">
+                  Purse
+                </span>
+                {isHost && (
+                  <span className="text-[8px] font-mono bg-amber-100 text-[#5c4308] px-1 rounded font-black">
+                    Host & Gavel
+                  </span>
+                )}
+              </div>
+              <span className="text-sm font-black font-mono text-[#124032] leading-none mt-0.5 block">
+                {formatLakhsAndCrores(myBudget, true)}
               </span>
             </div>
           )}
@@ -881,11 +900,13 @@ export default function Home() {
               onResetTimer={handleResetTimer}
               status={isSold ? "sold" : isUnsold ? "unsold" : "available"}
               currentBid={currentBid}
+              basePrice={activePlayer.basePrice}
               myBudget={myBudget}
               highestBidder={highestBidder}
               myTeamName={teamName}
               isHost={isHost}
               isNeutralAuctioneer={teamName.startsWith("Auctioneer - ")}
+              allowPlayerHammer={roomAllowPlayerHammer}
             />
             <ActivityFeed logs={activityLogs} />
           </div>
@@ -971,7 +992,7 @@ export default function Home() {
                           <span className="text-sm">{p.flag}</span>
                           <div className="truncate">
                             <p className="text-xs font-bold text-[#121417] truncate">{p.name}</p>
-                            <p className="text-[10px] font-mono text-[#767c84]">{p.role} • ₹{(p.basePrice / 100).toFixed(2)} Cr</p>
+                            <p className="text-[10px] font-mono text-[#767c84]">{p.role} • Base {formatLakhsAndCrores(p.basePrice, true)}</p>
                           </div>
                         </div>
 
@@ -1084,7 +1105,7 @@ export default function Home() {
                           {isSelf && <span className="text-[#124032] font-black">(You)</span>}
                         </span>
                         <span className="font-black font-mono text-sm text-[#124032]">
-                          ₹{(budget / 100).toFixed(2)} Cr
+                          {formatLakhsAndCrores(budget, true)}
                         </span>
                       </div>
                       <div className="w-full bg-[#e8e2d4] h-2 rounded-full overflow-hidden mb-1.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]">
