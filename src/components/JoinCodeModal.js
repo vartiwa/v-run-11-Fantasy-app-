@@ -144,13 +144,10 @@ export default function JoinCodeModal({
                   <button
                     key={franchise.name}
                     type="button"
-                    onClick={() => !isClaimActive && setSelectedFranchise(franchise.name)}
-                    disabled={isClaimActive}
+                    onClick={() => setSelectedFranchise(franchise.name)}
                     className={`p-2.5 rounded-xl text-xs font-bold flex flex-col justify-between border transition-all text-left cursor-pointer ${
                       isSelected
                         ? "bg-[#124032] text-white border-[#124032] shadow-xs"
-                        : isClaimActive
-                        ? "bg-slate-100 text-slate-400 cursor-not-allowed border-slate-200 opacity-60"
                         : "bg-slate-50 text-slate-800 border-slate-200 hover:border-[#124032]"
                     }`}
                   >
@@ -161,7 +158,7 @@ export default function JoinCodeModal({
 
                     <div className="mt-1 flex items-center justify-between w-full text-[9px] font-mono">
                       {isClaimActive ? (
-                        <span className="text-red-500 font-bold">TAKEN • {remainingMin}m</span>
+                        <span className="text-[#124032] font-bold">READY • TAP TO REJOIN</span>
                       ) : (
                         <span className="text-emerald-700 font-semibold">AVAILABLE</span>
                       )}

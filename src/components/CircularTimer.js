@@ -49,13 +49,13 @@ export default function CircularTimer({
         <span
           className={`text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-xs ${
             isTimeUp
-              ? "bg-rose-100 text-rose-800 border border-rose-300"
+              ? "bg-amber-100 text-amber-900 border border-amber-300 animate-pulse"
               : isWarning
               ? "bg-amber-100 text-amber-900 border border-amber-300 animate-pulse"
               : "bg-[#eef5f1] text-[#124032] border border-[#c3ded0]"
           }`}
         >
-          {isTimeUp ? "Round Concluded" : isWarning ? "Fair Warning (Going Twice)" : "Gavel Open"}
+          {isTimeUp ? "Final Call • Awaiting Gavel" : isWarning ? "Fair Warning (Going Twice)" : "Gavel Open"}
         </span>
       </div>
 

@@ -130,6 +130,10 @@ export default function Home() {
     return auctionData[activePlayer.id]?.status === "sold";
   }, [auctionData, activePlayer.id]);
 
+  const isUnsold = useMemo(() => {
+    return auctionData[activePlayer.id]?.status === "unsold";
+  }, [auctionData, activePlayer.id]);
+
   const secondsLeft = useMemo(() => {
     if (timerEndsAt === null || now === 0) return null;
     return Math.max(0, Math.ceil((timerEndsAt - now) / 1000));
@@ -220,31 +224,13 @@ export default function Home() {
       }
     }
 
-    // Only playing franchise managers count against the team capacity
+    // 🌟 If re-joining or reclaiming a franchise, clear previous disconnect entry so player can enter immediately
     if (!isNeutralAuctioneer) {
-      const activePlayingTeams = Object.keys(activeTeams).filter(
-        (t) => !t.startsWith("Auctioneer - ")
-      );
-      if (activePlayingTeams.length >= effectiveCap && !activeTeams[uniqueTeamId]) {
-        return alert(
-          `⚠️ Room "${targetRoom}" is full (${effectiveCap} teams). Inactive claims auto-expire in 2 hours.`
-        );
-      }
-
-      // Check if another active player currently holds this franchise
-      const conflictingTeamEntry = Object.entries(activeTeams).find(
+      const conflictingTeamEntry = Object.entries(rawTeams).find(
         ([t]) => getFranchiseName(t) === franchise && t !== uniqueTeamId
       );
-
       if (conflictingTeamEntry) {
-        const [conflictingKey, conflictingData] = conflictingTeamEntry;
-        if (conflictingData.ownerUid !== userUid) {
-          const lastActive = conflictingData.lastActiveAt || conflictingData.joinedAt || 0;
-          const remainingMin = Math.max(1, Math.ceil((TWO_HOURS_MS - (nowTime - lastActive)) / 60000));
-          return alert(
-            `⚠️ Franchise "${franchise}" is currently claimed in this room. If inactive, it will auto-expire and release in ${remainingMin} minutes.`
-          );
-        }
+        await set(ref(db, `rooms/${targetRoom}/teams/${conflictingTeamEntry[0]}`), null);
       }
     }
 
@@ -289,11 +275,18 @@ export default function Home() {
     setIsPrivateModalOpen(true);
   };
 
-  const handleLeaveRoom = () => {
+  const handleLeaveRoom = async () => {
     try {
       sessionStorage.removeItem("vrun11_active_room");
       sessionStorage.removeItem("vrun11_active_team");
     } catch {}
+    if (roomId && teamName) {
+      try {
+        await set(ref(db, `rooms/${roomId}/teams/${teamName}`), null);
+      } catch (err) {
+        console.warn("Leave room cleanup error:", err);
+      }
+    }
     setHasJoined(false);
     setTeamName("");
     setActiveTab("auction");
@@ -552,16 +545,7 @@ export default function Home() {
     unsoldFiredRef.current = false;
   }, [timerEndsAt]);
 
-  // Host-Authoritative Timer auto-finalize (only host triggers, fallback if host offline)
-  useEffect(() => {
-    if (!hasJoined || isSold) return;
-    if (secondsLeft === 0 && !unsoldFiredRef.current) {
-      unsoldFiredRef.current = true;
-      if (isHost || !hostUid) {
-        handleSell();
-      }
-    }
-  }, [secondsLeft, isSold, hasJoined, isHost, hostUid, handleSell]);
+  // Timer clock is open for everyone; only Auctioneer striking the gavel concludes the lot!
 
   const handleNextPlayer = useCallback(() => {
     if (!isHost && hostUid) {
@@ -895,7 +879,7 @@ export default function Home() {
               onNextLot={handleNextPlayer}
               onExtendTimer={handleExtendTimer}
               onResetTimer={handleResetTimer}
-              status={isSold ? "sold" : isTimeUp ? "unsold" : "available"}
+              status={isSold ? "sold" : isUnsold ? "unsold" : "available"}
               currentBid={currentBid}
               myBudget={myBudget}
               highestBidder={highestBidder}
