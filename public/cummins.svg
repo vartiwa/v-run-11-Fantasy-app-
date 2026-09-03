@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="cummins-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="100%" stop-color="#ffedd5"/>
+    </linearGradient>
+    <linearGradient id="srh-cummins" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ea580c"/>
+      <stop offset="100%" stop-color="#c2410c"/>
+    </linearGradient>
+    <linearGradient id="skin-cummins" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fed7aa"/>
+      <stop offset="100%" stop-color="#fba863"/>
+    </linearGradient>
+    <linearGradient id="hair-cummins" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#78350f"/>
+      <stop offset="100%" stop-color="#451a03"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="200" height="200" fill="url(#cummins-bg)" rx="28"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#fdba74" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- Shoulders Jersey -->
+  <path d="M25 200 C25 148 62 138 100 138 C138 138 175 148 175 200 Z" fill="url(#srh-cummins)"/>
+  
+  <!-- Collar & Trim -->
+  <path d="M80 138 L100 162 L120 138 Z" fill="#18181b"/>
+  <path d="M85 138 L100 156 L115 138 Z" fill="url(#skin-cummins)"/>
+
+  <!-- Captaincy Badge / Star -->
+  <circle cx="140" cy="170" r="13" fill="#18181b" stroke="#ea580c" stroke-width="1.5"/>
+  <text x="140" y="175" font-family="system-ui, sans-serif" font-weight="900" font-size="11" fill="#ffffff" text-anchor="middle">30</text>
+
+  <!-- Neck -->
+  <rect x="86" y="108" width="28" height="34" rx="10" fill="url(#skin-cummins)"/>
+
+  <!-- Head -->
+  <ellipse cx="100" cy="85" rx="34" ry="40" fill="url(#skin-cummins)"/>
+
+  <!-- Athletic Brown Hair -->
+  <path d="M66 82 C65 52 82 42 100 42 C118 42 135 52 134 82 C131 75 125 70 120 70 C114 70 108 73 100 73 C92 73 86 70 80 70 C75 70 69 75 66 82 Z" fill="url(#hair-cummins)"/>
+
+  <!-- Eyes & Eyebrows -->
+  <rect x="79" y="78" width="13" height="3" rx="1.5" fill="#451a03"/>
+  <rect x="108" y="78" width="13" height="3" rx="1.5" fill="#451a03"/>
+  <circle cx="85" cy="85" r="3" fill="#1e3a8a"/>
+  <circle cx="115" cy="85" r="3" fill="#1e3a8a"/>
+
+  <!-- Confident Smile -->
+  <path d="M92 104 Q100 110 108 104" fill="none" stroke="#7c2d12" stroke-width="2.5" stroke-linecap="round"/>
+
+  <!-- Aus Crown Badge -->
+  <rect x="62" y="10" width="76" height="22" rx="11" fill="#ea580c" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))"/>
+  <text x="100" y="25" font-family="system-ui, sans-serif" font-weight="900" font-size="10" fill="#ffffff" text-anchor="middle" letter-spacing="1">CUMMINS • 2 CR</text>
+</svg>

@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="100%" height="100%">
+  <defs>
+    <linearGradient id="starc-bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#faf5ff"/>
+      <stop offset="100%" stop-color="#f3e8ff"/>
+    </linearGradient>
+    <linearGradient id="kkr-starc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3b0764"/>
+      <stop offset="100%" stop-color="#1e1b4b"/>
+    </linearGradient>
+    <linearGradient id="skin-starc" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fed7aa"/>
+      <stop offset="100%" stop-color="#fba863"/>
+    </linearGradient>
+    <linearGradient id="gold-trim" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="200" height="200" fill="url(#starc-bg)" rx="28"/>
+  <circle cx="100" cy="100" r="88" fill="none" stroke="#e9d5ff" stroke-width="2" stroke-dasharray="4 4"/>
+
+  <!-- Shoulders / KKR Purple Jersey -->
+  <path d="M25 200 C25 148 62 138 100 138 C138 138 175 148 175 200 Z" fill="url(#kkr-starc)"/>
+  
+  <!-- Gold Armor Shoulder Trim -->
+  <path d="M25 200 C30 165 48 148 66 142 L70 156 C56 162 44 175 36 200 Z" fill="url(#gold-trim)"/>
+  <path d="M175 200 C170 165 152 148 134 142 L130 156 C144 162 156 175 164 200 Z" fill="url(#gold-trim)"/>
+
+  <!-- Collar -->
+  <path d="M80 138 L100 162 L120 138 Z" fill="url(#gold-trim)"/>
+  <path d="M85 138 L100 156 L115 138 Z" fill="url(#skin-starc)"/>
+
+  <!-- Jersey #56 / Pace Star -->
+  <circle cx="140" cy="170" r="13" fill="#3b0764" stroke="#fbbf24" stroke-width="1.5"/>
+  <text x="140" y="175" font-family="system-ui, sans-serif" font-weight="900" font-size="11" fill="#fbbf24" text-anchor="middle">56</text>
+
+  <!-- Neck -->
+  <rect x="86" y="108" width="28" height="34" rx="10" fill="url(#skin-starc)"/>
+
+  <!-- Head -->
+  <ellipse cx="100" cy="85" rx="34" ry="40" fill="url(#skin-starc)"/>
+
+  <!-- Dark Hair -->
+  <path d="M66 82 C65 52 82 42 100 42 C118 42 135 52 134 82 C131 75 125 70 120 70 C114 70 108 73 100 73 C92 73 86 70 80 70 C75 70 69 75 66 82 Z" fill="#1c1917"/>
+
+  <!-- Intense Fast Bowler Brow -->
+  <rect x="79" y="78" width="13" height="3" rx="1.5" fill="#1c1917"/>
+  <rect x="108" y="78" width="13" height="3" rx="1.5" fill="#1c1917"/>
+  <circle cx="85" cy="85" r="3" fill="#1e293b"/>
+  <circle cx="115" cy="85" r="3" fill="#1e293b"/>
+
+  <!-- Sharp Jaw / Stubble -->
+  <path d="M88 100 Q100 106 112 100" fill="none" stroke="#7c2d12" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Badge -->
+  <rect x="62" y="10" width="76" height="22" rx="11" fill="#3b0764" stroke="#fbbf24" stroke-width="1" filter="drop-shadow(0 2px 4px rgba(0,0,0,0.1))"/>
+  <text x="100" y="25" font-family="system-ui, sans-serif" font-weight="900" font-size="10" fill="#fbbf24" text-anchor="middle" letter-spacing="1">STARC • 2 CR</text>
+</svg>

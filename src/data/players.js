@@ -85,7 +85,7 @@ export const playersList = [
     basePrice: 200,
     rating: 94,
     stats: { matches: 58, wickets: 63, economy: 8.5, sr: 20.1, runs: 515, srBat: 151.0 },
-    imageUrl: "/cummins.png",
+    imageUrl: "/cummins.svg",
   },
   {
     id: 8,
@@ -97,7 +97,7 @@ export const playersList = [
     basePrice: 200,
     rating: 95,
     stats: { matches: 41, wickets: 51, economy: 8.2, sr: 17.5, runs: 120, avg: 12.0 },
-    imageUrl: "/starc.png",
+    imageUrl: "/starc.svg",
   },
   {
     id: 9,
