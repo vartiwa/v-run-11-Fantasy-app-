@@ -40,7 +40,13 @@ export default function CircularTimer({
   });
 
   return (
-    <div className="relative w-full bg-gradient-to-b from-white via-[#fdfcf9] to-[#f8f6f0] border border-[#dcd6c8] rounded-3xl p-4 flex flex-col justify-between shadow-[0_2px_4px_rgba(0,0,0,0.02),0_10px_24px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] select-none text-[#121417]">
+    <div className={`relative w-full bg-gradient-to-b from-white via-[#fdfcf9] to-[#f8f6f0] border-2 rounded-3xl p-4 flex flex-col justify-between shadow-[0_2px_4px_rgba(0,0,0,0.02),0_12px_28px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] select-none text-[#121417] transition-all duration-300 ${
+      isTimeUp
+        ? "border-rose-400 ring-4 ring-rose-400/20"
+        : isWarning
+        ? "border-amber-400 ring-4 ring-amber-400/20"
+        : "border-[#dcd6c8]"
+    }`}>
       {/* Top Header */}
       <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#e8e2d4]">
         <div className="flex items-center gap-2">
@@ -59,7 +65,7 @@ export default function CircularTimer({
         </div>
 
         <span
-          className={`text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-xs transition-colors ${
+          className={`text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-2xs transition-colors ${
             isTimeUp
               ? "bg-rose-100 text-rose-900 border border-rose-300 animate-pulse"
               : isWarning
@@ -67,15 +73,25 @@ export default function CircularTimer({
               : "bg-[#eef5f1] text-[#124032] border border-[#c3ded0]"
           }`}
         >
-          {isTimeUp ? "Final Call • Awaiting Gavel" : isWarning ? "Fair Warning (Going Twice)" : "Gavel Open"}
+          {isTimeUp ? "Final Call • Gavel Pending" : isWarning ? "Fair Warning (Going Twice)" : "Clock Active"}
         </span>
       </div>
 
       {/* Center Chronometer Well with Circular Gauge */}
       <div className="flex items-center justify-between px-2 py-1">
         {/* Circular SVG Gauge */}
-        <div className="relative flex items-center justify-center filter drop-shadow-[0_4px_8px_rgba(0,0,0,0.06)]">
+        <div className="relative flex items-center justify-center filter drop-shadow-[0_6px_12px_rgba(0,0,0,0.08)]">
           <svg width={size} height={size} className="-rotate-90 transform">
+            {/* Outer Luxury Bezel Ring */}
+            <circle
+              cx={size / 2}
+              cy={size / 2}
+              r={radius + 3}
+              stroke="#d8d1c0"
+              strokeWidth={1}
+              fill="transparent"
+            />
+
             {/* Background Dial Track */}
             <circle
               cx={size / 2}
@@ -94,7 +110,7 @@ export default function CircularTimer({
                 y1={tick.y1}
                 x2={tick.x2}
                 y2={tick.y2}
-                stroke={tick.isQuarter ? "#a8a29e" : "#d6d3d1"}
+                stroke={tick.isQuarter ? "#8c8577" : "#c4bcae"}
                 strokeWidth={tick.isQuarter ? 1.5 : 1}
               />
             ))}

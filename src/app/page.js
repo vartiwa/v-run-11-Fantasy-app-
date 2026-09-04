@@ -860,27 +860,37 @@ export default function Home() {
       className={`min-h-screen lg:h-screen lg:max-h-screen flex flex-col bg-[#f6f5ef] bg-[radial-gradient(#ded8cb_1px,transparent_1px)] [background-size:22px_22px] text-[#121417] overflow-y-auto lg:overflow-hidden relative select-none ${inter.className}`}
     >
       {/* 🌟 1. LUXURY EDITORIAL SPORTS HEADER */}
-      <header className="py-3 px-4 md:px-6 bg-white/95 backdrop-blur-md border-b border-[#dcd6c8] flex flex-wrap items-center justify-between gap-3 shrink-0 z-20 shadow-[0_2px_10px_rgba(0,0,0,0.03)]">
+      <header className="py-2.5 px-4 md:px-6 bg-white/95 backdrop-blur-md border-b border-[#dcd6c8] flex flex-wrap items-center justify-between gap-3 shrink-0 z-20 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
         {/* Left: Brand + Room Code + Role */}
         <div className="flex items-center gap-3">
           <div
-            className="flex items-center gap-2 cursor-pointer group"
+            className="flex items-center gap-2.5 cursor-pointer group"
             onClick={handleLeaveRoom}
             title="Leave Room"
           >
-            <span className={`text-xl font-bold tracking-tight uppercase text-[#121417] group-hover:text-[#124032] transition-colors ${oswald.className}`}>
-              V-RUN 11
-            </span>
-            <span className="text-xs font-mono text-[#767c84] uppercase hidden sm:inline">
-              / IPL Mega Draft
-            </span>
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-b from-[#185341] to-[#0e3328] flex items-center justify-center text-white font-black text-sm shadow-xs border border-[#1b5e4a] group-hover:scale-105 transition-transform">
+              🏏
+            </div>
+            <div>
+              <div className="flex items-center gap-1.5">
+                <span className={`text-xl font-black tracking-tight uppercase text-[#121417] group-hover:text-[#124032] transition-colors leading-none ${oswald.className}`}>
+                  V-RUN 11
+                </span>
+                <span className="text-[9px] font-mono bg-gradient-to-b from-[#fbf5e6] to-[#eddcb7] text-[#5c4308] border border-[#d4be8c] px-1.5 py-0.2 rounded font-black uppercase tracking-wider">
+                  PRO
+                </span>
+              </div>
+              <p className="text-[10px] font-mono text-[#767c84] uppercase tracking-wider leading-none mt-0.5">
+                IPL Premier Draft
+              </p>
+            </div>
           </div>
 
-          <div className="hidden sm:block h-4 w-[1px] bg-[#d8d1c0] mx-1" />
+          <div className="hidden sm:block h-6 w-[1px] bg-[#d8d1c0] mx-1" />
 
           {/* Room Code & Share Plate */}
-          <div className="flex items-center gap-2 bg-gradient-to-b from-white via-[#faf8f3] to-[#f2ede0] border border-[#d8d1c0] px-3.5 py-1.5 rounded-2xl shadow-2xs text-xs font-mono">
-            <span className="text-[#8c8577] text-[11px] font-black">ROOM:</span>
+          <div className="flex items-center gap-2 bg-gradient-to-b from-white via-[#faf8f3] to-[#f2ede0] border border-[#d8d1c0] px-3 py-1 rounded-2xl shadow-2xs text-xs font-mono">
+            <span className="text-[#8c8577] text-[10px] font-black">ARENA:</span>
             <span className="font-black text-[#121417] tracking-wider">{roomId}</span>
             <button
               onClick={() => {
@@ -888,9 +898,10 @@ export default function Home() {
                 navigator.clipboard.writeText(url);
                 alert(`📋 Invite link copied to clipboard!\nShare this with your friends:\n${url}`);
               }}
-              className="text-xs text-[#124032] hover:underline font-bold ml-1 cursor-pointer"
+              className="text-[11px] font-bold text-[#124032] hover:text-emerald-800 hover:underline ml-1 cursor-pointer"
+              title="Copy Room Link"
             >
-              Copy
+              📋 Copy
             </button>
             <button
               onClick={() => {
@@ -898,9 +909,10 @@ export default function Home() {
                 const msg = encodeURIComponent(`🏏 Join my Live IPL Fantasy Auction Draft!\n🏛️ Room PIN: ${roomId}\n👉 Tap to pick your franchise team: ${url}`);
                 window.open(`https://wa.me/?text=${msg}`, "_blank");
               }}
-              className="text-xs text-emerald-700 hover:underline font-bold ml-1 cursor-pointer"
+              className="text-[11px] font-bold text-emerald-700 hover:text-emerald-900 hover:underline ml-1 cursor-pointer"
+              title="Share via WhatsApp"
             >
-              WhatsApp
+              💬 WhatsApp
             </button>
           </div>
 

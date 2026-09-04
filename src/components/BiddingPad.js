@@ -266,7 +266,7 @@ export default function BiddingPad({
                       className={`group relative p-2.5 rounded-2xl flex flex-col items-center justify-center transition-all cursor-pointer ${
                         disabled
                           ? "bg-[#ece8df] text-slate-400 border border-[#dcd6c8] opacity-50 cursor-not-allowed"
-                          : "bg-gradient-to-b from-white via-[#faf9f5] to-[#f0ece1] hover:to-[#e8e2d4] text-[#121417] border border-[#d8d1c0] border-b-[3px] border-b-[#b8af9c] active:translate-y-0.5 active:border-b-[1px] shadow-[0_2px_4px_rgba(0,0,0,0.04)] hover:shadow-md"
+                          : "bg-gradient-to-b from-white via-[#faf9f5] to-[#f0ece1] hover:to-[#e8e2d4] text-[#121417] border border-[#d8d1c0] hover:border-[#124032]/40 border-b-[3px] border-b-[#b8af9c] active:translate-y-0.5 active:border-b-[1px] shadow-[0_2px_5px_rgba(0,0,0,0.04)] hover:shadow-md"
                       }`}
                       title={
                         isWinning
@@ -276,10 +276,10 @@ export default function BiddingPad({
                           : inc.subtitle
                       }
                     >
-                      <span className="text-sm font-bold font-mono leading-none text-[#124032] group-hover:scale-105 transition-transform">
+                      <span className="text-sm font-black font-mono leading-none text-[#124032] group-hover:scale-110 transition-transform">
                         {inc.label}
                       </span>
-                      <span className="text-[9px] text-[#767c84] mt-1 font-mono font-semibold">
+                      <span className="text-[9px] text-[#767c84] mt-1 font-mono font-bold">
                         {formatLakhsAndCrores(nextTotal, true)}
                       </span>
                     </button>
@@ -290,9 +290,9 @@ export default function BiddingPad({
 
             {/* Hover preview information strip */}
             {hoveredInc && !isWinning && !isOptedOut && (
-              <div className="mt-2 text-[10px] font-mono bg-[#f4f1e8] text-[#555a60] px-2.5 py-1 rounded-lg border border-[#dfd9cb] flex items-center justify-between">
-                <span>Paddle {hoveredInc.label}: New bid will be <strong>{formatLakhsAndCrores(currentBid + hoveredInc.amount, false)}</strong></span>
-                <span>Purse after: <strong>{formatLakhsAndCrores(Math.max(0, myBudget - (currentBid + hoveredInc.amount)), true)}</strong></span>
+              <div className="mt-2 text-[10px] font-mono bg-[#f4f1e8] text-[#555a60] px-3 py-1.5 rounded-xl border border-[#dfd9cb] flex items-center justify-between shadow-inner">
+                <span>Paddle {hoveredInc.label}: New bid will be <strong className="text-[#124032]">{formatLakhsAndCrores(currentBid + hoveredInc.amount, false)}</strong></span>
+                <span>Purse after: <strong className="text-[#124032]">{formatLakhsAndCrores(Math.max(0, myBudget - (currentBid + hoveredInc.amount)), true)}</strong></span>
               </div>
             )}
 
@@ -305,12 +305,12 @@ export default function BiddingPad({
                     onOptOut(true);
                   }}
                   disabled={isLocked || isWinning || !onOptOut}
-                  className={`w-full py-2 px-3 rounded-xl font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 border shadow-2xs cursor-pointer ${
+                  className={`w-full py-2.5 px-3.5 rounded-xl font-mono text-xs font-bold transition-all flex items-center justify-center gap-2 border shadow-2xs cursor-pointer ${
                     isWinning
                       ? "bg-[#f5f2e9] text-[#8c8577] border-[#dcd6c8] cursor-not-allowed opacity-75"
                       : isLocked
                       ? "bg-[#ece8df] text-[#8c8577] border-[#dcd6c8] cursor-not-allowed opacity-50"
-                      : "bg-gradient-to-b from-[#fffaf7] to-[#fdede7] hover:from-[#fdede7] hover:to-[#fbdad0] text-rose-800 border-rose-200 border-b-2 border-b-rose-300 hover:border-rose-400 active:translate-y-0.5 active:border-b"
+                      : "bg-gradient-to-b from-[#fffaf7] via-[#fdede7] to-[#fae0d7] hover:from-[#fdede7] hover:to-[#f7d3c8] text-rose-900 border-rose-200 border-b-[3px] border-b-rose-300 hover:border-rose-400 active:translate-y-0.5 active:border-b"
                   }`}
                   title={
                     isWinning
@@ -325,7 +325,7 @@ export default function BiddingPad({
                       : "Back Off / No Call (Fold This Lot)"}
                   </span>
                   {!isWinning && !isLocked && (
-                    <span className="text-[10px] text-rose-600/80 font-normal hidden sm:inline">
+                    <span className="text-[10px] text-rose-700/80 font-normal hidden sm:inline">
                       — Can jump back in anytime!
                     </span>
                   )}
@@ -344,12 +344,12 @@ export default function BiddingPad({
             <button
               onClick={handleHammerClick}
               disabled={isLocked}
-              className={`w-full py-3.5 px-4 rounded-2xl font-bold text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 cursor-pointer ${
+              className={`w-full py-3.5 px-4 rounded-2xl font-black text-xs uppercase tracking-wider transition-all flex items-center justify-center gap-2.5 cursor-pointer ${
                 isLocked
                   ? "bg-[#e5e0d3] text-[#8c8577] cursor-not-allowed border border-[#d0c9b8]"
                   : hasBids
-                  ? "bg-gradient-to-b from-[#185341] to-[#0e3328] hover:from-[#1b5e4a] hover:to-[#103a2e] text-white border border-[#1b5e4a] border-b-4 border-b-[#071c15] shadow-[0_6px_16px_rgba(18,64,50,0.3)] active:translate-y-1 active:border-b-0"
-                  : "bg-gradient-to-b from-[#92400e] to-[#712b06] hover:from-[#a14b10] hover:to-[#833309] text-white border border-[#a14b10] border-b-4 border-b-[#451802] shadow-[0_6px_16px_rgba(146,64,14,0.3)] active:translate-y-1 active:border-b-0"
+                  ? "bg-gradient-to-b from-[#185341] via-[#124032] to-[#0a261e] hover:from-[#1d634e] hover:to-[#0f382c] text-white border border-[#1b5e4a] border-b-4 border-b-[#051711] shadow-[0_8px_20px_rgba(18,64,50,0.35)] active:translate-y-1 active:border-b-0"
+                  : "bg-gradient-to-b from-[#854d0e] via-[#713f12] to-[#451a03] hover:from-[#9a5b15] hover:to-[#552304] text-white border border-[#9a5b15] border-b-4 border-b-[#2e0e01] shadow-[0_8px_20px_rgba(133,77,14,0.35)] active:translate-y-1 active:border-b-0"
               }`}
             >
               <GavelIcon className="w-5 h-5" isStriking={isStriking} />

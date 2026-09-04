@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 :root {
-  --background: #070b14;
-  --foreground: #f8fafc;
+  --background: #f6f5ef;
+  --foreground: #121417;
+  --primary-green: #124032;
+  --primary-gold: #d4be8c;
 }
 
 @theme inline {
@@ -18,19 +20,40 @@ body {
   overflow-x: hidden;
 }
 
-/* Sleek modern scrollbars */
+/* Luxury Editorial warm scrollbars */
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(18, 64, 50, 0.03);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(18, 64, 50, 0.18);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: rgba(18, 64, 50, 0.35);
+}
+
+/* Luxury micro-animations */
+@keyframes goldShimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-gold-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(212, 190, 140, 0) 0%,
+    rgba(212, 190, 140, 0.25) 50%,
+    rgba(212, 190, 140, 0) 100%
+  );
+  background-size: 200% 100%;
+  animation: goldShimmer 3s infinite ease-in-out;
 }
 

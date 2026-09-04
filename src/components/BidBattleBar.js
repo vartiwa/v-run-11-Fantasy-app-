@@ -29,13 +29,13 @@ export default function BidBattleBar({
 
   return (
     <div
-      className={`w-full rounded-3xl p-3.5 select-none transition-all duration-300 relative overflow-hidden border shadow-[0_2px_4px_rgba(0,0,0,0.02),0_10px_24px_rgba(0,0,0,0.04)] ${
+      className={`w-full rounded-3xl p-3.5 select-none transition-all duration-300 relative overflow-hidden border-2 shadow-[0_2px_4px_rgba(0,0,0,0.02),0_12px_28px_rgba(0,0,0,0.04)] ${
         wasOutbid
-          ? "bg-gradient-to-r from-rose-50 via-amber-50 to-rose-50 border-rose-400 ring-2 ring-rose-400/30 animate-pulse"
+          ? "bg-gradient-to-r from-rose-50 via-amber-50 to-rose-50 border-rose-500 ring-4 ring-rose-500/20 animate-pulse"
           : isOptedOut
           ? "bg-gradient-to-r from-amber-50 via-white to-amber-50 border-amber-300 ring-1 ring-amber-400/20"
           : isMyTeamLeading
-          ? "bg-gradient-to-r from-[#eef7f2] via-[#e4f2ea] to-[#eef7f2] border-[#7fc49c] ring-1 ring-[#124032]/20"
+          ? "bg-gradient-to-r from-[#eef7f2] via-[#e4f2ea] to-[#eef7f2] border-[#7fc49c] ring-2 ring-[#124032]/25 shadow-[0_0_20px_rgba(18,64,50,0.08)]"
           : "bg-gradient-to-r from-white via-[#fcfbf7] to-[#f7f5ee] border-[#dcd6c8]"
       }`}
     >
@@ -81,9 +81,9 @@ export default function BidBattleBar({
           <div
             className={`w-11 h-11 rounded-2xl flex items-center justify-center font-black text-base shadow-xs border transition-all duration-300 shrink-0 ${
               isMyTeamLeading
-                ? "bg-[#124032] text-white border-[#185341] shadow-[0_0_12px_rgba(18,64,50,0.25)] scale-105"
+                ? "bg-gradient-to-b from-[#185341] to-[#0e3328] text-white border-[#185341] shadow-[0_0_16px_rgba(18,64,50,0.3)] scale-105"
                 : hasBids
-                ? "bg-[#fbf5e6] text-[#5c4308] border-[#d4be8c]"
+                ? "bg-gradient-to-b from-[#fbf5e6] to-[#eddcb7] text-[#5c4308] border-[#d4be8c]"
                 : "bg-[#f4f1e8] text-[#8c8577] border-[#ded8cb]"
             }`}
           >
@@ -147,20 +147,23 @@ export default function BidBattleBar({
         </div>
       </div>
 
-      {/* Dynamic Escalation Progress Bar */}
-      <div className="w-full bg-[#e8e2d4] h-2 rounded-full mt-2.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]">
+      {/* Dynamic Escalation Progress Bar with Milestone Markers */}
+      <div className="relative w-full bg-[#e8e2d4] h-2.5 rounded-full mt-2.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]">
         <div
-          className={`h-full rounded-full transition-all duration-500 ease-out ${
+          className={`h-full rounded-full transition-all duration-500 ease-out relative ${
             isMyTeamLeading
               ? "bg-gradient-to-r from-[#185341] via-[#248166] to-[#124032]"
               : hasBids
-              ? "bg-gradient-to-r from-amber-600 to-amber-500"
+              ? "bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600"
               : "bg-slate-300"
           }`}
           style={{
             width: `${progressPercent}%`,
           }}
-        />
+        >
+          {/* Shimmer on progress */}
+          <div className="absolute inset-0 bg-white/20 animate-pulse" />
+        </div>
       </div>
     </div>
   );
