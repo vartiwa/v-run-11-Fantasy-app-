@@ -27,6 +27,18 @@ export default function CircularTimer({
     return `${m.toString().padStart(2, "0")}:${s.toString().padStart(2, "0")}`;
   };
 
+  // Generate 12 radial chronograph tick marks
+  const tickMarks = Array.from({ length: 12 }, (_, i) => {
+    const angle = (i * 30 * Math.PI) / 180;
+    const rInner = radius - 7;
+    const rOuter = radius - 3;
+    const x1 = size / 2 + rInner * Math.cos(angle);
+    const y1 = size / 2 + rInner * Math.sin(angle);
+    const x2 = size / 2 + rOuter * Math.cos(angle);
+    const y2 = size / 2 + rOuter * Math.sin(angle);
+    return { x1, y1, x2, y2, isQuarter: i % 3 === 0 };
+  });
+
   return (
     <div className="relative w-full bg-gradient-to-b from-white via-[#fdfcf9] to-[#f8f6f0] border border-[#dcd6c8] rounded-3xl p-4 flex flex-col justify-between shadow-[0_2px_4px_rgba(0,0,0,0.02),0_10px_24px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] select-none text-[#121417]">
       {/* Top Header */}
@@ -35,7 +47,7 @@ export default function CircularTimer({
           <span
             className={`w-2.5 h-2.5 rounded-full shadow-xs ${
               isTimeUp
-                ? "bg-rose-600"
+                ? "bg-rose-600 animate-ping"
                 : isWarning
                 ? "bg-amber-500 animate-ping"
                 : "bg-[#124032]"
@@ -47,9 +59,9 @@ export default function CircularTimer({
         </div>
 
         <span
-          className={`text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-xs ${
+          className={`text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-xs transition-colors ${
             isTimeUp
-              ? "bg-amber-100 text-amber-900 border border-amber-300 animate-pulse"
+              ? "bg-rose-100 text-rose-900 border border-rose-300 animate-pulse"
               : isWarning
               ? "bg-amber-100 text-amber-900 border border-amber-300 animate-pulse"
               : "bg-[#eef5f1] text-[#124032] border border-[#c3ded0]"
@@ -73,6 +85,20 @@ export default function CircularTimer({
               strokeWidth={strokeWidth}
               fill="transparent"
             />
+
+            {/* Precision Chronometer Radial Tick Marks */}
+            {tickMarks.map((tick, i) => (
+              <line
+                key={i}
+                x1={tick.x1}
+                y1={tick.y1}
+                x2={tick.x2}
+                y2={tick.y2}
+                stroke={tick.isQuarter ? "#a8a29e" : "#d6d3d1"}
+                strokeWidth={tick.isQuarter ? 1.5 : 1}
+              />
+            ))}
+
             {/* Animated Active Progress Arc */}
             <circle
               cx={size / 2}
@@ -92,7 +118,7 @@ export default function CircularTimer({
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span
               className={`text-2xl font-bold tracking-tight ${
-                isTimeUp ? "text-rose-600" : isWarning ? "text-amber-600" : "text-[#121417]"
+                isTimeUp ? "text-rose-600 animate-pulse" : isWarning ? "text-amber-600" : "text-[#121417]"
               } ${oswald.className}`}
             >
               {formatTime(secondsLeft)}

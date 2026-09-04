@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { Oswald } from "next/font/google";
 import PlayerAvatar from "./PlayerAvatar";
 import { formatLakhsAndCrores } from "@/lib/formatCurrency";
+import { RupeeCoinIcon } from "./AuctionIcons";
 
 const oswald = Oswald({ subsets: ["latin"], weight: ["500", "600", "700"] });
 
@@ -22,6 +24,15 @@ export default function PlayerCard({
   const isBowler = role === "Bowler";
   const isWK = role === "Wicket Keeper";
 
+  const [bidPulse, setBidPulse] = useState(false);
+
+  // Trigger brief visual pulse when bid rises
+  useEffect(() => {
+    setBidPulse(true);
+    const t = setTimeout(() => setBidPulse(false), 600);
+    return () => clearTimeout(t);
+  }, [currentBid]);
+
   return (
     <div className="relative w-full bg-gradient-to-b from-white via-[#fdfcf9] to-[#f8f6f0] border border-[#dcd6c8] rounded-3xl p-5 flex flex-col justify-between select-none shadow-[0_2px_4px_rgba(0,0,0,0.02),0_12px_28px_rgba(0,0,0,0.05),0_24px_48px_rgba(0,0,0,0.03),inset_0_1px_0_rgba(255,255,255,0.9)] ring-1 ring-black/[0.03] flex-1 min-h-[380px] text-[#121417]">
       {/* Decorative Corner Rivets */}
@@ -39,7 +50,7 @@ export default function PlayerCard({
           </div>
           {isOverseas && (
             <span className="text-[10px] font-mono font-bold text-amber-900 bg-gradient-to-b from-amber-100 to-amber-200 border border-amber-300 px-2 py-0.5 rounded-lg shadow-xs">
-              OVERSEAS
+              ✈ OVERSEAS
             </span>
           )}
           <span className="text-[10px] font-mono font-bold text-[#124032] bg-[#eef5f1] border border-[#c3ded0] px-2 py-0.5 rounded-lg shadow-xs uppercase">
@@ -74,7 +85,7 @@ export default function PlayerCard({
 
         <div className="relative flex-1 min-w-0">
           <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#124032]/10 border border-[#124032]/20 text-[10px] font-mono uppercase tracking-widest text-[#124032] font-bold mb-1">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#124032]" />
+            <span className="w-1.5 h-1.5 rounded-full bg-[#124032] animate-pulse" />
             <span>LOT ON THE BLOCK</span>
           </div>
 
@@ -93,7 +104,7 @@ export default function PlayerCard({
 
       {/* 3D Tactile Stats Chips */}
       <div className="grid grid-cols-3 gap-2.5 my-1">
-        <div className="bg-gradient-to-b from-white to-[#f7f5ee] border border-[#dfd9cb] border-b-2 border-b-[#c9c2b2] rounded-2xl p-2.5 text-center shadow-[0_2px_4px_rgba(0,0,0,0.03)]">
+        <div className="bg-gradient-to-b from-white to-[#f7f5ee] border border-[#dfd9cb] border-b-2 border-b-[#c9c2b2] rounded-2xl p-2.5 text-center shadow-[0_2px_4px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 transition-transform">
           <span className="text-[10px] font-mono font-bold uppercase text-[#767c84] block">
             {isBowler ? "WICKETS" : "T20 RUNS"}
           </span>
@@ -102,7 +113,7 @@ export default function PlayerCard({
           </span>
         </div>
 
-        <div className="bg-gradient-to-b from-white to-[#f7f5ee] border border-[#dfd9cb] border-b-2 border-b-[#c9c2b2] rounded-2xl p-2.5 text-center shadow-[0_2px_4px_rgba(0,0,0,0.03)]">
+        <div className="bg-gradient-to-b from-white to-[#f7f5ee] border border-[#dfd9cb] border-b-2 border-b-[#c9c2b2] rounded-2xl p-2.5 text-center shadow-[0_2px_4px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 transition-transform">
           <span className="text-[10px] font-mono font-bold uppercase text-[#767c84] block">
             {isBowler ? "ECONOMY" : "STRIKE RATE"}
           </span>
@@ -111,7 +122,7 @@ export default function PlayerCard({
           </span>
         </div>
 
-        <div className="bg-gradient-to-b from-white to-[#f7f5ee] border border-[#dfd9cb] border-b-2 border-b-[#c9c2b2] rounded-2xl p-2.5 text-center shadow-[0_2px_4px_rgba(0,0,0,0.03)]">
+        <div className="bg-gradient-to-b from-white to-[#f7f5ee] border border-[#dfd9cb] border-b-2 border-b-[#c9c2b2] rounded-2xl p-2.5 text-center shadow-[0_2px_4px_rgba(0,0,0,0.03)] hover:-translate-y-0.5 transition-transform">
           <span className="text-[10px] font-mono font-bold uppercase text-[#767c84] block">
             {isBowler ? "AVERAGE" : isWK ? "DISMISSALS" : "AVERAGE"}
           </span>
@@ -121,11 +132,18 @@ export default function PlayerCard({
         </div>
       </div>
 
-      {/* Engraved High Bid Plaque with Metallic Brass Rim */}
-      <div className="relative bg-gradient-to-b from-[#f7f3e6] via-[#ede6d1] to-[#e4dcc7] border-2 border-[#d0c6ad] rounded-2xl p-3.5 flex items-center justify-between mt-2 shadow-[inset_0_2px_6px_rgba(0,0,0,0.06),0_2px_5px_rgba(0,0,0,0.04)]">
+      {/* Engraved High Bid Plaque with Dynamic Aura Pulse */}
+      <div
+        className={`relative bg-gradient-to-b from-[#f7f3e6] via-[#ede6d1] to-[#e4dcc7] border-2 rounded-2xl p-3.5 flex items-center justify-between mt-2 shadow-[inset_0_2px_6px_rgba(0,0,0,0.06),0_2px_5px_rgba(0,0,0,0.04)] transition-all duration-300 ${
+          bidPulse
+            ? "border-amber-400 ring-4 ring-amber-400/20 scale-[1.01]"
+            : "border-[#d0c6ad]"
+        }`}
+      >
         <div>
           <span className="text-[10px] font-mono uppercase tracking-widest text-[#767c84] block font-black flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
+            <span className="w-2 h-2 rounded-full bg-amber-500 animate-ping" />
+            <RupeeCoinIcon className="w-3.5 h-3.5" />
             <span>CURRENT HIGH BID</span>
           </span>
           <span className="text-xs font-mono text-[#555a60] truncate block mt-0.5 max-w-[210px]">

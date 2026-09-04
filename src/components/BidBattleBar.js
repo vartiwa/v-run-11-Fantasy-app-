@@ -1,99 +1,166 @@
 "use client";
 
 import { Oswald } from "next/font/google";
+import { formatLakhsAndCrores } from "@/lib/formatCurrency";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["400", "700"] });
+const oswald = Oswald({ subsets: ["latin"], weight: ["600", "700"] });
 
 export default function BidBattleBar({
   highestBidder = "No Bids Yet",
   currentBid = 200,
   basePrice = 200,
   myTeamName = "",
+  wasOutbid = false,
+  onDismissOutbid,
+  optOutCount = 0,
+  isOptedOut = false,
+  onJumpBackIn,
 }) {
   const hasBids = highestBidder && highestBidder !== "No Bids Yet";
   const isMyTeamLeading = hasBids && highestBidder === myTeamName;
-  const teamLeadName = hasBids ? highestBidder.split(" - ")[0] : "Awaiting Bids";
+  const teamLeadName = hasBids ? highestBidder.split(" - ")[0] : "Awaiting Opening Nomination";
+  const managerName = hasBids && highestBidder.includes(" - ") ? highestBidder.split(" - ")[1] : null;
 
-  const bidIncrease = currentBid - basePrice;
-  const bidMultiplier = basePrice > 0 ? (currentBid / basePrice).toFixed(1) : 1;
+  const bidIncrease = Math.max(0, currentBid - basePrice);
+  const bidMultiplier = basePrice > 0 ? (currentBid / basePrice).toFixed(1) : "1.0";
+
+  // Progress relative to base price (caps at 100% when 3x base)
+  const progressPercent = Math.min(100, Math.max(12, (currentBid / (basePrice * 3)) * 100));
 
   return (
-    <div className="w-full bg-gradient-to-r from-slate-900/90 via-[#131b2e]/90 to-slate-900/90 border border-white/10 rounded-3xl p-3 shadow-xl backdrop-blur-xl relative overflow-hidden select-none">
-      {/* Background ambient lighting */}
-      <div
-        className={`absolute -right-10 -top-10 w-36 h-36 rounded-full blur-2xl pointer-events-none transition-colors duration-700 ${
-          isMyTeamLeading ? "bg-emerald-500/20" : hasBids ? "bg-[#EF4123]/20" : "bg-sky-500/10"
-        }`}
-      ></div>
+    <div
+      className={`w-full rounded-3xl p-3.5 select-none transition-all duration-300 relative overflow-hidden border shadow-[0_2px_4px_rgba(0,0,0,0.02),0_10px_24px_rgba(0,0,0,0.04)] ${
+        wasOutbid
+          ? "bg-gradient-to-r from-rose-50 via-amber-50 to-rose-50 border-rose-400 ring-2 ring-rose-400/30 animate-pulse"
+          : isOptedOut
+          ? "bg-gradient-to-r from-amber-50 via-white to-amber-50 border-amber-300 ring-1 ring-amber-400/20"
+          : isMyTeamLeading
+          ? "bg-gradient-to-r from-[#eef7f2] via-[#e4f2ea] to-[#eef7f2] border-[#7fc49c] ring-1 ring-[#124032]/20"
+          : "bg-gradient-to-r from-white via-[#fcfbf7] to-[#f7f5ee] border-[#dcd6c8]"
+      }`}
+    >
+      {/* Dynamic State Alert Ribbon if Outbid */}
+      {wasOutbid && (
+        <div className="flex items-center justify-between bg-rose-600 text-white text-[11px] font-mono font-bold px-3 py-1 rounded-xl mb-2 shadow-xs">
+          <div className="flex items-center gap-2">
+            <span className="animate-bounce">⚡</span>
+            <span>YOU WERE OUTBID! {teamLeadName} holds current high bid at {formatLakhsAndCrores(currentBid, true)}</span>
+          </div>
+          {onDismissOutbid && (
+            <button
+              onClick={onDismissOutbid}
+              className="text-white/80 hover:text-white text-xs cursor-pointer font-bold ml-2"
+            >
+              ✕
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* Dynamic State Alert Ribbon if Opted Out */}
+      {isOptedOut && !wasOutbid && (
+        <div className="flex items-center justify-between bg-gradient-to-r from-[#854d0e] to-[#713f12] text-white text-[11px] font-mono font-bold px-3 py-1.5 rounded-xl mb-2 shadow-xs border border-amber-600/40">
+          <div className="flex items-center gap-2">
+            <span>✋</span>
+            <span>YOU HAVE BACKED OFF — Your paddle is parked for this lot</span>
+          </div>
+          {onJumpBackIn && (
+            <button
+              onClick={onJumpBackIn}
+              className="px-2.5 py-0.5 bg-white hover:bg-amber-50 text-amber-900 rounded-lg text-[10px] font-black uppercase tracking-wider cursor-pointer shadow-2xs active:translate-y-0.5 transition-all"
+            >
+              ⚡ Jump Back In!
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 relative z-10">
-        {/* Leader Info */}
+        {/* Leader Franchise & Status */}
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div
-            className={`w-10 h-10 rounded-xl flex items-center justify-center font-black text-sm shadow-md border ${
+            className={`w-11 h-11 rounded-2xl flex items-center justify-center font-black text-base shadow-xs border transition-all duration-300 shrink-0 ${
               isMyTeamLeading
-                ? "bg-emerald-500 text-white border-emerald-300 shadow-[0_0_15px_rgba(16,185,129,0.5)]"
+                ? "bg-[#124032] text-white border-[#185341] shadow-[0_0_12px_rgba(18,64,50,0.25)] scale-105"
                 : hasBids
-                ? "bg-[#EF4123] text-white border-[#FF6B00] shadow-[0_0_15px_rgba(239,65,35,0.4)]"
-                : "bg-slate-800 text-slate-400 border-white/10"
+                ? "bg-[#fbf5e6] text-[#5c4308] border-[#d4be8c]"
+                : "bg-[#f4f1e8] text-[#8c8577] border-[#ded8cb]"
             }`}
           >
-            {isMyTeamLeading ? "👑" : hasBids ? "⚡" : "⏳"}
+            {isMyTeamLeading ? "👑" : hasBids ? "🏏" : "⏳"}
           </div>
 
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-[9px] uppercase font-black tracking-widest text-slate-400">
-                Current Bid Leader
+          <div className="min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-[#767c84]">
+                Current High Paddle
               </span>
-              {isMyTeamLeading && (
-                <span className="text-[8px] bg-emerald-400/20 text-emerald-300 border border-emerald-400/40 px-1.5 py-0.2 rounded font-black">
-                  YOUR FRANCHISE
+              {isMyTeamLeading ? (
+                <span className="text-[9px] font-mono bg-[#124032] text-white px-2 py-0.5 rounded-md font-black tracking-wider uppercase shadow-2xs">
+                  ★ YOUR FRANCHISE LEADS
+                </span>
+              ) : hasBids ? (
+                <span className="text-[9px] font-mono bg-amber-100 text-amber-900 border border-amber-300 px-1.5 py-0.2 rounded font-bold">
+                  ACTIVE LEADER
+                </span>
+              ) : null}
+
+              {optOutCount > 0 && (
+                <span className="text-[9px] font-mono bg-[#ece7db] text-[#5c4308] border border-[#d8d1c0] px-1.5 py-0.2 rounded font-bold">
+                  ✋ {optOutCount} Backed Off
                 </span>
               )}
             </div>
-            <p className={`text-base font-black uppercase tracking-wide truncate ${isMyTeamLeading ? "text-emerald-400" : "text-white"}`}>
+
+            <p className={`text-base font-bold uppercase tracking-wide truncate ${isMyTeamLeading ? "text-[#124032]" : "text-[#121417]"}`}>
               {teamLeadName}
+              {managerName && (
+                <span className="text-xs font-mono font-normal text-[#767c84] ml-1.5 lowercase">
+                  ({managerName})
+                </span>
+              )}
             </p>
           </div>
         </div>
 
-        {/* Dynamic Bid Growth Meter */}
-        <div className="flex items-center gap-4 w-full sm:w-auto justify-end">
-          <div className="text-right">
-            <span className="text-[9px] text-slate-500 uppercase font-bold tracking-widest block">
+        {/* Dynamic Bid Growth Meter & Leading Amount */}
+        <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-2 sm:pt-0 border-[#e8e2d4]">
+          <div className="text-left sm:text-right">
+            <span className="text-[9px] text-[#767c84] uppercase font-mono font-bold tracking-wider block">
               Bid Surge
             </span>
-            <span className={`text-sm font-black ${bidIncrease > 0 ? "text-amber-400" : "text-slate-400"}`}>
-              {bidIncrease > 0 ? `+₹${bidIncrease}L (${bidMultiplier}x Base)` : "At Base Price"}
+            <span className={`text-xs font-mono font-bold ${bidIncrease > 0 ? "text-amber-800" : "text-[#767c84]"}`}>
+              {bidIncrease > 0 ? `+${formatLakhsAndCrores(bidIncrease, true)} (${bidMultiplier}x Base)` : "At Opening Base"}
             </span>
           </div>
 
-          <div className="h-8 w-[1px] bg-white/10 hidden sm:block"></div>
+          <div className="h-8 w-[1px] bg-[#d8d1c0] hidden sm:block"></div>
 
           <div className="text-right">
-            <span className="text-[9px] text-slate-500 uppercase font-bold tracking-widest block">
-              Leading Amount
+            <span className="text-[9px] text-[#767c84] uppercase font-mono font-bold tracking-wider block">
+              Leading High Bid
             </span>
-            <span className={`text-xl font-black text-[#EF4123] ${oswald.className}`}>
-              ₹{currentBid}L
+            <span className={`text-2xl font-bold tracking-tight text-[#121417] ${oswald.className}`}>
+              {formatLakhsAndCrores(currentBid, false)}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Surge Progress Bar */}
-      <div className="w-full bg-black/40 h-1.5 rounded-full mt-3 overflow-hidden border border-white/5">
+      {/* Dynamic Escalation Progress Bar */}
+      <div className="w-full bg-[#e8e2d4] h-2 rounded-full mt-2.5 overflow-hidden shadow-[inset_0_1px_2px_rgba(0,0,0,0.08)]">
         <div
-          className={`h-full rounded-full transition-all duration-500 ${
+          className={`h-full rounded-full transition-all duration-500 ease-out ${
             isMyTeamLeading
-              ? "bg-gradient-to-r from-emerald-500 to-teal-400 shadow-[0_0_10px_#10b981]"
-              : "bg-gradient-to-r from-[#EF4123] to-[#FF6B00] shadow-[0_0_10px_#ef4123]"
+              ? "bg-gradient-to-r from-[#185341] via-[#248166] to-[#124032]"
+              : hasBids
+              ? "bg-gradient-to-r from-amber-600 to-amber-500"
+              : "bg-slate-300"
           }`}
           style={{
-            width: `${Math.min(100, Math.max(15, (currentBid / (basePrice * 2.5)) * 100))}%`,
+            width: `${progressPercent}%`,
           }}
-        ></div>
+        />
       </div>
     </div>
   );

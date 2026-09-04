@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Oswald } from "next/font/google";
 import AudioVisualizer from "./AudioVisualizer";
+import { formatLakhsAndCrores } from "@/lib/formatCurrency";
 
 const oswald = Oswald({ subsets: ["latin"], weight: ["400", "700"] });
 
@@ -90,7 +91,7 @@ export default function SidebarDock({
               </p>
               {hasJoined && (
                 <span className="text-[10px] text-[#A3E635] font-bold">
-                  ₹{myBudget.toLocaleString()}L Purse
+                  {formatLakhsAndCrores(myBudget, true)} Purse
                 </span>
               )}
             </div>

@@ -16,6 +16,9 @@ import LandingPage from "@/components/LandingPage";
 import PrivateRoomModal from "@/components/PrivateRoomModal";
 import JoinCodeModal from "@/components/JoinCodeModal";
 import ActivityFeed from "@/components/ActivityFeed";
+import BidBattleBar from "@/components/BidBattleBar";
+import SoundTestModal from "@/components/SoundTestModal";
+import { SoundSpeakerIcon, AudioEqualizer } from "@/components/AuctionIcons";
 import { playersList } from "@/data/players";
 import { sounds } from "@/lib/soundEffects";
 import { formatLakhsAndCrores } from "@/lib/formatCurrency";
@@ -39,14 +42,29 @@ export default function Home() {
   // Multi-Room State
   const [roomId, setRoomId] = useState("MAIN-ARENA");
   const [roomCapacity, setRoomCapacity] = useState(8);
-  const [roomAllowPlayerHammer, setRoomAllowPlayerHammer] = useState(true);
+  const [roomAllowPlayerHammer, setRoomAllowPlayerHammer] = useState(false);
+  const [rotateAuctioneer, setRotateAuctioneer] = useState(false);
+  const [isAuctioneerBusy, setIsAuctioneerBusy] = useState(false);
+  const [optOuts, setOptOuts] = useState({});
+  const [autoNextSeconds, setAutoNextSeconds] = useState(null);
 
   useEffect(() => {
     if (!roomId) return;
-    const unsub = onValue(ref(db, `rooms/${roomId}/allowPlayerHammer`), (snap) => {
+    const unsubHammer = onValue(ref(db, `rooms/${roomId}/allowPlayerHammer`), (snap) => {
       if (snap.exists()) setRoomAllowPlayerHammer(!!snap.val());
     });
-    return () => unsub();
+    const unsubRotate = onValue(ref(db, `rooms/${roomId}/rotateAuctioneer`), (snap) => {
+      if (snap.exists()) setRotateAuctioneer(!!snap.val());
+    });
+    const unsubBusy = onValue(ref(db, `rooms/${roomId}/auctioneerBusy`), (snap) => {
+      if (snap.exists()) setIsAuctioneerBusy(!!snap.val());
+      else setIsAuctioneerBusy(false);
+    });
+    return () => {
+      unsubHammer();
+      unsubRotate();
+      unsubBusy();
+    };
   }, [roomId]);
 
   // Ensure seamless anonymous authentication on client mount
@@ -98,6 +116,9 @@ export default function Home() {
   const [hasJoined, setHasJoined] = useState(false);
   const [myBudget, setMyBudget] = useState(DEFAULT_BUDGET);
   const [isMuted, setIsMuted] = useState(false);
+  const [isSoundTestOpen, setIsSoundTestOpen] = useState(false);
+  const [wasOutbid, setWasOutbid] = useState(false);
+  const prevHighestBidderRef = useRef("No Bids Yet");
 
   // Active View Tab
   const [activeTab, setActiveTab] = useState("auction"); // 'auction', 'squad', or 'chat'
@@ -171,10 +192,12 @@ export default function Home() {
     return () => window.removeEventListener("resize", updateViewport);
   }, []);
 
-  // Audio countdown ticks in final 5 seconds
+  // Audio countdown ticks in final 5 seconds & Fair warning at 10s
   useEffect(() => {
     if (secondsLeft !== null && secondsLeft > 0 && secondsLeft <= 5) {
       sounds.playTick();
+    } else if (secondsLeft === 10) {
+      sounds.playFairWarning();
     }
   }, [secondsLeft]);
 
@@ -288,6 +311,22 @@ export default function Home() {
   };
 
   const handleLeaveRoom = async () => {
+    // If leaving user is the host, proactively pass host authority to next player
+    if (isHost && roomId) {
+      const teamsArr = Object.values(allTeams).filter((t) => !t.isNeutralAuctioneer && t.ownerUid !== hostUid);
+      if (teamsArr.length > 0) {
+        const nextHost = teamsArr[0];
+        if (nextHost && nextHost.ownerUid) {
+          try {
+            await set(ref(db, `rooms/${roomId}/hostUid`), nextHost.ownerUid);
+            logEvent("info", `👑 Auctioneer departed. Gavel Authority transferred to ${nextHost.managerName} (${nextHost.franchise})!`);
+          } catch (err) {
+            console.warn("Error handing over host:", err);
+          }
+        }
+      }
+    }
+
     try {
       sessionStorage.removeItem("vrun11_active_room");
       sessionStorage.removeItem("vrun11_active_team");
@@ -359,6 +398,9 @@ export default function Home() {
       onValue(ref(db, `rooms/${roomId}/global/timerEndsAt`), (s) => setTimerEndsAt(s.exists() ? s.val() : null)),
       onValue(ref(db, `rooms/${roomId}/auction`), (s) => s.exists() && setAuctionData(s.val())),
       onValue(ref(db, `rooms/${roomId}/teams`), (s) => s.exists() && setAllTeams(s.val())),
+      onValue(ref(db, `rooms/${roomId}/auction/${activePlayer.id}/optOuts`), (s) => {
+        setOptOuts(s.exists() ? s.val() : {});
+      }),
       onValue(ref(db, `rooms/${roomId}/auction/${activePlayer.id}/currentBid`), (s) => {
         const val = s.val() !== null ? s.val() : activePlayer.basePrice;
         if (prevBidRef.current > 0 && val > prevBidRef.current) {
@@ -367,9 +409,22 @@ export default function Home() {
         prevBidRef.current = val;
         setCurrentBid(val);
       }),
-      onValue(ref(db, `rooms/${roomId}/auction/${activePlayer.id}/highestBidder`), (s) =>
-        setHighestBidder(s.val() !== null ? s.val() : "No Bids Yet")
-      ),
+      onValue(ref(db, `rooms/${roomId}/auction/${activePlayer.id}/highestBidder`), (s) => {
+        const val = s.val() !== null ? s.val() : "No Bids Yet";
+        if (
+          prevHighestBidderRef.current &&
+          prevHighestBidderRef.current === teamName &&
+          val !== teamName &&
+          val !== "No Bids Yet"
+        ) {
+          sounds.playOutbid();
+          setWasOutbid(true);
+        } else if (val === teamName) {
+          setWasOutbid(false);
+        }
+        prevHighestBidderRef.current = val;
+        setHighestBidder(val);
+      }),
       onValue(ref(db, `rooms/${roomId}/teams/${teamName}/budget`), (s) =>
         setMyBudget(s.val() !== null ? s.val() : DEFAULT_BUDGET)
       ),
@@ -395,26 +450,81 @@ export default function Home() {
     return () => unsubs.forEach((unsub) => unsub());
   }, [activePlayer.id, activePlayer.basePrice, hasJoined, teamName, roomId]);
 
+  // Host Departure auto-recovery: If host leaves, designate an active manager
   useEffect(() => {
-    const TWO_HOURS = 2 * 60 * 60 * 1000;
-    const unsub = onValue(ref(db, `rooms/${roomId}/teams`), (s) => {
-      if (s.exists()) {
-        const raw = s.val() || {};
-        const active = {};
-        const nowMs = Date.now();
-        Object.entries(raw).forEach(([key, val]) => {
-          const lastActive = val?.lastActiveAt || val?.joinedAt || 0;
-          if (nowMs - lastActive < TWO_HOURS) {
-            active[key] = val;
-          }
-        });
-        setAllTeams(active);
-      } else {
-        setAllTeams({});
+    if (!roomId || !hasJoined) return;
+    const teamsArr = Object.values(allTeams);
+    if (teamsArr.length > 0 && hostUid) {
+      const hostStillPresent = teamsArr.some((t) => t.ownerUid === hostUid);
+      if (!hostStillPresent) {
+        const nextHost = teamsArr.find((t) => !t.isNeutralAuctioneer) || teamsArr[0];
+        if (nextHost && nextHost.ownerUid) {
+          set(ref(db, `rooms/${roomId}/hostUid`), nextHost.ownerUid);
+          logEvent(
+            "info",
+            `👑 Host departed. Gavel Authority transferred to ${nextHost.managerName} (${nextHost.franchise})!`
+          );
+        }
       }
-    });
-    return () => unsub();
-  }, [roomId]);
+    }
+  }, [allTeams, hostUid, roomId, hasJoined, logEvent]);
+
+  // Opt-out / Back off state helpers
+  const isOptedOut = useMemo(() => {
+    return !!optOuts[teamName];
+  }, [optOuts, teamName]);
+
+  const optOutCount = useMemo(() => {
+    return Object.keys(optOuts).length;
+  }, [optOuts]);
+
+  const handleOptOut = useCallback((optedOut) => {
+    if (!roomId || !activePlayer?.id || !teamName) return;
+    set(ref(db, `rooms/${roomId}/auction/${activePlayer.id}/optOuts/${teamName}`), optedOut ? true : null);
+    if (optedOut) {
+      logEvent("info", `✋ ${getFranchiseName(teamName)} backed off from bidding on ${activePlayer.name}`);
+    } else {
+      logEvent("info", `⚡ ${getFranchiseName(teamName)} jumped back into the bidding!`);
+    }
+  }, [roomId, activePlayer?.id, activePlayer?.name, teamName, logEvent]);
+
+  // Auctioneer Gavel rotation & authority controls
+  const handleToggleAuctioneerBusy = useCallback(() => {
+    const nextBusy = !isAuctioneerBusy;
+    set(ref(db, `rooms/${roomId}/auctioneerBusy`), nextBusy);
+    if (nextBusy) {
+      set(ref(db, `rooms/${roomId}/allowPlayerHammer`), true);
+      const hostTeam = Object.values(allTeams).find((t) => t.ownerUid === hostUid);
+      logEvent("info", `⏳ ${hostTeam?.managerName || "Auctioneer"} marked themselves BUSY / STEPPED AWAY. Hammer is open to all!`);
+    } else {
+      set(ref(db, `rooms/${roomId}/allowPlayerHammer`), false);
+      logEvent("info", `✅ Auctioneer returned and reclaimed gavel authority!`);
+    }
+  }, [roomId, isAuctioneerBusy, allTeams, hostUid, logEvent]);
+
+  const handleToggleRotateAuctioneer = useCallback(() => {
+    set(ref(db, `rooms/${roomId}/rotateAuctioneer`), !rotateAuctioneer);
+  }, [roomId, rotateAuctioneer]);
+
+  const handleTogglePlayerHammer = useCallback(() => {
+    set(ref(db, `rooms/${roomId}/allowPlayerHammer`), !roomAllowPlayerHammer);
+  }, [roomId, roomAllowPlayerHammer]);
+
+  const handlePassGavelRandomly = useCallback(() => {
+    const eligibleTeams = Object.values(allTeams).filter((t) => !t.isNeutralAuctioneer);
+    if (eligibleTeams.length < 2) {
+      return alert("Not enough players in room to rotate gavel!");
+    }
+    const otherTeams = eligibleTeams.filter((t) => t.ownerUid !== hostUid);
+    const nextHost = otherTeams.length > 0
+      ? otherTeams[Math.floor(Math.random() * otherTeams.length)]
+      : eligibleTeams[0];
+    if (nextHost && nextHost.ownerUid) {
+      set(ref(db, `rooms/${roomId}/hostUid`), nextHost.ownerUid);
+      logEvent("info", `🎲 Host passed Gavel Authority to ${nextHost.managerName} (${nextHost.franchise})!`);
+      sounds.playGavel();
+    }
+  }, [allTeams, hostUid, roomId, logEvent]);
 
   // Atomic Bidding via Firebase runTransaction (Zero collision, strictly ordered)
   const handleBid = async (amountToAdd) => {
@@ -460,8 +570,8 @@ export default function Home() {
 
         logEvent(
           "bid",
-          `⚡ ${getFranchiseName(teamName)} raised bid to ₹${finalBid}L`,
-          `${activePlayer.name} (+₹${amountToAdd}L)`
+          `⚡ ${getFranchiseName(teamName)} raised bid to ${formatLakhsAndCrores(finalBid, true)}`,
+          `${activePlayer.name} (+${formatLakhsAndCrores(amountToAdd, true)})`
         );
       }
     } catch (err) {
@@ -470,7 +580,8 @@ export default function Home() {
   };
 
   const selectPlayerForAuction = useCallback((player) => {
-    if (!isHost && hostUid) {
+    const canControl = isHost || teamName.startsWith("Auctioneer - ") || roomAllowPlayerHammer || isAuctioneerBusy;
+    if (!canControl && hostUid) {
       return alert("⚠️ Only the Room Host / Auctioneer can nominate players!");
     }
     const status = auctionData[player.id]?.status;
@@ -480,17 +591,24 @@ export default function Home() {
     set(ref(db, `rooms/${roomId}/auction/${player.id}/status`), null);
     set(ref(db, `rooms/${roomId}/auction/${player.id}/currentBid`), player.basePrice);
     set(ref(db, `rooms/${roomId}/auction/${player.id}/highestBidder`), "No Bids Yet");
+    set(ref(db, `rooms/${roomId}/auction/${player.id}/optOuts`), null);
+    setWasOutbid(false);
+    prevHighestBidderRef.current = "No Bids Yet";
     startNewTimer();
 
     logEvent(
       "info",
       `📢 ${player.name} is now on the auction block!`,
-      `Base: ₹${player.basePrice}L | ${player.role}`
+      `Base: ${formatLakhsAndCrores(player.basePrice, true)} | ${player.role}`
     );
-  }, [auctionData, logEvent, startNewTimer, roomId, isHost, hostUid]);
+  }, [auctionData, logEvent, startNewTimer, roomId, isHost, hostUid, teamName, roomAllowPlayerHammer, isAuctioneerBusy]);
 
   // Atomic Sell / Pass Handler (prevents multi-client double deduction)
   const handleSell = useCallback(async () => {
+    const canUseHammer = isHost || teamName.startsWith("Auctioneer - ") || roomAllowPlayerHammer || isAuctioneerBusy;
+    if (!canUseHammer && hostUid) {
+      return alert("⚠️ Only the Room Authority / Auctioneer can strike the gavel!");
+    }
     const auctionStatusRef = ref(db, `rooms/${roomId}/auction/${activePlayer.id}`);
     try {
       const tx = await runTransaction(auctionStatusRef, (cur) => {
@@ -513,7 +631,7 @@ export default function Home() {
 
       if (!winner || winner === "No Bids Yet" || finalizedData?.status === "unsold") {
         sounds.playUnsold();
-        logEvent("unsold", `❌ ${activePlayer.name} went UNSOLD`, `Base ₹${activePlayer.basePrice}L`);
+        logEvent("unsold", `❌ ${activePlayer.name} went UNSOLD`, `Base ${formatLakhsAndCrores(activePlayer.basePrice, true)}`);
         return;
       }
 
@@ -545,8 +663,8 @@ export default function Home() {
 
       logEvent(
         "sold",
-        `🔨 SOLD! ${getFranchiseName(winner)} bought ${activePlayer.name} for ₹${finalPrice}L!`,
-        `Base ₹${activePlayer.basePrice}L`
+        `🔨 SOLD! ${getFranchiseName(winner)} bought ${activePlayer.name} for ${formatLakhsAndCrores(finalPrice, true)}!`,
+        `Base ${formatLakhsAndCrores(activePlayer.basePrice, true)}`
       );
     } catch (err) {
       console.error("Sale transaction failed:", err);
@@ -560,7 +678,8 @@ export default function Home() {
   // Timer clock is open for everyone; only Auctioneer striking the gavel concludes the lot!
 
   const handleNextPlayer = useCallback(() => {
-    if (!isHost && hostUid) {
+    const canControl = isHost || teamName.startsWith("Auctioneer - ") || roomAllowPlayerHammer || isAuctioneerBusy;
+    if (!canControl && hostUid) {
       return alert("⚠️ Only the Room Host / Auctioneer can advance to the next player!");
     }
     const available = playersList.filter((p) => {
@@ -573,14 +692,59 @@ export default function Home() {
     });
 
     if (available.length > 0) {
+      // If rotate auctioneer is enabled, pick a random active manager for the next round
+      if (rotateAuctioneer) {
+        const eligibleTeams = Object.values(allTeams).filter((t) => !t.isNeutralAuctioneer);
+        if (eligibleTeams.length > 1) {
+          const otherTeams = eligibleTeams.filter((t) => t.ownerUid !== hostUid);
+          const nextHost = otherTeams.length > 0
+            ? otherTeams[Math.floor(Math.random() * otherTeams.length)]
+            : eligibleTeams[0];
+          if (nextHost && nextHost.ownerUid) {
+            set(ref(db, `rooms/${roomId}/hostUid`), nextHost.ownerUid);
+            logEvent("info", `🎲 Gavel passed to ${nextHost.managerName} (${nextHost.franchise}) for the next round!`);
+          }
+        }
+      }
+
       selectPlayerForAuction(available[0]);
     } else {
       alert("All lots in this category are completed! Select another role from the pool.");
     }
-  }, [auctionData, filterRole, activePlayer.id, selectPlayerForAuction, isHost, hostUid]);
+  }, [auctionData, filterRole, activePlayer.id, selectPlayerForAuction, isHost, hostUid, teamName, roomAllowPlayerHammer, isAuctioneerBusy, rotateAuctioneer, allTeams, roomId, logEvent]);
+
+  // Automatic countdown transition to next lot when hammer strikes
+  useEffect(() => {
+    if (isSold || isUnsold) {
+      setAutoNextSeconds(4);
+      const timer = setInterval(() => {
+        setAutoNextSeconds((prev) => {
+          if (prev === null) return null;
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      return () => clearInterval(timer);
+    } else {
+      setAutoNextSeconds(null);
+    }
+  }, [isSold, isUnsold]);
+
+  useEffect(() => {
+    if (autoNextSeconds === 0) {
+      setAutoNextSeconds(null);
+      if (isHost || (hostUid && !Object.values(allTeams).some((t) => t.ownerUid === hostUid))) {
+        handleNextPlayer();
+      }
+    }
+  }, [autoNextSeconds, isHost, hostUid, allTeams, handleNextPlayer]);
 
   const handleExtendTimer = useCallback(async () => {
-    if (!isHost && hostUid) {
+    const canControl = isHost || teamName.startsWith("Auctioneer - ") || roomAllowPlayerHammer || isAuctioneerBusy;
+    if (!canControl && hostUid) {
       return alert("⚠️ Only the Room Authority / Auctioneer can extend the clock!");
     }
     const timerSnap = await get(ref(db, `rooms/${roomId}/global/timerEndsAt`));
@@ -589,16 +753,17 @@ export default function Home() {
     await set(ref(db, `rooms/${roomId}/global/timerEndsAt`), newEnd);
     logEvent("info", "⏱️ 15s Fair Warning added by Auctioneer!");
     sounds.playTick();
-  }, [roomId, isHost, hostUid, logEvent]);
+  }, [roomId, isHost, hostUid, teamName, roomAllowPlayerHammer, isAuctioneerBusy, logEvent]);
 
   const handleResetTimer = useCallback(async () => {
-    if (!isHost && hostUid) {
+    const canControl = isHost || teamName.startsWith("Auctioneer - ") || roomAllowPlayerHammer || isAuctioneerBusy;
+    if (!canControl && hostUid) {
       return alert("⚠️ Only the Room Authority / Auctioneer can reset the clock!");
     }
     startNewTimer();
     logEvent("info", "🔄 60s Clock reset by Auctioneer!");
     sounds.playTick();
-  }, [isHost, hostUid, startNewTimer, logEvent]);
+  }, [isHost, hostUid, teamName, roomAllowPlayerHammer, isAuctioneerBusy, startNewTimer, logEvent]);
 
   const togglePlayingStatus = (player) => {
     const playingXI = squad.filter((p) => p.isPlaying);
@@ -615,7 +780,7 @@ export default function Home() {
   };
 
   const handleReleasePlayer = (player) => {
-    if (window.confirm(`Release ${player.name} and refund ₹${player.boughtFor}L?`)) {
+    if (window.confirm(`Release ${player.name} and refund ${formatLakhsAndCrores(player.boughtFor, true)}?`)) {
       set(ref(db, `rooms/${roomId}/teams/${teamName}/squad/${player.id}`), null);
       get(ref(db, `rooms/${roomId}/teams/${teamName}/budget`)).then((s) => {
         if (s.exists()) set(ref(db, `rooms/${roomId}/teams/${teamName}/budget`), s.val() + player.boughtFor);
@@ -739,17 +904,81 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Host / Room Authority Badge */}
+          {/* Host / Room Authority Badge & Controls */}
           {isHost ? (
-            <span className="inline-flex items-center gap-1.5 bg-gradient-to-b from-[#fbf5e6] to-[#eddcb7] text-[#5c4308] border border-[#d4be8c] px-3 py-1.5 rounded-2xl text-xs font-mono font-black shadow-2xs">
-              <span>👑</span>
-              <span>Room Authority (Host)</span>
-            </span>
+            <div className="flex items-center gap-1.5 flex-wrap">
+              <span className="inline-flex items-center gap-1 bg-gradient-to-b from-[#fbf5e6] to-[#eddcb7] text-[#5c4308] border border-[#d4be8c] px-2.5 py-1 rounded-2xl text-xs font-mono font-black shadow-2xs">
+                <span>👑</span>
+                <span>Host</span>
+              </span>
+
+              <div className="flex items-center gap-1 bg-[#f4f1e8] p-1 rounded-2xl border border-[#d8d1c0] text-[10px] font-mono flex-wrap">
+                {/* ⏳ Busy / Step Away Toggle */}
+                <button
+                  onClick={handleToggleAuctioneerBusy}
+                  className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer shadow-2xs border ${
+                    isAuctioneerBusy
+                      ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-700 animate-pulse"
+                      : "bg-white hover:bg-amber-50 text-amber-900 border-amber-300"
+                  }`}
+                  title={
+                    isAuctioneerBusy
+                      ? "You are marked busy. Tap to reclaim gavel authority"
+                      : "Step away temporarily. Hands hammer authority to the room until you return."
+                  }
+                >
+                  {isAuctioneerBusy ? "✅ I'm Back" : "⏳ Busy"}
+                </button>
+
+                <button
+                  onClick={handleTogglePlayerHammer}
+                  className={`px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer ${
+                    roomAllowPlayerHammer
+                      ? "bg-emerald-100 text-[#124032] border border-emerald-300"
+                      : "text-[#767c84] hover:text-[#121417]"
+                  }`}
+                  title="Allow non-host players to strike the hammer"
+                >
+                  🔨 Hammer: {roomAllowPlayerHammer ? "ON" : "OFF"}
+                </button>
+
+                <button
+                  onClick={handleToggleRotateAuctioneer}
+                  className={`hidden sm:inline-block px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer ${
+                    rotateAuctioneer
+                      ? "bg-purple-100 text-purple-800 border border-purple-300"
+                      : "text-[#767c84] hover:text-[#121417]"
+                  }`}
+                  title="Randomly rotate auctioneer role to another player each round"
+                >
+                  🎲 Rotate: {rotateAuctioneer ? "ON" : "OFF"}
+                </button>
+
+                <button
+                  onClick={handlePassGavelRandomly}
+                  className="px-2 py-0.5 rounded-lg bg-white border border-[#d8d1c0] text-[#5c4308] hover:bg-[#faf8f4] font-bold transition-colors cursor-pointer shadow-2xs"
+                  title="Pass gavel authority to another player now"
+                >
+                  Pass 🎲
+                </button>
+              </div>
+            </div>
           ) : (
-            <span className="hidden md:inline-flex items-center gap-1.5 bg-[#f4f1e8] text-[#555a60] border border-[#dcd6c8] px-3 py-1.5 rounded-2xl text-xs font-mono font-bold">
-              <span>👑</span>
-              <span>Authority: Creator</span>
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="hidden md:inline-flex items-center gap-1.5 bg-[#f4f1e8] text-[#555a60] border border-[#dcd6c8] px-3 py-1.5 rounded-2xl text-xs font-mono font-bold">
+                <span>👑</span>
+                <span>Authority: {allTeams[Object.keys(allTeams).find((k) => allTeams[k].ownerUid === hostUid)]?.managerName || "Host"}</span>
+              </span>
+              {isAuctioneerBusy ? (
+                <span className="text-[10px] font-mono bg-amber-500 text-white px-2 py-0.5 rounded-xl font-bold animate-pulse">
+                  ⏳ Auctioneer Busy (Hammer Open)
+                </span>
+              ) : roomAllowPlayerHammer ? (
+                <span className="text-[10px] font-mono bg-emerald-100 text-[#124032] border border-emerald-300 px-2 py-0.5 rounded-xl font-bold">
+                  🔨 Hammer Open to All
+                </span>
+              ) : null}
+            </div>
           )}
         </div>
 
@@ -827,13 +1056,26 @@ export default function Home() {
             </div>
           )}
 
-          <button
-            onClick={toggleSound}
-            className="w-9 h-9 rounded-2xl bg-gradient-to-b from-white to-[#f4f1e8] hover:to-[#ede7db] text-[#555a60] border border-[#d8d1c0] flex items-center justify-center text-xs transition-colors cursor-pointer shadow-2xs"
-            title={isMuted ? "Unmute Sound" : "Mute Sound"}
-          >
-            {isMuted ? "🔇" : "🔊"}
-          </button>
+          {/* Audio Controls & SFX Test */}
+          <div className="flex items-center gap-1.5 bg-gradient-to-b from-white to-[#f4f1e8] border border-[#d8d1c0] p-1 rounded-2xl shadow-2xs">
+            <button
+              onClick={toggleSound}
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+                isMuted ? "text-slate-400 hover:text-slate-600" : "text-[#124032] hover:text-emerald-800"
+              }`}
+              title={isMuted ? "Unmute Broadcast Audio" : "Mute Broadcast Audio"}
+            >
+              <SoundSpeakerIcon isMuted={isMuted} className="w-4 h-4" />
+              <AudioEqualizer isMuted={isMuted} className="hidden sm:flex items-end gap-0.5 h-3" />
+            </button>
+            <button
+              onClick={() => setIsSoundTestOpen(true)}
+              className="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold text-[#555a60] hover:text-[#121417] bg-[#f0ece0] hover:bg-[#e4ded0] transition-colors cursor-pointer border border-[#dfd9cb]"
+              title="Test Web Audio Sound Synthesizer"
+            >
+              SFX Test
+            </button>
+          </div>
 
           <button
             onClick={handleLeaveRoom}
@@ -850,6 +1092,57 @@ export default function Home() {
         playersList={playersList}
         allTeams={allTeams}
       />
+
+      {/* 🌟 AUCTIONEER BUSY / STEPPED AWAY ANNOUNCEMENT BANNER */}
+      {isAuctioneerBusy && (
+        <div className="w-full bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800 text-white py-2 px-4 md:px-6 flex flex-wrap items-center justify-between gap-2 font-mono text-xs shadow-md border-b border-amber-500 animate-fade-in shrink-0 z-20">
+          <div className="flex items-center gap-2">
+            <span className="text-sm">⏳</span>
+            <span className="font-black uppercase tracking-wider">
+              AUCTIONEER IS BUSY / STEPPED AWAY
+            </span>
+            <span className="bg-black/25 px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-white/20">
+              Hammer is open to all franchise managers!
+            </span>
+          </div>
+
+          {isHost && (
+            <button
+              onClick={handleToggleAuctioneerBusy}
+              className="px-3 py-1 bg-white hover:bg-amber-50 text-amber-900 font-black uppercase tracking-wider text-[11px] rounded-xl shadow-xs transition-all cursor-pointer active:translate-y-0.5"
+            >
+              ✅ I'm Back (Reclaim Gavel)
+            </button>
+          )}
+        </div>
+      )}
+
+      {/* 🌟 AUTO-NEXT LOT COUNTDOWN BANNER */}
+      {autoNextSeconds !== null && (
+        <div className="w-full bg-gradient-to-r from-[#185341] via-[#124032] to-[#0e3328] text-white py-2 px-6 flex flex-wrap items-center justify-between gap-2 font-mono text-xs shadow-md border-b border-[#1b5e4a] animate-fade-in shrink-0 z-20">
+          <div className="flex items-center gap-3">
+            <span className="text-sm">🔨</span>
+            <span className="font-black uppercase tracking-wider">
+              LOT FINALIZED ({isSold ? `AWARDED AT ${formatLakhsAndCrores(currentBid, true)}` : "PASSED UNSOLD"})
+            </span>
+            <span className="bg-white/15 px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-white/20">
+              Next Lot in {autoNextSeconds}s
+            </span>
+          </div>
+
+          {(isHost || teamName.startsWith("Auctioneer - ") || roomAllowPlayerHammer || isAuctioneerBusy) && (
+            <button
+              onClick={() => {
+                handleNextPlayer();
+                setAutoNextSeconds(null);
+              }}
+              className="px-3 py-1 bg-white hover:bg-emerald-50 text-[#124032] font-black uppercase tracking-wider text-[11px] rounded-xl shadow-xs transition-all cursor-pointer active:translate-y-0.5"
+            >
+              Advance Immediately ⏭️
+            </button>
+          )}
+        </div>
+      )}
 
       {/* Confetti on Sold */}
       {isSold && (
@@ -884,8 +1177,19 @@ export default function Home() {
             />
           </div>
 
-          {/* COL 2 (Center 4 Cols): Timer + Bidding Console + Bid Log */}
-          <div className="lg:col-span-4 flex flex-col gap-3 h-full min-h-0 justify-between overflow-hidden">
+          {/* COL 2 (Center 4 Cols): Bid Battle + Timer + Bidding Console + Bid Log */}
+          <div className="lg:col-span-4 flex flex-col gap-2.5 h-full min-h-0 justify-between overflow-y-auto pr-0.5">
+            <BidBattleBar
+              highestBidder={highestBidder}
+              currentBid={currentBid}
+              basePrice={activePlayer.basePrice}
+              myTeamName={teamName}
+              wasOutbid={wasOutbid}
+              onDismissOutbid={() => setWasOutbid(false)}
+              optOutCount={optOutCount}
+              isOptedOut={isOptedOut}
+              onJumpBackIn={() => handleOptOut(false)}
+            />
             <CircularTimer
               secondsLeft={secondsLeft}
               totalDuration={60}
@@ -902,11 +1206,19 @@ export default function Home() {
               currentBid={currentBid}
               basePrice={activePlayer.basePrice}
               myBudget={myBudget}
+              squadCount={squad.length}
               highestBidder={highestBidder}
               myTeamName={teamName}
               isHost={isHost}
               isNeutralAuctioneer={teamName.startsWith("Auctioneer - ")}
               allowPlayerHammer={roomAllowPlayerHammer}
+              isOptedOut={isOptedOut}
+              onOptOut={handleOptOut}
+              isAuctioneerBusy={isAuctioneerBusy}
+              onToggleAuctioneerBusy={handleToggleAuctioneerBusy}
+              onPassGavel={handlePassGavelRandomly}
+              onTogglePlayerHammer={handleTogglePlayerHammer}
+              onLeaveRoom={handleLeaveRoom}
             />
             <ActivityFeed logs={activityLogs} />
           </div>
@@ -1163,7 +1475,7 @@ export default function Home() {
                       <span className="text-sm">{p.flag}</span>
                       <div className="truncate">
                         <p className="text-xs font-bold text-[#121417] truncate">{p.name}</p>
-                        <p className="text-[10px] font-mono text-[#767c84]">{p.role} • ₹{(p.boughtFor / 100).toFixed(2)} Cr</p>
+                        <p className="text-[10px] font-mono text-[#767c84]">{p.role} • {formatLakhsAndCrores(p.boughtFor, true)}</p>
                       </div>
                     </div>
 
@@ -1212,6 +1524,14 @@ export default function Home() {
           />
         </main>
       )}
+
+      {/* Sound Test Diagnostics Modal */}
+      <SoundTestModal
+        isOpen={isSoundTestOpen}
+        onClose={() => setIsSoundTestOpen(false)}
+        isMuted={isMuted}
+        onToggleMute={toggleSound}
+      />
     </div>
   );
 }
