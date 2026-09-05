@@ -407,6 +407,16 @@ class SoundEngine {
         this.playBid();
     }
   }
+
+  // Convenience alias methods
+  bid() { this.playBid(); }
+  click() { this.playClick(); }
+  gavel() { this.playGavel(); }
+  tick() { this.playTick(); }
+  victory() { this.playVictory(); }
+  unsold() { this.playUnsold(); }
+  outbid() { this.playOutbid(); }
+  fairWarning() { this.playFairWarning(); }
 }
 
 export const sounds = new SoundEngine();

@@ -3,53 +3,78 @@
     ".read": false,
     ".write": false,
     "rooms": {
+      ".read": false,
+      ".write": false,
       "$roomId": {
         ".read": true,
         ".write": false,
+        ".validate": "$roomId.length >= 3 && $roomId.length <= 40",
         "hostUid": {
-          ".write": "!data.exists() || data.val() == newData.val()",
-          ".validate": "newData.isString()"
+          ".write": true,
+          ".validate": "newData.isString() && newData.val().length <= 100"
         },
         "capacity": {
-          ".write": "!data.exists()",
+          ".write": true,
           ".validate": "newData.isNumber() && newData.val() >= 2 && newData.val() <= 12"
         },
+        "allowPlayerHammer": {
+          ".write": true,
+          ".validate": "newData.isBoolean()"
+        },
+        "rotateAuctioneer": {
+          ".write": true,
+          ".validate": "newData.isBoolean()"
+        },
+        "auctioneerBusy": {
+          ".write": true,
+          ".validate": "newData.isBoolean()"
+        },
         "teams": {
+          ".write": true,
           "$teamId": {
-            ".write": true,
-            ".validate": "newData.hasChildren(['budget'])",
-            "ownerUid": {
-              ".validate": "newData.isString()"
-            },
-            "budget": {
-              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
-            }
+            ".validate": "newData.val() == null || (newData.child('budget').isNumber() && newData.child('budget').val() >= 0 && newData.child('budget').val() <= 10000)"
           }
         },
         "auction": {
+          ".write": true,
           "$playerId": {
-            ".write": true,
+            ".validate": "newData.val() == null || newData.hasChildren()",
             "currentBid": {
-              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000 && (!data.exists() || newData.val() >= data.val())"
+              ".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 10000"
+            },
+            "highestBidder": {
+              ".validate": "newData.isString() || newData.val() == null"
+            },
+            "highestBidderTeam": {
+              ".validate": "newData.isString() || newData.val() == null"
             },
             "status": {
               ".validate": "newData.val() == 'sold' || newData.val() == 'unsold' || newData.val() == null"
+            },
+            "optOuts": {
+              ".write": true
             }
-          }
-        },
-        "chat": {
-          "$msgId": {
-            ".write": true,
-            ".validate": "newData.hasChildren(['sender', 'message', 'timestamp']) && newData.child('message').val().length <= 150"
           }
         },
         "global": {
           ".write": true,
+          "activePlayerId": {
+            ".validate": "newData.isNumber() || newData.val() == null"
+          },
           "timerEndsAt": {
             ".validate": "newData.isNumber() || newData.val() == null"
           },
-          "activePlayerId": {
-            ".validate": "newData.isNumber()"
+          "activityLog": {
+            ".write": true,
+            "$logId": {
+              ".validate": "newData.hasChildren(['time', 'text'])"
+            }
+          }
+        },
+        "chat": {
+          ".write": true,
+          "$msgId": {
+            ".validate": "newData.hasChildren(['sender', 'message', 'timestamp']) && newData.child('message').isString() && newData.child('message').val().length <= 300"
           }
         }
       }

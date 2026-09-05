@@ -30,19 +30,22 @@ export default function SoundTestModal({ isOpen, onClose, isMuted, onToggleMute 
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in select-none text-[#121417]">
-      <div className="relative w-full max-w-md bg-gradient-to-b from-white via-[#faf8f3] to-[#f4efe3] border border-[#dcd6c8] rounded-3xl p-5 shadow-[0_20px_50px_rgba(0,0,0,0.2)] flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fadeIn select-none text-white">
+      <div className="relative w-full max-w-md bg-gradient-to-b from-[#0b1c15] via-[#071510] to-[#040c08] border border-[#d4be8c]/25 shadow-[0_25px_80px_rgba(0,0,0,0.9),0_0_60px_rgba(18,64,50,0.35)] rounded-3xl p-6 flex flex-col">
+        {/* Ambient Top Glow */}
+        <div className="absolute top-0 inset-x-0 h-24 bg-gradient-to-b from-[#124032]/35 to-transparent pointer-events-none rounded-t-3xl" />
+
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-[#e5dfd2]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-b from-[#185341] to-[#0e3328] text-white flex items-center justify-center shadow-xs">
+        <div className="relative z-10 flex items-center justify-between pb-4 border-b border-white/10">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#124032] to-[#0a231b] border border-[#d4be8c]/40 text-[#d4be8c] flex items-center justify-center shadow-md">
               <SoundSpeakerIcon isMuted={isMuted} className="w-5 h-5" />
             </div>
             <div>
-              <h3 className={`text-base font-bold uppercase tracking-wider text-[#121417] leading-none ${oswald.className}`}>
+              <h3 className={`text-lg font-bold uppercase tracking-wider text-white leading-none ${oswald.className}`}>
                 Subtle Audio Synthesizer
               </h3>
-              <p className="text-[11px] font-mono text-[#767c84] mt-0.5">
+              <p className="text-[11px] text-white/60 mt-1">
                 Gentle acoustic chimes & wooden mallet feedback
               </p>
             </div>
@@ -50,21 +53,21 @@ export default function SoundTestModal({ isOpen, onClose, isMuted, onToggleMute 
 
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white border border-[#dcd6c8] text-[#767c84] hover:text-[#121417] flex items-center justify-center text-sm cursor-pointer shadow-2xs transition-colors"
+            className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white/70 hover:text-white flex items-center justify-center text-sm cursor-pointer transition-colors shadow-sm"
           >
             ✕
           </button>
         </div>
 
         {/* Master Mute & Equalizer Status Strip */}
-        <div className="flex items-center justify-between my-3 p-3 bg-white rounded-2xl border border-[#ded8cb] shadow-2xs">
+        <div className="relative z-10 flex items-center justify-between my-3.5 p-3.5 bg-white/5 rounded-2xl border border-white/10 shadow-inner">
           <div className="flex items-center gap-3">
             <AudioEqualizer isMuted={isMuted} />
-            <div className="text-xs font-mono">
-              <span className="font-bold block text-[#121417]">
+            <div className="text-xs">
+              <span className="font-bold block text-white">
                 Status: {isMuted ? "Audio Muted" : "Active & Ready"}
               </span>
-              <span className="text-[10px] text-[#767c84]">
+              <span className="text-[10px] text-white/50">
                 {isMuted ? "Turn on audio to hear gentle auction cues" : "Low gain, soft attacks, filtered sine tones"}
               </span>
             </div>
@@ -72,10 +75,10 @@ export default function SoundTestModal({ isOpen, onClose, isMuted, onToggleMute 
 
           <button
             onClick={onToggleMute}
-            className={`px-3 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer border ${
+            className={`px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
               isMuted
-                ? "bg-[#185341] text-white border-[#185341] shadow-xs"
-                : "bg-rose-50 text-rose-800 border-rose-300 hover:bg-rose-100"
+                ? "bg-[#124032] text-[#d4be8c] border-[#d4be8c]/50 shadow-sm"
+                : "bg-rose-500/20 text-rose-300 border-rose-500/40 hover:bg-rose-500/30"
             }`}
           >
             {isMuted ? "Unmute Now" : "Mute Sound"}
@@ -83,33 +86,33 @@ export default function SoundTestModal({ isOpen, onClose, isMuted, onToggleMute 
         </div>
 
         {/* Sound Effects Grid */}
-        <div className="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+        <div className="relative z-10 space-y-2 max-h-72 overflow-y-auto pr-1">
           {SOUND_EFFECTS.map((item) => {
             const isPlaying = lastTested === item.id;
 
             return (
               <div
                 key={item.id}
-                className={`p-2.5 rounded-2xl border flex items-center justify-between transition-all ${
+                className={`p-3 rounded-2xl border flex items-center justify-between transition-all ${
                   isPlaying
-                    ? "bg-[#eef7f2] border-[#7ec499] shadow-xs scale-[1.01]"
-                    : "bg-white border-[#e5dfd2] hover:bg-[#faf8f4]"
+                    ? "bg-[#124032] border-[#d4be8c]/70 shadow-[0_2px_12px_rgba(18,64,50,0.5)] scale-[1.01]"
+                    : "bg-white/5 border-white/10 hover:bg-white/8 hover:border-white/15"
                 }`}
               >
                 <div className="flex items-center gap-3 truncate min-w-0 pr-2">
-                  <span className="text-base shrink-0">{item.icon}</span>
+                  <span className="text-lg shrink-0">{item.icon}</span>
                   <div className="truncate">
-                    <p className="text-xs font-bold text-[#121417] font-mono leading-tight">{item.label}</p>
-                    <p className="text-[10px] text-[#767c84] font-mono truncate">{item.desc}</p>
+                    <p className="text-xs font-bold text-white leading-tight">{item.label}</p>
+                    <p className="text-[10px] text-white/50 truncate">{item.desc}</p>
                   </div>
                 </div>
 
                 <button
                   onClick={() => handleTest(item)}
-                  className={`shrink-0 px-3 py-1.5 rounded-xl text-[11px] font-mono font-bold transition-all cursor-pointer border ${
+                  className={`shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
                     isPlaying
-                      ? "bg-[#185341] text-white border-[#1b5e4a] shadow-xs"
-                      : "bg-gradient-to-b from-white to-[#f4f1e8] hover:to-[#ece6d8] text-[#121417] border-[#d8d1c0] shadow-2xs active:translate-y-0.5"
+                      ? "bg-gradient-to-r from-[#d4be8c] to-[#c7ad72] text-[#06120d] border-[#d4be8c] shadow-sm font-semibold"
+                      : "bg-white/10 hover:bg-white/20 text-white border-white/15 shadow-sm active:translate-y-0.5"
                   }`}
                 >
                   {isPlaying ? "Playing ♪" : "Test Sound"}
@@ -120,11 +123,11 @@ export default function SoundTestModal({ isOpen, onClose, isMuted, onToggleMute 
         </div>
 
         {/* Footer */}
-        <div className="pt-3 mt-3 border-t border-[#e5dfd2] flex items-center justify-between text-[10px] font-mono text-[#767c84]">
-          <span>Filtered sine & acoustic resonance (zero harsh buzz)</span>
+        <div className="relative z-10 pt-4 mt-3 border-t border-white/10 flex items-center justify-between text-[11px] text-white/50">
+          <span>Filtered sine & acoustic resonance</span>
           <button
             onClick={onClose}
-            className="px-3 py-1 bg-[#185341] text-white rounded-xl font-bold uppercase tracking-wider cursor-pointer"
+            className="px-4 py-1.5 bg-gradient-to-r from-[#d4be8c] to-[#c7ad72] text-[#06120d] rounded-xl font-bold uppercase tracking-wider cursor-pointer shadow-sm hover:brightness-105"
           >
             Done
           </button>
