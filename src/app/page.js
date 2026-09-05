@@ -8,7 +8,6 @@ import { Inter, Outfit } from "next/font/google";
 
 import PlayerCard from "@/components/PlayerCard";
 import BiddingPad from "@/components/BiddingPad";
-import CircularTimer from "@/components/CircularTimer";
 import CricketPitch from "@/components/CricketPitch";
 import RoomChat from "@/components/RoomChat";
 import BroadcastMarquee from "@/components/BroadcastMarquee";
@@ -16,7 +15,6 @@ import LandingPage from "@/components/LandingPage";
 import PrivateRoomModal from "@/components/PrivateRoomModal";
 import JoinCodeModal from "@/components/JoinCodeModal";
 import ActivityFeed from "@/components/ActivityFeed";
-import BidBattleBar from "@/components/BidBattleBar";
 import SoundTestModal from "@/components/SoundTestModal";
 import {
   SoundSpeakerIcon,
@@ -1249,54 +1247,44 @@ export default function Home() {
             />
           </div>
 
-          {/* COL 2 (Center 4 Cols): Bid Battle + Timer + Bidding Console + Bid Log */}
-          <div className="lg:col-span-4 flex flex-col gap-2.5 h-full min-h-0 justify-between overflow-y-auto pr-0.5">
-            <BidBattleBar
-              highestBidder={highestBidder}
-              currentBid={currentBid}
-              basePrice={activePlayer.basePrice}
-              myTeamName={teamName}
-              wasOutbid={wasOutbid}
-              onDismissOutbid={() => setWasOutbid(false)}
-              optOutCount={optOutCount}
-              isOptedOut={isOptedOut}
-              onJumpBackIn={() => handleOptOut(false)}
-            />
-            <CircularTimer
-              secondsLeft={secondsLeft}
-              totalDuration={60}
-              isWarning={isWarning}
-              isTimeUp={isTimeUp}
-            />
-            <BiddingPad
-              onBid={handleBid}
-              onSell={handleSell}
-              onNextLot={handleNextPlayer}
-              onExtendTimer={handleExtendTimer}
-              onResetTimer={handleResetTimer}
-              status={isSold ? "sold" : isUnsold ? "unsold" : "available"}
-              currentBid={currentBid}
-              basePrice={activePlayer.basePrice}
-              myBudget={myBudget}
-              squadCount={squad.length}
-              highestBidder={highestBidder}
-              myTeamName={teamName}
-              isHost={isHost}
-              isNeutralAuctioneer={teamName.startsWith("Auctioneer - ")}
-              allowPlayerHammer={roomAllowPlayerHammer}
-              isOptedOut={isOptedOut}
-              onOptOut={handleOptOut}
-              isAuctioneerBusy={isAuctioneerBusy}
-              onToggleAuctioneerBusy={handleToggleAuctioneerBusy}
-              onPassGavel={handlePassGavelRandomly}
-              onTogglePlayerHammer={handleTogglePlayerHammer}
-              onLeaveRoom={handleLeaveRoom}
-            />
-            <ActivityFeed logs={activityLogs} />
+          {/* COL 2 (Center 4 Cols): Unified Bidding Command Center & Live Ledger */}
+          <div className="lg:col-span-4 flex flex-col gap-3 h-full min-h-0 justify-between overflow-hidden">
+            <div className="flex-1 min-h-0">
+              <BiddingPad
+                onBid={handleBid}
+                onSell={handleSell}
+                onNextLot={handleNextPlayer}
+                onExtendTimer={handleExtendTimer}
+                onResetTimer={handleResetTimer}
+                status={isSold ? "sold" : isUnsold ? "unsold" : "available"}
+                currentBid={currentBid}
+                basePrice={activePlayer.basePrice}
+                myBudget={myBudget}
+                squadCount={squad.length}
+                highestBidder={highestBidder}
+                myTeamName={teamName}
+                isHost={isHost}
+                isNeutralAuctioneer={teamName.startsWith("Auctioneer - ")}
+                allowPlayerHammer={roomAllowPlayerHammer}
+                isOptedOut={isOptedOut}
+                onOptOut={handleOptOut}
+                secondsLeft={secondsLeft}
+                totalDuration={60}
+                isWarning={isWarning}
+                isTimeUp={isTimeUp}
+                wasOutbid={wasOutbid}
+                onDismissOutbid={() => setWasOutbid(false)}
+                optOutCount={optOutCount}
+                recentLogs={activityLogs}
+              />
+            </div>
+            <div className="shrink-0">
+              <ActivityFeed logs={activityLogs} />
+            </div>
           </div>
 
           {/* COL 3 (Right 4 Cols): Player Pool / Purses / Chat */}
-          <div className="lg:col-span-4 flex flex-col h-full min-h-0 bg-gradient-to-b from-white via-[#f7faf8] to-[#edf5f0] border border-[#c6ded0] rounded-3xl p-4 shadow-[0_16px_36px_rgba(18,64,50,0.08),0_2px_8px_rgba(18,64,50,0.04)] text-[#12241b] overflow-hidden justify-between relative">
+          <div className="lg:col-span-4 flex flex-col h-full min-h-0 bg-white/95 backdrop-blur-xl border border-[#cfe0d5] rounded-3xl p-4 shadow-[0_12px_32px_rgba(18,64,50,0.06),0_2px_8px_rgba(18,64,50,0.03)] text-[#12241b] overflow-hidden justify-between relative">
             {/* Top Hairline Sheen */}
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#d4be8c] via-[#059669] to-[#d4be8c] opacity-80" />
 
