@@ -102,24 +102,24 @@ export default function CricketPitch({
   return (
     <div className="flex flex-col gap-3 h-full overflow-hidden">
       {/* Top Composition Info Bar */}
-      <div className="grid grid-cols-4 gap-3 bg-gradient-to-b from-[#183d2f] via-[#133226] to-[#0e271e] p-3.5 rounded-3xl border border-[#3dd9a5]/35 shadow-[0_16px_36px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.18)] text-center shrink-0">
+      <div className="grid grid-cols-4 gap-3 bg-gradient-to-b from-white via-[#f7faf8] to-[#edf5f0] p-3.5 rounded-3xl border border-[#c6ded0] shadow-[0_16px_36px_rgba(18,64,50,0.08),0_2px_8px_rgba(18,64,50,0.04)] text-center shrink-0">
         <div>
-          <span className="text-white/60 text-[9px] uppercase font-mono font-bold tracking-wider block">Total Runs</span>
-          <span className={`text-lg font-bold text-[#ebd7aa] ${oswald.className}`}>{totalRuns}</span>
+          <span className="text-[#5c7567] text-[9px] uppercase font-mono font-bold tracking-wider block">Total Runs</span>
+          <span className={`text-lg font-bold text-[#0e2c1e] ${oswald.className}`}>{totalRuns}</span>
         </div>
         <div>
-          <span className="text-white/60 text-[9px] uppercase font-mono font-bold tracking-wider block">Wickets</span>
-          <span className={`text-lg font-bold text-[#ebd7aa] ${oswald.className}`}>{totalWickets}</span>
+          <span className="text-[#5c7567] text-[9px] uppercase font-mono font-bold tracking-wider block">Wickets</span>
+          <span className={`text-lg font-bold text-[#0e2c1e] ${oswald.className}`}>{totalWickets}</span>
         </div>
         <div>
-          <span className="text-white/60 text-[9px] uppercase font-mono font-bold tracking-wider block">Overseas</span>
-          <span className={`text-lg font-bold ${overseasCount > 4 ? "text-rose-400" : "text-[#3dd9a5]"} ${oswald.className}`}>
+          <span className="text-[#5c7567] text-[9px] uppercase font-mono font-bold tracking-wider block">Overseas</span>
+          <span className={`text-lg font-bold ${overseasCount > 4 ? "text-rose-600" : "text-[#047857]"} ${oswald.className}`}>
             {overseasCount}/4
           </span>
         </div>
         <div>
-          <span className="text-white/60 text-[9px] uppercase font-mono font-bold tracking-wider block">Playing XI</span>
-          <span className={`text-lg font-bold text-[#ebd7aa] ${oswald.className}`}>{playingXI.length}/11</span>
+          <span className="text-[#5c7567] text-[9px] uppercase font-mono font-bold tracking-wider block">Playing XI</span>
+          <span className={`text-lg font-bold text-[#0e2c1e] ${oswald.className}`}>{playingXI.length}/11</span>
         </div>
       </div>
 

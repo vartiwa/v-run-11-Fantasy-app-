@@ -40,40 +40,40 @@ export default function CircularTimer({
   });
 
   return (
-    <div className={`relative w-full bg-gradient-to-b from-[#183d2f] via-[#133226] to-[#0e271e] border rounded-3xl p-4 flex flex-col justify-between shadow-[0_20px_45px_rgba(0,0,0,0.45),0_0_35px_rgba(46,133,101,0.22),inset_0_1px_0_rgba(255,255,255,0.18)] select-none text-white transition-all duration-300 ${
+    <div className={`relative w-full bg-gradient-to-b from-white via-[#f7faf8] to-[#edf5f0] border rounded-3xl p-4 flex flex-col justify-between shadow-[0_16px_36px_rgba(18,64,50,0.08),0_2px_8px_rgba(18,64,50,0.04)] select-none text-[#12241b] transition-all duration-300 ${
       isTimeUp
-        ? "border-rose-500 ring-4 ring-rose-500/25"
+        ? "border-rose-400 ring-4 ring-rose-400/20"
         : isWarning
-        ? "border-amber-400 ring-4 ring-amber-400/25"
-        : "border-[#3dd9a5]/35 ring-1 ring-[#d4be8c]/25"
+        ? "border-amber-400 ring-4 ring-amber-400/20"
+        : "border-[#c6ded0] ring-1 ring-[#059669]/10"
     }`}>
       {/* Top Hairline Sheen */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/50 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#d4be8c] via-[#059669] to-[#d4be8c] opacity-80" />
 
       {/* Top Header */}
-      <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/15">
+      <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#cfe0d5]">
         <div className="flex items-center gap-2">
           <span
             className={`w-2.5 h-2.5 rounded-full shadow-xs ${
               isTimeUp
                 ? "bg-rose-500 animate-ping"
                 : isWarning
-                ? "bg-amber-400 animate-ping"
-                : "bg-[#3dd9a5] shadow-[0_0_8px_#3dd9a5]"
+                ? "bg-amber-500 animate-ping"
+                : "bg-[#059669] shadow-[0_0_8px_#059669]"
             }`}
           />
-          <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#ebd7aa]">
+          <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#0f5132]">
             AUCTION CHRONOMETER
           </span>
         </div>
 
         <span
-          className={`text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-sm transition-colors ${
+          className={`text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-xs transition-colors ${
             isTimeUp
-              ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse"
+              ? "bg-rose-50 text-rose-700 border border-rose-200 animate-pulse"
               : isWarning
-              ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse"
-              : "bg-[#184a39] text-[#3dd9a5] border border-[#3dd9a5]/40"
+              ? "bg-amber-50 text-amber-800 border border-amber-300 animate-pulse"
+              : "bg-[#e6f7ee] text-[#047857] border border-[#a7f3d0]"
           }`}
         >
           {isTimeUp ? "Final Call • Gavel Pending" : isWarning ? "Fair Warning (Going Twice)" : "Clock Active"}
@@ -83,15 +83,15 @@ export default function CircularTimer({
       {/* Center Chronometer Well with Circular Gauge */}
       <div className="flex items-center justify-between px-2 py-1">
         {/* Circular SVG Gauge */}
-        <div className="relative flex items-center justify-center filter drop-shadow-[0_0_16px_rgba(18,64,50,0.4)]">
+        <div className="relative flex items-center justify-center filter drop-shadow-[0_4px_12px_rgba(18,64,50,0.1)]">
           <svg width={size} height={size} className="-rotate-90 transform">
             {/* Outer Luxury Bezel Ring */}
             <circle
               cx={size / 2}
               cy={size / 2}
               r={radius + 3}
-              stroke="#d4be8c"
-              strokeOpacity={0.25}
+              stroke="#badbc6"
+              strokeOpacity={0.6}
               strokeWidth={1}
               fill="transparent"
             />
@@ -101,7 +101,7 @@ export default function CircularTimer({
               cx={size / 2}
               cy={size / 2}
               r={radius}
-              stroke="rgba(255,255,255,0.08)"
+              stroke="#e2ede5"
               strokeWidth={strokeWidth}
               fill="transparent"
             />
@@ -114,7 +114,7 @@ export default function CircularTimer({
                 y1={tick.y1}
                 x2={tick.x2}
                 y2={tick.y2}
-                stroke={tick.isQuarter ? "#d4be8c" : "rgba(255,255,255,0.2)"}
+                stroke={tick.isQuarter ? "#059669" : "#a8c9b5"}
                 strokeWidth={tick.isQuarter ? 1.5 : 1}
               />
             ))}
@@ -124,13 +124,13 @@ export default function CircularTimer({
               cx={size / 2}
               cy={size / 2}
               r={radius}
-              stroke={isTimeUp ? "#f43f5e" : isWarning ? "#f59e0b" : "#34d399"}
+              stroke={isTimeUp ? "#e11d48" : isWarning ? "#d97706" : "#059669"}
               strokeWidth={strokeWidth}
               strokeDasharray={circumference}
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
               fill="transparent"
-              className="transition-all duration-1000 ease-linear drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]"
+              className="transition-all duration-1000 ease-linear drop-shadow-[0_0_8px_rgba(5,150,105,0.4)]"
             />
           </svg>
 
@@ -138,12 +138,12 @@ export default function CircularTimer({
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span
               className={`text-2xl font-bold tracking-tight ${
-                isTimeUp ? "text-rose-400 animate-pulse" : isWarning ? "text-amber-400" : "text-white"
+                isTimeUp ? "text-rose-600 animate-pulse" : isWarning ? "text-amber-700" : "text-[#0e2c1e]"
               } ${oswald.className}`}
             >
               {formatTime(secondsLeft)}
             </span>
-            <span className="text-[9px] font-mono font-bold text-white/40 uppercase tracking-wider -mt-0.5">
+            <span className="text-[9px] font-mono font-bold text-[#5c7567] uppercase tracking-wider -mt-0.5">
               REMAINING
             </span>
           </div>
@@ -151,14 +151,14 @@ export default function CircularTimer({
 
         {/* Chronometer Stats & Gavel Rules */}
         <div className="flex-1 pl-4 flex flex-col justify-center space-y-1.5 font-mono">
-          <div className="bg-[#10271f] border border-[#3dd9a5]/25 rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
-            <span className="text-[10px] text-white/50 uppercase">Clock Window:</span>
-            <span className="font-bold text-white">{secondsLeft !== null ? `${secondsLeft}s` : "--"}</span>
+          <div className="bg-[#eef5f1] border border-[#cbe0d3] rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
+            <span className="text-[10px] text-[#5c7567] uppercase">Clock Window:</span>
+            <span className="font-bold text-[#0e2c1e]">{secondsLeft !== null ? `${secondsLeft}s` : "--"}</span>
           </div>
 
-          <div className="bg-[#10271f] border border-[#3dd9a5]/25 rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
-            <span className="text-[10px] text-white/50 uppercase">Anti-Snipe:</span>
-            <span className="font-bold text-[#3dd9a5]">+15s Fair Warning</span>
+          <div className="bg-[#eef5f1] border border-[#cbe0d3] rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
+            <span className="text-[10px] text-[#5c7567] uppercase">Anti-Snipe:</span>
+            <span className="font-bold text-[#047857]">+15s Fair Warning</span>
           </div>
         </div>
       </div>

@@ -33,44 +33,44 @@ export default function BroadcastMarquee({
   }, [auctionData, playersList]);
 
   return (
-    <div className="w-full bg-gradient-to-r from-[#0e271e] via-[#143629] to-[#0e271e] border-b border-[#3dd9a5]/25 py-2 px-6 select-none font-mono text-xs text-white/80 shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
+    <div className="w-full bg-gradient-to-r from-[#eaf4ed] via-[#f3f9f5] to-[#eaf4ed] border-b border-[#cfe0d5] py-2 px-6 select-none font-mono text-xs text-[#284938] shadow-xs">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center gap-3 md:gap-4 flex-wrap">
-          <div className="flex items-center gap-2 bg-[#0a1e16] px-2.5 py-1 rounded-lg border border-[#3dd9a5]/35 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
-            <span className="w-2 h-2 rounded-full bg-[#3dd9a5] animate-pulse shadow-[0_0_8px_#3dd9a5]" />
-            <span className="font-bold text-[#ebd7aa] uppercase tracking-wider text-[11px]">LIVE DRAFT FLOOR</span>
+          <div className="flex items-center gap-2 bg-white px-2.5 py-1 rounded-lg border border-[#badbc6] shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse shadow-[0_0_8px_#059669]" />
+            <span className="font-bold text-[#0f5132] uppercase tracking-wider text-[11px]">LIVE DRAFT FLOOR</span>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-white/60">SOLD:</span>
-            <strong className="text-[#3dd9a5] bg-[#0a1e16] px-2 py-0.5 rounded-md border border-[#3dd9a5]/30 font-mono shadow-xs">{stats.soldCount}</strong>
+            <span className="text-[11px] text-[#5c7567]">SOLD:</span>
+            <strong className="text-[#047857] bg-white px-2 py-0.5 rounded-md border border-[#badbc6] font-mono shadow-xs">{stats.soldCount}</strong>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-[11px] text-white/60">UNSOLD:</span>
-            <strong className="text-rose-400 bg-[#0a1e16] px-2 py-0.5 rounded-md border border-rose-500/30 font-mono shadow-xs">{stats.unsoldCount}</strong>
+            <span className="text-[11px] text-[#5c7567]">UNSOLD:</span>
+            <strong className="text-rose-700 bg-white px-2 py-0.5 rounded-md border border-rose-200 font-mono shadow-xs">{stats.unsoldCount}</strong>
           </div>
 
           <div className="hidden md:flex items-center gap-2">
-            <span className="text-[11px] text-[#ebd7aa] font-bold">RECORD LOT:</span>
-            <strong className="text-white bg-[#0a1e16] px-2.5 py-0.5 rounded-md border border-[#d4be8c]/35 shadow-xs font-bold">
+            <span className="text-[11px] text-[#854d0e] font-bold">RECORD LOT:</span>
+            <strong className="text-[#0e2c1e] bg-white px-2.5 py-0.5 rounded-md border border-[#e5d4a6] shadow-xs font-bold">
               {stats.topBuy.price > 0
                 ? `${stats.topBuy.name} (`
                 : "None yet"}
               {stats.topBuy.price > 0 && (
-                <span className="text-[#3dd9a5]">{formatLakhsAndCrores(stats.topBuy.price, true)}</span>
+                <span className="text-[#047857]">{formatLakhsAndCrores(stats.topBuy.price, true)}</span>
               )}
               {stats.topBuy.price > 0 && (
-                <span className="text-[#ebd7aa]"> • {stats.topBuy.team})</span>
+                <span className="text-[#854d0e]"> • {stats.topBuy.team})</span>
               )}
             </strong>
           </div>
         </div>
 
-        <div className="hidden sm:flex items-center gap-2 text-[11px] text-white/50">
+        <div className="hidden sm:flex items-center gap-2 text-[11px] text-[#5c7567]">
           <span>BROADCAST SYNC:</span>
-          <span className="text-[#34d399] font-bold flex items-center gap-1">
-            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#34d399] animate-ping" />
+          <span className="text-[#047857] font-bold flex items-center gap-1">
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#059669] animate-ping" />
             REALTIME
           </span>
         </div>
