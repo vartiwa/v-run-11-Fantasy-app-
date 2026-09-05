@@ -53,23 +53,23 @@ export default function CricketPitch({
             )}
           </div>
 
-          <div className="mt-1 bg-white/95 px-2.5 py-0.5 rounded-lg border border-[#d8d1c0] text-center max-w-[105px] truncate shadow-2xs">
-            <p className="text-[10px] font-bold text-[#121417] truncate leading-tight">{player.name}</p>
-            <p className="text-[8px] text-[#124032] font-mono font-bold">
+          <div className="mt-1 bg-[#040c08]/90 px-2.5 py-0.5 rounded-lg border border-white/10 text-center max-w-[105px] truncate shadow-xs">
+            <p className="text-[10px] font-bold text-white truncate leading-tight">{player.name}</p>
+            <p className="text-[8px] text-[#34d399] font-mono font-bold">
               {formatLakhsAndCrores(player.boughtFor, true)}
             </p>
           </div>
         </div>
 
         {/* Hover Quick Actions */}
-        <div className="absolute top-14 hidden group-hover:flex flex-col gap-1 bg-white border border-[#dcd6c8] p-2 rounded-2xl shadow-xl z-40 whitespace-nowrap">
+        <div className="absolute top-14 hidden group-hover:flex flex-col gap-1 bg-[#06140e] border border-[#d4be8c]/30 p-2 rounded-2xl shadow-xl z-40 whitespace-nowrap text-white">
           <button
             onClick={() => {
               sounds.playClick();
               onSetCaptain(player.id);
             }}
             className={`text-[10px] font-bold px-2.5 py-1 rounded-xl text-left cursor-pointer transition-colors ${
-              isCaptain ? "bg-[#fbf5e6] text-[#5c4308]" : "text-[#555a60] hover:bg-[#faf8f4]"
+              isCaptain ? "bg-[#d4be8c]/20 text-[#ecdcb8]" : "text-white/70 hover:bg-white/5 hover:text-white"
             }`}
           >
             👑 Set Captain (2x Pts)
@@ -80,7 +80,7 @@ export default function CricketPitch({
               onSetViceCaptain(player.id);
             }}
             className={`text-[10px] font-bold px-2.5 py-1 rounded-xl text-left cursor-pointer transition-colors ${
-              isViceCaptain ? "bg-[#f0f4f8] text-[#102a43]" : "text-[#555a60] hover:bg-[#f0f4f8]"
+              isViceCaptain ? "bg-sky-950/50 text-sky-300" : "text-white/70 hover:bg-white/5 hover:text-white"
             }`}
           >
             🛡️ Set Vice-Captain (1.5x)
@@ -90,7 +90,7 @@ export default function CricketPitch({
               sounds.playClick();
               onBenchPlayer(player);
             }}
-            className="text-[10px] font-bold px-2.5 py-1 rounded-xl text-left text-rose-700 hover:bg-rose-50 cursor-pointer transition-colors"
+            className="text-[10px] font-bold px-2.5 py-1 rounded-xl text-left text-rose-400 hover:bg-rose-950/40 cursor-pointer transition-colors"
           >
             🪑 Move to Bench
           </button>
@@ -102,24 +102,24 @@ export default function CricketPitch({
   return (
     <div className="flex flex-col gap-3 h-full overflow-hidden">
       {/* Top Composition Info Bar */}
-      <div className="grid grid-cols-4 gap-3 bg-white p-3.5 rounded-3xl border border-[#dcd6c8] shadow-xs text-center shrink-0">
+      <div className="grid grid-cols-4 gap-3 bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] p-3.5 rounded-3xl border border-[#d4be8c]/25 shadow-[0_12px_28px_rgba(0,0,0,0.5),inset_0_1px_0_rgba(212,190,140,0.15)] text-center shrink-0">
         <div>
-          <span className="text-[#767c84] text-[9px] uppercase font-mono font-bold tracking-wider block">Total Runs</span>
-          <span className={`text-lg font-bold text-[#121417] ${oswald.className}`}>{totalRuns}</span>
+          <span className="text-white/50 text-[9px] uppercase font-mono font-bold tracking-wider block">Total Runs</span>
+          <span className={`text-lg font-bold text-[#ecdcb8] ${oswald.className}`}>{totalRuns}</span>
         </div>
         <div>
-          <span className="text-[#767c84] text-[9px] uppercase font-mono font-bold tracking-wider block">Wickets</span>
-          <span className={`text-lg font-bold text-[#121417] ${oswald.className}`}>{totalWickets}</span>
+          <span className="text-white/50 text-[9px] uppercase font-mono font-bold tracking-wider block">Wickets</span>
+          <span className={`text-lg font-bold text-[#ecdcb8] ${oswald.className}`}>{totalWickets}</span>
         </div>
         <div>
-          <span className="text-[#767c84] text-[9px] uppercase font-mono font-bold tracking-wider block">Overseas</span>
-          <span className={`text-lg font-bold ${overseasCount > 4 ? "text-rose-600" : "text-[#124032]"} ${oswald.className}`}>
+          <span className="text-white/50 text-[9px] uppercase font-mono font-bold tracking-wider block">Overseas</span>
+          <span className={`text-lg font-bold ${overseasCount > 4 ? "text-rose-400" : "text-[#34d399]"} ${oswald.className}`}>
             {overseasCount}/4
           </span>
         </div>
         <div>
-          <span className="text-[#767c84] text-[9px] uppercase font-mono font-bold tracking-wider block">Playing XI</span>
-          <span className={`text-lg font-bold text-[#121417] ${oswald.className}`}>{playingXI.length}/11</span>
+          <span className="text-white/50 text-[9px] uppercase font-mono font-bold tracking-wider block">Playing XI</span>
+          <span className={`text-lg font-bold text-[#ecdcb8] ${oswald.className}`}>{playingXI.length}/11</span>
         </div>
       </div>
 

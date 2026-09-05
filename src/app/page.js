@@ -857,10 +857,10 @@ export default function Home() {
   // 🌟 View 2: Joined - Zero-Scroll Sports Draft Room
   return (
     <div
-      className={`min-h-screen lg:h-screen lg:max-h-screen flex flex-col bg-[#f6f5ef] bg-[radial-gradient(#ded8cb_1px,transparent_1px)] [background-size:22px_22px] text-[#121417] overflow-y-auto lg:overflow-hidden relative select-none ${inter.className}`}
+      className={`min-h-screen lg:h-screen lg:max-h-screen flex flex-col bg-[#040c08] bg-[radial-gradient(#124032_1px,transparent_1px)] [background-size:24px_24px] text-white overflow-y-auto lg:overflow-hidden relative select-none ${inter.className}`}
     >
       {/* 🌟 1. LUXURY EDITORIAL SPORTS HEADER */}
-      <header className="py-2.5 px-4 md:px-6 bg-white/95 backdrop-blur-md border-b border-[#dcd6c8] flex flex-wrap items-center justify-between gap-3 shrink-0 z-20 shadow-[0_2px_12px_rgba(0,0,0,0.03)]">
+      <header className="py-2.5 px-4 md:px-6 bg-[#06120d]/95 backdrop-blur-xl border-b border-[#d4be8c]/25 flex flex-wrap items-center justify-between gap-3 shrink-0 z-20 shadow-[0_4px_20px_rgba(0,0,0,0.5)]">
         {/* Left: Brand + Room Code + Role */}
         <div className="flex items-center gap-3">
           <div
@@ -868,37 +868,37 @@ export default function Home() {
             onClick={handleLeaveRoom}
             title="Leave Room"
           >
-            <div className="w-8 h-8 rounded-xl bg-gradient-to-b from-[#185341] to-[#0e3328] flex items-center justify-center text-white font-black text-sm shadow-xs border border-[#1b5e4a] group-hover:scale-105 transition-transform">
+            <div className="w-8 h-8 rounded-xl bg-gradient-to-b from-[#185341] to-[#0e3328] flex items-center justify-center text-white font-black text-sm shadow-xs border border-[#34d399]/40 group-hover:scale-105 transition-transform">
               🏏
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className={`text-xl font-black tracking-tight uppercase text-[#121417] group-hover:text-[#124032] transition-colors leading-none ${oswald.className}`}>
+                <span className={`text-xl font-black tracking-tight uppercase text-[#ecdcb8] group-hover:text-[#34d399] transition-colors leading-none ${oswald.className}`}>
                   V-RUN 11
                 </span>
-                <span className="text-[9px] font-mono bg-gradient-to-b from-[#fbf5e6] to-[#eddcb7] text-[#5c4308] border border-[#d4be8c] px-1.5 py-0.2 rounded font-black uppercase tracking-wider">
+                <span className="text-[9px] font-mono bg-[#d4be8c]/15 text-[#ecdcb8] border border-[#d4be8c]/40 px-1.5 py-0.2 rounded font-black uppercase tracking-wider">
                   PRO
                 </span>
               </div>
-              <p className="text-[10px] font-mono text-[#767c84] uppercase tracking-wider leading-none mt-0.5">
+              <p className="text-[10px] font-mono text-white/50 uppercase tracking-wider leading-none mt-0.5">
                 IPL Premier Draft
               </p>
             </div>
           </div>
 
-          <div className="hidden sm:block h-6 w-[1px] bg-[#d8d1c0] mx-1" />
+          <div className="hidden sm:block h-6 w-[1px] bg-white/10 mx-1" />
 
           {/* Room Code & Share Plate */}
-          <div className="flex items-center gap-2 bg-gradient-to-b from-white via-[#faf8f3] to-[#f2ede0] border border-[#d8d1c0] px-3 py-1 rounded-2xl shadow-2xs text-xs font-mono">
-            <span className="text-[#8c8577] text-[10px] font-black">ARENA:</span>
-            <span className="font-black text-[#121417] tracking-wider">{roomId}</span>
+          <div className="flex items-center gap-2 bg-[#040c08]/90 border border-[#d4be8c]/30 px-3 py-1 rounded-2xl shadow-inner text-xs font-mono">
+            <span className="text-[#d4be8c] text-[10px] font-black">ARENA:</span>
+            <span className="font-black text-white tracking-wider">{roomId}</span>
             <button
               onClick={() => {
                 const url = `${window.location.origin}/?room=${encodeURIComponent(roomId)}`;
                 navigator.clipboard.writeText(url);
                 alert(`📋 Invite link copied to clipboard!\nShare this with your friends:\n${url}`);
               }}
-              className="text-[11px] font-bold text-[#124032] hover:text-emerald-800 hover:underline ml-1 cursor-pointer"
+              className="text-[11px] font-bold text-[#34d399] hover:text-emerald-300 hover:underline ml-1 cursor-pointer"
               title="Copy Room Link"
             >
               📋 Copy
@@ -909,7 +909,7 @@ export default function Home() {
                 const msg = encodeURIComponent(`🏏 Join my Live IPL Fantasy Auction Draft!\n🏛️ Room PIN: ${roomId}\n👉 Tap to pick your franchise team: ${url}`);
                 window.open(`https://wa.me/?text=${msg}`, "_blank");
               }}
-              className="text-[11px] font-bold text-emerald-700 hover:text-emerald-900 hover:underline ml-1 cursor-pointer"
+              className="text-[11px] font-bold text-emerald-400 hover:text-emerald-200 hover:underline ml-1 cursor-pointer"
               title="Share via WhatsApp"
             >
               💬 WhatsApp
@@ -919,19 +919,19 @@ export default function Home() {
           {/* Host / Room Authority Badge & Controls */}
           {isHost ? (
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="inline-flex items-center gap-1 bg-gradient-to-b from-[#fbf5e6] to-[#eddcb7] text-[#5c4308] border border-[#d4be8c] px-2.5 py-1 rounded-2xl text-xs font-mono font-black shadow-2xs">
+              <span className="inline-flex items-center gap-1 bg-[#d4be8c]/15 text-[#ecdcb8] border border-[#d4be8c]/40 px-2.5 py-1 rounded-2xl text-xs font-mono font-black shadow-xs">
                 <span>👑</span>
                 <span>Host</span>
               </span>
 
-              <div className="flex items-center gap-1 bg-[#f4f1e8] p-1 rounded-2xl border border-[#d8d1c0] text-[10px] font-mono flex-wrap">
+              <div className="flex items-center gap-1 bg-[#040c08]/90 p-1 rounded-2xl border border-white/10 text-[10px] font-mono flex-wrap">
                 {/* ⏳ Busy / Step Away Toggle */}
                 <button
                   onClick={handleToggleAuctioneerBusy}
-                  className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer shadow-2xs border ${
+                  className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer shadow-xs border ${
                     isAuctioneerBusy
-                      ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-700 animate-pulse"
-                      : "bg-white hover:bg-amber-50 text-amber-900 border-amber-300"
+                      ? "bg-amber-600 hover:bg-amber-700 text-white border-amber-500 animate-pulse"
+                      : "bg-[#07120d] hover:bg-amber-950/40 text-amber-300 border border-amber-500/30"
                   }`}
                   title={
                     isAuctioneerBusy
@@ -946,8 +946,8 @@ export default function Home() {
                   onClick={handleTogglePlayerHammer}
                   className={`px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer ${
                     roomAllowPlayerHammer
-                      ? "bg-emerald-100 text-[#124032] border border-emerald-300"
-                      : "text-[#767c84] hover:text-[#121417]"
+                      ? "bg-emerald-950/80 text-[#34d399] border border-emerald-500/40"
+                      : "text-white/50 hover:text-white"
                   }`}
                   title="Allow non-host players to strike the hammer"
                 >
@@ -958,8 +958,8 @@ export default function Home() {
                   onClick={handleToggleRotateAuctioneer}
                   className={`hidden sm:inline-block px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer ${
                     rotateAuctioneer
-                      ? "bg-purple-100 text-purple-800 border border-purple-300"
-                      : "text-[#767c84] hover:text-[#121417]"
+                      ? "bg-purple-950/80 text-purple-300 border border-purple-500/40"
+                      : "text-white/50 hover:text-white"
                   }`}
                   title="Randomly rotate auctioneer role to another player each round"
                 >
@@ -968,7 +968,7 @@ export default function Home() {
 
                 <button
                   onClick={handlePassGavelRandomly}
-                  className="px-2 py-0.5 rounded-lg bg-white border border-[#d8d1c0] text-[#5c4308] hover:bg-[#faf8f4] font-bold transition-colors cursor-pointer shadow-2xs"
+                  className="px-2 py-0.5 rounded-lg bg-[#07120d] border border-[#d4be8c]/30 text-[#ecdcb8] hover:bg-[#0b1c15] font-bold transition-colors cursor-pointer shadow-xs"
                   title="Pass gavel authority to another player now"
                 >
                   Pass 🎲
@@ -977,7 +977,7 @@ export default function Home() {
             </div>
           ) : (
             <div className="flex items-center gap-1.5">
-              <span className="hidden md:inline-flex items-center gap-1.5 bg-[#f4f1e8] text-[#555a60] border border-[#dcd6c8] px-3 py-1.5 rounded-2xl text-xs font-mono font-bold">
+              <span className="hidden md:inline-flex items-center gap-1.5 bg-[#040c08]/90 text-white/70 border border-white/10 px-3 py-1.5 rounded-2xl text-xs font-mono font-bold">
                 <span>👑</span>
                 <span>Authority: {allTeams[Object.keys(allTeams).find((k) => allTeams[k].ownerUid === hostUid)]?.managerName || "Host"}</span>
               </span>
@@ -986,7 +986,7 @@ export default function Home() {
                   ⏳ Auctioneer Busy (Hammer Open)
                 </span>
               ) : roomAllowPlayerHammer ? (
-                <span className="text-[10px] font-mono bg-emerald-100 text-[#124032] border border-emerald-300 px-2 py-0.5 rounded-xl font-bold">
+                <span className="text-[10px] font-mono bg-emerald-950/80 text-[#34d399] border border-emerald-500/40 px-2 py-0.5 rounded-xl font-bold">
                   🔨 Hammer Open to All
                 </span>
               ) : null}
@@ -995,13 +995,13 @@ export default function Home() {
         </div>
 
         {/* Center: Main View Tabs with Inset Physical Track */}
-        <div className="flex items-center gap-1.5 bg-[#e8e4da] p-1.5 rounded-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.08)] border border-[#d8d1c0]">
+        <div className="flex items-center gap-1.5 bg-[#040c08] p-1.5 rounded-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] border border-[#d4be8c]/25">
           <button
             onClick={() => setActiveTab("auction")}
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
               activeTab === "auction"
-                ? "bg-gradient-to-b from-white to-[#f8f6f0] text-[#121417] shadow-[0_2px_5px_rgba(0,0,0,0.08)] border border-[#d8d1c0]"
-                : "text-[#656b73] hover:text-[#121417]"
+                ? "bg-gradient-to-b from-[#d4be8c] via-[#c2aa74] to-[#a88f57] text-[#071510] shadow-[0_2px_8px_rgba(212,190,140,0.4)] border border-[#ecdcb8]"
+                : "text-white/50 hover:text-white"
             }`}
           >
             Auction Floor
@@ -1011,8 +1011,8 @@ export default function Home() {
               onClick={() => setActiveTab("squad")}
               className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 activeTab === "squad"
-                  ? "bg-gradient-to-b from-white to-[#f8f6f0] text-[#121417] shadow-[0_2px_5px_rgba(0,0,0,0.08)] border border-[#d8d1c0]"
-                  : "text-[#656b73] hover:text-[#121417]"
+                  ? "bg-gradient-to-b from-[#d4be8c] via-[#c2aa74] to-[#a88f57] text-[#071510] shadow-[0_2px_8px_rgba(212,190,140,0.4)] border border-[#ecdcb8]"
+                  : "text-white/50 hover:text-white"
               }`}
             >
               My Squad ({squad.length}/11)
@@ -1022,8 +1022,8 @@ export default function Home() {
             onClick={() => setActiveTab("chat")}
             className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
               activeTab === "chat"
-                ? "bg-gradient-to-b from-white to-[#f8f6f0] text-[#121417] shadow-[0_2px_5px_rgba(0,0,0,0.08)] border border-[#d8d1c0]"
-                : "text-[#656b73] hover:text-[#121417]"
+                ? "bg-gradient-to-b from-[#d4be8c] via-[#c2aa74] to-[#a88f57] text-[#071510] shadow-[0_2px_8px_rgba(212,190,140,0.4)] border border-[#ecdcb8]"
+                : "text-white/50 hover:text-white"
             }`}
           >
             Telegraph
@@ -1032,48 +1032,48 @@ export default function Home() {
 
         {/* Right: Purse + Manager Count + Mute + Exit */}
         <div className="flex items-center gap-3">
-          <div className="text-right hidden sm:block bg-gradient-to-b from-white via-[#faf8f3] to-[#f2ede0] border border-[#d8d1c0] px-3 py-1 rounded-2xl shadow-2xs">
-            <span className="text-[9px] uppercase font-mono text-[#8c8577] block font-bold leading-none">
+          <div className="text-right hidden sm:block bg-[#040c08]/90 border border-white/10 px-3 py-1 rounded-2xl shadow-inner">
+            <span className="text-[9px] uppercase font-mono text-white/50 block font-bold leading-none">
               Franchises
             </span>
-            <span className="text-xs font-black font-mono text-[#121417] mt-0.5">
+            <span className="text-xs font-black font-mono text-[#ecdcb8] mt-0.5">
               {activeCount}/{roomCapacity}
             </span>
           </div>
 
           {teamName.startsWith("Auctioneer - ") ? (
-            <div className="text-right bg-gradient-to-b from-[#fbf5e6] to-[#eddcb7] border-2 border-[#d4be8c] px-4 py-1 rounded-2xl shadow-2xs">
-              <span className="text-[9px] uppercase font-mono text-[#5c4308] block font-black leading-none">
+            <div className="text-right bg-[#d4be8c]/15 border border-[#d4be8c]/40 px-4 py-1 rounded-2xl shadow-xs">
+              <span className="text-[9px] uppercase font-mono text-[#ecdcb8] block font-black leading-none">
                 Role
               </span>
-              <span className="text-xs font-black font-mono text-[#5c4308] leading-none">
+              <span className="text-xs font-black font-mono text-[#d4be8c] leading-none">
                 Auctioneer
               </span>
             </div>
           ) : (
-            <div className="text-right bg-gradient-to-b from-white via-[#fbf9f4] to-[#f2ede0] border-2 border-[#d0c6ad] px-4 py-1 rounded-2xl shadow-[inset_0_1px_2px_rgba(0,0,0,0.03),0_2px_4px_rgba(0,0,0,0.02)]">
+            <div className="text-right bg-gradient-to-b from-[#0b1c15] to-[#040c08] border border-[#d4be8c]/40 px-4 py-1 rounded-2xl shadow-[inset_0_1px_2px_rgba(0,0,0,0.5),0_2px_8px_rgba(0,0,0,0.4)]">
               <div className="flex items-center justify-end gap-1">
-                <span className="text-[9px] uppercase font-mono text-[#8c8577] block font-bold leading-none">
+                <span className="text-[9px] uppercase font-mono text-white/50 block font-bold leading-none">
                   Purse
                 </span>
                 {isHost && (
-                  <span className="text-[8px] font-mono bg-amber-100 text-[#5c4308] px-1 rounded font-black">
+                  <span className="text-[8px] font-mono bg-[#d4be8c]/20 text-[#ecdcb8] px-1 rounded font-black">
                     Host & Gavel
                   </span>
                 )}
               </div>
-              <span className="text-sm font-black font-mono text-[#124032] leading-none mt-0.5 block">
+              <span className="text-sm font-black font-mono text-[#34d399] leading-none mt-0.5 block drop-shadow-[0_0_8px_rgba(52,211,153,0.3)]">
                 {formatLakhsAndCrores(myBudget, true)}
               </span>
             </div>
           )}
 
           {/* Audio Controls & SFX Test */}
-          <div className="flex items-center gap-1.5 bg-gradient-to-b from-white to-[#f4f1e8] border border-[#d8d1c0] p-1 rounded-2xl shadow-2xs">
+          <div className="flex items-center gap-1.5 bg-[#040c08]/90 border border-white/10 p-1 rounded-2xl shadow-inner">
             <button
               onClick={toggleSound}
               className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
-                isMuted ? "text-slate-400 hover:text-slate-600" : "text-[#124032] hover:text-emerald-800"
+                isMuted ? "text-white/30 hover:text-white/50" : "text-[#34d399] hover:text-emerald-300"
               }`}
               title={isMuted ? "Unmute Broadcast Audio" : "Mute Broadcast Audio"}
             >
@@ -1082,7 +1082,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setIsSoundTestOpen(true)}
-              className="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold text-[#555a60] hover:text-[#121417] bg-[#f0ece0] hover:bg-[#e4ded0] transition-colors cursor-pointer border border-[#dfd9cb]"
+              className="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold text-white/60 hover:text-white bg-[#0a1b14] hover:bg-[#112d22] transition-colors cursor-pointer border border-white/10"
               title="Test Web Audio Sound Synthesizer"
             >
               SFX Test
@@ -1091,7 +1091,7 @@ export default function Home() {
 
           <button
             onClick={handleLeaveRoom}
-            className="px-3.5 py-1.5 bg-gradient-to-b from-rose-50 to-rose-100 hover:to-rose-200 text-rose-800 border border-rose-300 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer shadow-2xs active:translate-y-0.5"
+            className="px-3.5 py-1.5 bg-gradient-to-b from-rose-950/60 to-rose-900/60 hover:to-rose-800/70 text-rose-200 border border-rose-500/40 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs active:translate-y-0.5"
           >
             Exit
           </button>
@@ -1131,13 +1131,13 @@ export default function Home() {
 
       {/* 🌟 AUTO-NEXT LOT COUNTDOWN BANNER */}
       {autoNextSeconds !== null && (
-        <div className="w-full bg-gradient-to-r from-[#185341] via-[#124032] to-[#0e3328] text-white py-2 px-6 flex flex-wrap items-center justify-between gap-2 font-mono text-xs shadow-md border-b border-[#1b5e4a] animate-fade-in shrink-0 z-20">
+        <div className="w-full bg-gradient-to-r from-[#05110c] via-[#0d261c] to-[#05110c] text-white py-2 px-6 flex flex-wrap items-center justify-between gap-2 font-mono text-xs shadow-md border-b border-[#34d399]/30 animate-fade-in shrink-0 z-20">
           <div className="flex items-center gap-3">
             <span className="text-sm">🔨</span>
-            <span className="font-black uppercase tracking-wider">
+            <span className="font-black uppercase tracking-wider text-[#ecdcb8]">
               LOT FINALIZED ({isSold ? `AWARDED AT ${formatLakhsAndCrores(currentBid, true)}` : "PASSED UNSOLD"})
             </span>
-            <span className="bg-white/15 px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-white/20">
+            <span className="bg-[#34d399]/15 text-[#34d399] px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-[#34d399]/30">
               Next Lot in {autoNextSeconds}s
             </span>
           </div>
@@ -1148,7 +1148,7 @@ export default function Home() {
                 handleNextPlayer();
                 setAutoNextSeconds(null);
               }}
-              className="px-3 py-1 bg-white hover:bg-emerald-50 text-[#124032] font-black uppercase tracking-wider text-[11px] rounded-xl shadow-xs transition-all cursor-pointer active:translate-y-0.5"
+              className="px-3 py-1 bg-gradient-to-b from-[#34d399] to-[#059669] hover:from-[#10b981] hover:to-[#047857] text-[#040c08] font-black uppercase tracking-wider text-[11px] rounded-xl shadow-xs transition-all cursor-pointer active:translate-y-0.5"
             >
               Advance Immediately ⏭️
             </button>
@@ -1236,15 +1236,18 @@ export default function Home() {
           </div>
 
           {/* COL 3 (Right 4 Cols): Player Pool / Purses / Chat */}
-          <div className="lg:col-span-4 flex flex-col h-full min-h-0 bg-gradient-to-b from-white via-[#fdfcf9] to-[#f8f6f0] border border-[#dcd6c8] rounded-3xl p-4.5 shadow-[0_2px_4px_rgba(0,0,0,0.02),0_10px_24px_rgba(0,0,0,0.04),inset_0_1px_0_rgba(255,255,255,0.9)] text-[#121417] overflow-hidden justify-between">
+          <div className="lg:col-span-4 flex flex-col h-full min-h-0 bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] border border-[#d4be8c]/25 rounded-3xl p-4.5 shadow-[0_16px_36px_rgba(0,0,0,0.55),0_2px_8px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(212,190,140,0.2)] text-white overflow-hidden justify-between relative">
+            {/* Top Hairline Sheen */}
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/40 to-transparent pointer-events-none" />
+
             {/* Panel Tab Switcher with Inset Track */}
-            <div className="flex items-center gap-1 bg-[#e8e4da] p-1 rounded-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] border border-[#d8d1c0] shrink-0 mb-3 font-mono">
+            <div className="flex items-center gap-1 bg-[#040c08] p-1 rounded-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.8)] border border-[#d4be8c]/20 shrink-0 mb-3 font-mono">
               <button
                 onClick={() => setCockpitTab("pool")}
                 className={`flex-1 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   cockpitTab === "pool"
-                    ? "bg-gradient-to-b from-white to-[#f8f6f0] text-[#121417] shadow-[0_2px_4px_rgba(0,0,0,0.06)] border border-[#d8d1c0]"
-                    : "text-[#656b73] hover:text-[#121417]"
+                    ? "bg-gradient-to-b from-[#d4be8c] via-[#c2aa74] to-[#a88f57] text-[#071510] shadow-[0_2px_6px_rgba(212,190,140,0.35)] border border-[#ecdcb8]"
+                    : "text-white/50 hover:text-white"
                 }`}
               >
                 Catalog ({filteredPlayers.length})
@@ -1253,8 +1256,8 @@ export default function Home() {
                 onClick={() => setCockpitTab("purses")}
                 className={`flex-1 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   cockpitTab === "purses"
-                    ? "bg-gradient-to-b from-white to-[#f8f6f0] text-[#121417] shadow-[0_2px_4px_rgba(0,0,0,0.06)] border border-[#d8d1c0]"
-                    : "text-[#656b73] hover:text-[#121417]"
+                    ? "bg-gradient-to-b from-[#d4be8c] via-[#c2aa74] to-[#a88f57] text-[#071510] shadow-[0_2px_6px_rgba(212,190,140,0.35)] border border-[#ecdcb8]"
+                    : "text-white/50 hover:text-white"
                 }`}
               >
                 Purses ({activeCount})
@@ -1263,8 +1266,8 @@ export default function Home() {
                 onClick={() => setCockpitTab("chat")}
                 className={`flex-1 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
                   cockpitTab === "chat"
-                    ? "bg-gradient-to-b from-white to-[#f8f6f0] text-[#121417] shadow-[0_2px_4px_rgba(0,0,0,0.06)] border border-[#d8d1c0]"
-                    : "text-[#656b73] hover:text-[#121417]"
+                    ? "bg-gradient-to-b from-[#d4be8c] via-[#c2aa74] to-[#a88f57] text-[#071510] shadow-[0_2px_6px_rgba(212,190,140,0.35)] border border-[#ecdcb8]"
+                    : "text-white/50 hover:text-white"
                 }`}
               >
                 Telegraph
@@ -1280,18 +1283,18 @@ export default function Home() {
                     placeholder="Search player or role..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1 bg-white text-[#121417] text-xs px-3.5 py-2 rounded-xl border border-[#d8d1c0] focus:outline-none focus:border-[#124032] placeholder:text-[#9ca3af] shadow-2xs"
+                    className="flex-1 bg-[#040c08] text-white text-xs px-3.5 py-2 rounded-xl border border-[#d4be8c]/25 focus:outline-none focus:border-[#34d399] placeholder:text-white/30 shadow-inner"
                   />
                   <select
                     value={filterRole}
                     onChange={(e) => setFilterRole(e.target.value)}
-                    className="bg-white text-[#121417] text-xs px-2.5 py-2 rounded-xl border border-[#d8d1c0] focus:outline-none font-mono shadow-2xs"
+                    className="bg-[#040c08] text-[#ecdcb8] text-xs px-2.5 py-2 rounded-xl border border-[#d4be8c]/25 focus:outline-none font-mono shadow-inner"
                   >
-                    <option value="All">All Roles</option>
-                    <option value="Batsman">Batsmen</option>
-                    <option value="Bowler">Bowlers</option>
-                    <option value="Wicket Keeper">WKs</option>
-                    <option value="All-Rounder">All-Rounders</option>
+                    <option value="All" className="bg-[#040c08] text-white">All Roles</option>
+                    <option value="Batsman" className="bg-[#040c08] text-white">Batsmen</option>
+                    <option value="Bowler" className="bg-[#040c08] text-white">Bowlers</option>
+                    <option value="Wicket Keeper" className="bg-[#040c08] text-white">WKs</option>
+                    <option value="All-Rounder" className="bg-[#040c08] text-white">All-Rounders</option>
                   </select>
                 </div>
 
@@ -1308,24 +1311,24 @@ export default function Home() {
                         key={p.id}
                         className={`flex items-center justify-between p-2.5 rounded-2xl border transition-all ${
                           isActive
-                            ? "bg-gradient-to-b from-[#eef7f2] to-[#d8ede1] border-[#7ec499] shadow-xs"
-                            : "bg-gradient-to-b from-white to-[#f7f5ee] border-[#dfd9cb] hover:to-[#eee9dc] shadow-2xs hover:-translate-y-0.5"
+                            ? "bg-gradient-to-b from-[#132d22] to-[#0a1f16] border-[#34d399]/60 shadow-[0_0_15px_rgba(52,211,153,0.2)]"
+                            : "bg-gradient-to-b from-[#081711] to-[#040c08] border-white/10 hover:border-[#d4be8c]/40 hover:bg-[#0c231a] shadow-xs hover:-translate-y-0.5"
                         }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0 truncate">
                           <span className="text-sm">{p.flag}</span>
                           <div className="truncate">
-                            <p className="text-xs font-bold text-[#121417] truncate">{p.name}</p>
-                            <p className="text-[10px] font-mono text-[#767c84]">{p.role} • Base {formatLakhsAndCrores(p.basePrice, true)}</p>
+                            <p className="text-xs font-bold text-white truncate">{p.name}</p>
+                            <p className="text-[10px] font-mono text-white/50">{p.role} • Base {formatLakhsAndCrores(p.basePrice, true)}</p>
                           </div>
                         </div>
 
                         {isSoldStatus ? (
-                          <span className="text-[10px] font-mono bg-emerald-100 text-[#124032] border border-emerald-300 px-2 py-0.5 rounded-md font-black uppercase">
+                          <span className="text-[10px] font-mono bg-emerald-950/80 text-[#34d399] border border-emerald-500/40 px-2 py-0.5 rounded-md font-black uppercase">
                             Sold
                           </span>
                         ) : isUnsoldStatus ? (
-                          <span className="text-[10px] font-mono bg-rose-100 text-rose-800 border border-rose-300 px-2 py-0.5 rounded-md font-black uppercase">
+                          <span className="text-[10px] font-mono bg-rose-950/80 text-rose-300 border border-rose-500/40 px-2 py-0.5 rounded-md font-black uppercase">
                             Unsold
                           </span>
                         ) : isHost ? (
@@ -1333,8 +1336,8 @@ export default function Home() {
                             onClick={() => selectPlayerForAuction(p)}
                             className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                               isActive
-                                ? "bg-gradient-to-b from-[#185341] to-[#0e3328] text-white border border-[#1b5e4a] shadow-xs"
-                                : "bg-white hover:bg-[#124032] hover:text-white text-[#121417] border border-[#d8d1c0] shadow-2xs active:translate-y-0.5"
+                                ? "bg-gradient-to-b from-[#34d399] to-[#059669] text-[#040c08] border border-[#34d399] shadow-xs"
+                                : "bg-[#040c08] hover:bg-[#185341] text-[#ecdcb8] hover:text-white border border-[#d4be8c]/30 shadow-xs active:translate-y-0.5"
                             }`}
                           >
                             {isActive ? "Active ★" : "Nominate"}
@@ -1343,8 +1346,8 @@ export default function Home() {
                           <span
                             className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
                               isActive
-                                ? "bg-emerald-100 text-[#124032] border-emerald-300 font-bold"
-                                : "bg-white text-[#767c84] border-[#ded8cb]"
+                                ? "bg-emerald-950/80 text-[#34d399] border-emerald-500/40 font-bold"
+                                : "bg-[#040c08] text-white/40 border-white/10"
                             }`}
                           >
                             {isActive ? "On Block" : "Open"}
@@ -1357,10 +1360,10 @@ export default function Home() {
 
                 {/* Host Next Player CTA */}
                 {isHost && (
-                  <div className="pt-2 mt-2 border-t border-[#e8e2d4] flex justify-end shrink-0">
+                  <div className="pt-2 mt-2 border-t border-white/10 flex justify-end shrink-0">
                     <button
                       onClick={handleNextPlayer}
-                      className="w-full py-2.5 bg-gradient-to-b from-[#185341] to-[#0e3328] hover:to-[#09241c] text-white rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all border border-[#1b5e4a] border-b-2 border-b-[#071c15] shadow-xs active:translate-y-0.5 active:border-b-0 cursor-pointer"
+                      className="w-full py-2.5 bg-gradient-to-b from-[#1c5d46] to-[#0e3328] hover:from-[#237357] hover:to-[#124032] text-white rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all border border-[#34d399]/40 border-b-2 border-b-[#051711] shadow-xs active:translate-y-0.5 active:border-b-0 cursor-pointer"
                     >
                       Next Player ➝
                     </button>
@@ -1384,20 +1387,20 @@ export default function Home() {
                     return (
                       <div
                         key={team}
-                        className="p-3 rounded-2xl border-2 border-[#d4be8c] bg-gradient-to-b from-[#fbf5e6] via-[#f7ecd1] to-[#eddcb7] text-[#5c4308] shadow-xs transition-all"
+                        className="p-3 rounded-2xl border border-[#d4be8c]/40 bg-gradient-to-b from-[#241a06] via-[#1a1204] to-[#120c02] text-[#ecdcb8] shadow-xs transition-all"
                       >
                         <div className="flex justify-between items-center text-xs mb-1">
-                          <span className="font-bold text-[#5c4308] truncate flex items-center gap-1.5">
+                          <span className="font-bold text-[#ecdcb8] truncate flex items-center gap-1.5">
                             <span>👑</span>
                             <span>{team.replace("Auctioneer - ", "")}</span>
-                            <span className="text-[10px] font-normal opacity-80">(Auctioneer)</span>
-                            {isSelf && <span className="text-[#124032] font-black">(You)</span>}
+                            <span className="text-[10px] font-normal text-white/50">(Auctioneer)</span>
+                            {isSelf && <span className="text-[#34d399] font-black">(You)</span>}
                           </span>
-                          <span className="text-[9px] font-mono font-black bg-[#5c4308]/15 text-[#5c4308] px-2 py-0.5 rounded uppercase border border-[#5c4308]/20">
+                          <span className="text-[9px] font-mono font-black bg-[#d4be8c]/20 text-[#ecdcb8] px-2 py-0.5 rounded uppercase border border-[#d4be8c]/30">
                             Room Authority
                           </span>
                         </div>
-                        <p className="text-[10px] text-[#71540d] font-mono">
+                        <p className="text-[10px] text-white/50 font-mono">
                           Dictating room bidding, nominations & gavel strikes
                         </p>
                       </div>
@@ -1409,36 +1412,36 @@ export default function Home() {
                       key={team}
                       className={`p-3 rounded-2xl border transition-all ${
                         isSelf
-                          ? "bg-gradient-to-b from-[#f0f7f4] to-[#e4f1eb] border-[#92c5ab] shadow-xs"
-                          : "bg-gradient-to-b from-white to-[#f7f5ee] border-[#dfd9cb] shadow-2xs"
+                          ? "bg-gradient-to-b from-[#0c281e] to-[#061811] border-[#34d399]/40 shadow-xs"
+                          : "bg-gradient-to-b from-[#081711] to-[#040c08] border-white/10 shadow-xs"
                       }`}
                     >
                       <div className="flex justify-between items-center text-xs mb-1.5">
-                        <span className="font-bold text-[#121417] truncate flex items-center gap-1.5">
+                        <span className="font-bold text-white truncate flex items-center gap-1.5">
                           <span>{getFranchiseName(team)}</span>
                           {data.managerName && (
-                            <span className="text-[10px] font-mono text-[#767c84]">
+                            <span className="text-[10px] font-mono text-white/50">
                               • {data.managerName}
                             </span>
                           )}
                           {isRoomAuthority && (
-                            <span className="text-[9px] font-mono font-black text-[#5c4308] bg-[#fbf5e6] border border-[#d4be8c] px-1.5 rounded">
+                            <span className="text-[9px] font-mono font-black text-[#ecdcb8] bg-[#d4be8c]/20 border border-[#d4be8c]/40 px-1.5 rounded">
                               👑 Creator
                             </span>
                           )}
-                          {isSelf && <span className="text-[#124032] font-black">(You)</span>}
+                          {isSelf && <span className="text-[#34d399] font-black">(You)</span>}
                         </span>
-                        <span className="font-black font-mono text-sm text-[#124032]">
+                        <span className="font-black font-mono text-sm text-[#34d399]">
                           {formatLakhsAndCrores(budget, true)}
                         </span>
                       </div>
-                      <div className="w-full bg-[#e8e2d4] h-2 rounded-full overflow-hidden mb-1.5 shadow-[inset_0_1px_2px_rgba(0,0,0,0.1)]">
+                      <div className="w-full bg-[#040c08] h-2 rounded-full overflow-hidden mb-1.5 border border-white/10 shadow-[inset_0_1px_2px_rgba(0,0,0,0.8)]">
                         <div
-                          className="h-full bg-gradient-to-r from-[#185341] to-[#258266] rounded-full transition-all duration-500"
+                          className="h-full bg-gradient-to-r from-[#124032] via-[#34d399] to-[#124032] rounded-full transition-all duration-500"
                           style={{ width: `${pctLeft}%` }}
                         />
                       </div>
-                      <div className="flex justify-between text-[10px] font-mono text-[#767c84]">
+                      <div className="flex justify-between text-[10px] font-mono text-white/50">
                         <span>Squad: {squadCount}/11 players</span>
                         <span>{pctLeft.toFixed(0)}% remaining</span>
                       </div>
@@ -1467,40 +1470,41 @@ export default function Home() {
       {activeTab === "squad" && (
         <main className="flex-1 min-h-0 p-3 md:p-4 grid grid-cols-1 lg:grid-cols-12 gap-4 h-full overflow-hidden">
           {/* The Bench */}
-          <div className="lg:col-span-4 bg-white rounded-2xl p-5 border border-black/10 shadow-[0_2px_4px_rgba(0,0,0,0.02),0_10px_20px_rgba(0,0,0,0.04)] text-[#121417] flex flex-col h-full min-h-0 overflow-hidden">
-            <h3 className={`text-sm font-bold uppercase tracking-wider text-[#121417] mb-3 border-b border-black/10 pb-2 ${oswald.className}`}>
+          <div className="lg:col-span-4 bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] rounded-2xl p-5 border border-[#d4be8c]/25 shadow-[0_16px_36px_rgba(0,0,0,0.55),inset_0_1px_0_rgba(212,190,140,0.15)] text-white flex flex-col h-full min-h-0 overflow-hidden relative">
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/40 to-transparent pointer-events-none" />
+            <h3 className={`text-sm font-bold uppercase tracking-wider text-[#ecdcb8] mb-3 border-b border-white/10 pb-2 ${oswald.className}`}>
               Squad Reserves / Bench ({bench.length})
             </h3>
             {bench.length === 0 ? (
-              <div className="flex-1 flex flex-col items-center justify-center text-[#767c84] text-xs font-mono">
+              <div className="flex-1 flex flex-col items-center justify-center text-white/40 text-xs font-mono">
                 <p>Reserves bench is empty</p>
-                <p className="text-[11px] text-[#9ca3af] mt-0.5">Purchased players will arrive here</p>
+                <p className="text-[11px] text-white/30 mt-0.5">Purchased players will arrive here</p>
               </div>
             ) : (
               <div className="flex-1 min-h-0 overflow-y-auto space-y-2 pr-1">
                 {bench.map((p) => (
                   <div
                     key={p.id}
-                    className="p-3 rounded-xl bg-[#faf8f4] border border-black/10 flex items-center justify-between"
+                    className="p-3 rounded-xl bg-[#081711] border border-white/10 flex items-center justify-between"
                   >
                     <div className="flex items-center gap-2.5 truncate">
                       <span className="text-sm">{p.flag}</span>
                       <div className="truncate">
-                        <p className="text-xs font-bold text-[#121417] truncate">{p.name}</p>
-                        <p className="text-[10px] font-mono text-[#767c84]">{p.role} • {formatLakhsAndCrores(p.boughtFor, true)}</p>
+                        <p className="text-xs font-bold text-white truncate">{p.name}</p>
+                        <p className="text-[10px] font-mono text-white/50">{p.role} • {formatLakhsAndCrores(p.boughtFor, true)}</p>
                       </div>
                     </div>
 
                     <div className="flex gap-2">
                       <button
                         onClick={() => togglePlayingStatus(p)}
-                        className="bg-[#124032] hover:bg-[#0c2f24] text-white text-[10px] font-mono font-bold px-2.5 py-1 rounded-lg transition-colors cursor-pointer shadow-xs"
+                        className="bg-gradient-to-b from-[#185341] to-[#0e3328] hover:from-[#1f6b53] hover:to-[#124032] text-white text-[10px] font-mono font-bold px-2.5 py-1 rounded-lg transition-colors cursor-pointer border border-[#34d399]/40 shadow-xs"
                       >
                         + XI
                       </button>
                       <button
                         onClick={() => handleReleasePlayer(p)}
-                        className="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-mono font-bold px-2 py-1 rounded-lg transition-colors cursor-pointer"
+                        className="bg-rose-950/40 hover:bg-rose-900/50 text-rose-300 border border-rose-500/30 text-[10px] font-mono font-bold px-2 py-1 rounded-lg transition-colors cursor-pointer"
                       >
                         Release
                       </button>

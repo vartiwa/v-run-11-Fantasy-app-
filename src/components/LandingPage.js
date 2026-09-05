@@ -619,25 +619,28 @@ export default function LandingPage({
               <div
                 key={player.id}
                 onClick={() => handleSelectPlayer(player)}
-                className={`p-5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between group ${
+                className={`relative p-5 rounded-2xl border transition-all duration-200 cursor-pointer flex flex-col justify-between group overflow-hidden ${
                   isSelected
-                    ? "bg-gradient-to-b from-[#124032] via-[#0d2e24] to-[#071912] border-[#d4be8c] shadow-[0_4px_24px_rgba(212,190,140,0.25),0_0_25px_rgba(18,64,50,0.5)] ring-1 ring-[#d4be8c]/50 -translate-y-1"
-                    : "bg-gradient-to-b from-[#0b1c15]/90 via-[#071510]/95 to-[#040c08] border-white/10 hover:border-[#d4be8c]/50 hover:bg-[#0c2018] shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.7),0_0_20px_rgba(212,190,140,0.15)] hover:-translate-y-1"
+                    ? "bg-gradient-to-b from-[#124032] via-[#0d2e24] to-[#071912] border-[#d4be8c] shadow-[0_12px_32px_rgba(0,0,0,0.8),0_0_30px_rgba(212,190,140,0.3),inset_0_1px_0_rgba(212,190,140,0.4)] ring-2 ring-[#d4be8c]/70 -translate-y-1"
+                    : "bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] border-white/10 hover:border-[#d4be8c]/60 hover:bg-[#0c2018] shadow-[0_10px_25px_rgba(0,0,0,0.65),0_2px_6px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.85),0_0_25px_rgba(18,64,50,0.35),inset_0_1px_0_rgba(212,190,140,0.25)] hover:-translate-y-1"
                 }`}
               >
+                {/* Top ambient hairline sheen */}
+                <div className="absolute inset-x-4 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/40 to-transparent pointer-events-none" />
+
                 <div>
                   <div className="flex items-center justify-between text-xs font-mono text-white/60 mb-2">
                     <span className="flex items-center gap-1.5">
                       <span>{player.flag}</span>
                       <span>{player.team}</span>
                     </span>
-                    <span className="font-bold text-[#d4be8c] bg-[#124032] px-2 py-0.5 rounded border border-[#d4be8c]/30">
+                    <span className="font-bold text-[#d4be8c] bg-[#124032] px-2 py-0.5 rounded border border-[#d4be8c]/30 shadow-inner">
                       OVR {player.rating}
                     </span>
                   </div>
 
                   <div className="flex items-center gap-3 my-2">
-                    <div className="relative w-12 h-12 min-w-[48px] min-h-[48px] aspect-square rounded-xl bg-gradient-to-b from-[#124032] to-[#081b14] border border-[#d4be8c]/30 overflow-hidden flex items-center justify-center shrink-0 shadow-inner group-hover:scale-105 transition-transform">
+                    <div className="relative w-12 h-12 min-w-[48px] min-h-[48px] aspect-square rounded-xl bg-gradient-to-b from-[#124032] to-[#081b14] border border-[#d4be8c]/35 overflow-hidden flex items-center justify-center shrink-0 shadow-[inset_0_2px_4px_rgba(0,0,0,0.6),0_1px_0_rgba(255,255,255,0.08)] group-hover:scale-105 transition-transform">
                       {player.imageUrl ? (
                         <Image
                           src={player.imageUrl}
@@ -698,11 +701,14 @@ export default function LandingPage({
             <div
               key={team.id}
               onClick={onOpenPrivateModal}
-              className="p-5 bg-gradient-to-b from-[#0b1c15]/90 via-[#071510]/95 to-[#040c08] border border-white/10 hover:border-[#d4be8c]/60 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between min-h-[145px] group shadow-[0_4px_16px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_24px_rgba(0,0,0,0.7),0_0_20px_rgba(212,190,140,0.18)] hover:-translate-y-1"
+              className="relative p-5 bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] border border-white/10 hover:border-[#d4be8c]/60 rounded-2xl transition-all duration-200 cursor-pointer flex flex-col justify-between min-h-[145px] group shadow-[0_10px_25px_rgba(0,0,0,0.65),0_2px_6px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)] hover:shadow-[0_16px_36px_rgba(0,0,0,0.85),0_0_25px_rgba(212,190,140,0.2),inset_0_1px_0_rgba(212,190,140,0.25)] hover:-translate-y-1 overflow-hidden"
             >
+              {/* Top ambient hairline sheen */}
+              <div className="absolute inset-x-4 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/35 to-transparent pointer-events-none" />
+
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="font-mono text-xs font-bold text-[#d4be8c] bg-[#124032] px-2 py-0.5 rounded border border-[#d4be8c]/30">
+                  <span className="font-mono text-xs font-bold text-[#d4be8c] bg-[#124032] px-2 py-0.5 rounded border border-[#d4be8c]/30 shadow-inner">
                     {team.code}
                   </span>
                   <span className="text-[10px] font-mono text-white/50 uppercase">
@@ -730,7 +736,8 @@ export default function LandingPage({
           ───────────────────────────────────────────────────────────── */}
       <section className={`px-6 lg:px-12 py-16 max-w-7xl mx-auto w-full border-b border-white/10 relative z-10 transition-colors duration-300 ${isFullPageVideo ? "bg-[#06120d]/75 backdrop-blur-md" : ""}`}>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="p-6 bg-gradient-to-b from-[#0b1c15]/90 via-[#071510]/95 to-[#040c08] border border-white/10 hover:border-[#d4be8c]/35 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.7),0_0_20px_rgba(18,64,50,0.2)] transition-all group">
+          <div className="relative p-6 bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] border border-white/10 hover:border-[#d4be8c]/35 rounded-2xl shadow-[0_12px_28px_rgba(0,0,0,0.65),0_2px_6px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)] hover:shadow-[0_18px_38px_rgba(0,0,0,0.8),0_0_24px_rgba(18,64,50,0.25)] transition-all group overflow-hidden">
+            <div className="absolute inset-x-6 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/30 to-transparent pointer-events-none" />
             <span className={`text-5xl font-bold text-[#d4be8c]/25 group-hover:text-[#d4be8c]/45 transition-colors block mb-2 ${displayFont.className}`}>
               01
             </span>
@@ -742,7 +749,8 @@ export default function LandingPage({
             </p>
           </div>
 
-          <div className="p-6 bg-gradient-to-b from-[#0b1c15]/90 via-[#071510]/95 to-[#040c08] border border-white/10 hover:border-[#d4be8c]/35 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.7),0_0_20px_rgba(18,64,50,0.2)] transition-all group">
+          <div className="relative p-6 bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] border border-white/10 hover:border-[#d4be8c]/35 rounded-2xl shadow-[0_12px_28px_rgba(0,0,0,0.65),0_2px_6px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)] hover:shadow-[0_18px_38px_rgba(0,0,0,0.8),0_0_24px_rgba(18,64,50,0.25)] transition-all group overflow-hidden">
+            <div className="absolute inset-x-6 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/30 to-transparent pointer-events-none" />
             <span className={`text-5xl font-bold text-[#d4be8c]/25 group-hover:text-[#d4be8c]/45 transition-colors block mb-2 ${displayFont.className}`}>
               02
             </span>
@@ -754,7 +762,8 @@ export default function LandingPage({
             </p>
           </div>
 
-          <div className="p-6 bg-gradient-to-b from-[#0b1c15]/90 via-[#071510]/95 to-[#040c08] border border-white/10 hover:border-[#d4be8c]/35 rounded-2xl shadow-[0_4px_20px_rgba(0,0,0,0.5)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.7),0_0_20px_rgba(18,64,50,0.2)] transition-all group">
+          <div className="relative p-6 bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] border border-white/10 hover:border-[#d4be8c]/35 rounded-2xl shadow-[0_12px_28px_rgba(0,0,0,0.65),0_2px_6px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(255,255,255,0.08)] hover:shadow-[0_18px_38px_rgba(0,0,0,0.8),0_0_24px_rgba(18,64,50,0.25)] transition-all group overflow-hidden">
+            <div className="absolute inset-x-6 top-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/30 to-transparent pointer-events-none" />
             <span className={`text-5xl font-bold text-[#d4be8c]/25 group-hover:text-[#d4be8c]/45 transition-colors block mb-2 ${displayFont.className}`}>
               03
             </span>
