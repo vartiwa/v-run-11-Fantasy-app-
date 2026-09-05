@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useRef, useEffect } from "react";
 import Image from "next/image";
-import { Inter, Oswald } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 import {
   ArrowRight,
   Lock,
@@ -18,7 +18,7 @@ import {
 } from "lucide-react";
 import { sounds } from "@/lib/soundEffects";
 
-const displayFont = Oswald({ subsets: ["latin"], weight: ["500", "600", "700"] });
+const displayFont = Outfit({ subsets: ["latin"], weight: ["500", "600", "700", "800"] });
 const bodyFont = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 // 🌟 KEY MARQUEE PLAYERS ONLY (MAIN PAGE SPOTLIGHT)

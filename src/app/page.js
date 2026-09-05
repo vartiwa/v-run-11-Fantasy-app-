@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback, useRef, useMemo } from "react";
 import { ref, onValue, set, get, push, runTransaction } from "firebase/database";
 import { db, ensureAuthUser } from "@/lib/firebase";
 import Confetti from "react-confetti";
-import { Inter, Oswald } from "next/font/google";
+import { Inter, Outfit } from "next/font/google";
 
 import PlayerCard from "@/components/PlayerCard";
 import BiddingPad from "@/components/BiddingPad";
@@ -18,12 +18,26 @@ import JoinCodeModal from "@/components/JoinCodeModal";
 import ActivityFeed from "@/components/ActivityFeed";
 import BidBattleBar from "@/components/BidBattleBar";
 import SoundTestModal from "@/components/SoundTestModal";
-import { SoundSpeakerIcon, AudioEqualizer } from "@/components/AuctionIcons";
+import {
+  SoundSpeakerIcon,
+  AudioEqualizer,
+  CrownIcon,
+  CricketBatIcon,
+  ClockIcon,
+  CheckIcon,
+  GavelIcon,
+  DiceIcon,
+  NextTrackIcon,
+  StarIcon,
+  CopyIcon,
+  WhatsAppIcon,
+  ChevronRightIcon,
+} from "@/components/AuctionIcons";
 import { playersList } from "@/data/players";
 import { sounds } from "@/lib/soundEffects";
 import { formatLakhsAndCrores } from "@/lib/formatCurrency";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["400", "700"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["500", "600", "700", "800", "900"] });
 const inter = Inter({ subsets: ["latin"] });
 
 const DEFAULT_BUDGET = 10000;
@@ -896,18 +910,18 @@ export default function Home() {
             title="Leave Room"
           >
             <div className="w-8 h-8 rounded-xl bg-gradient-to-b from-[#059669] to-[#047857] flex items-center justify-center text-white font-black text-sm shadow-xs border border-[#34d399]/40 group-hover:scale-105 transition-transform">
-              🏏
+              <CricketBatIcon className="w-4 h-4 text-emerald-100" />
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className={`text-xl font-black tracking-tight uppercase text-[#0e2c1e] group-hover:text-[#059669] transition-colors leading-none ${oswald.className}`}>
+                <span className={`text-xl font-black tracking-tight uppercase text-[#0e2c1e] group-hover:text-[#059669] transition-colors leading-none ${outfit.className}`}>
                   V-RUN 11
                 </span>
-                <span className="text-[9px] font-mono bg-[#e2efe6] text-[#0f5132] border border-[#b6d8c2] px-1.5 py-0.2 rounded font-black uppercase tracking-wider">
+                <span className="text-[9px] font-sans bg-[#e2efe6] text-[#0f5132] border border-[#b6d8c2] px-1.5 py-0.2 rounded font-black uppercase tracking-wider">
                   PRO
                 </span>
               </div>
-              <p className="text-[10px] font-mono text-[#5c7467] uppercase tracking-wider leading-none mt-0.5">
+              <p className="text-[10px] font-sans font-medium text-[#5c7467] uppercase tracking-wider leading-none mt-0.5">
                 IPL Premier Draft
               </p>
             </div>
@@ -917,45 +931,47 @@ export default function Home() {
 
           {/* Room Code & Share Plate */}
           <div className="flex items-center gap-2 bg-[#eaf3ec] border border-[#c4ded0] px-3 py-1 rounded-2xl shadow-xs text-xs font-mono text-[#0e2c1e]">
-            <span className="text-[#065f46] text-[10px] font-black">ARENA:</span>
+            <span className="text-[#065f46] text-[10px] font-sans font-bold">ARENA:</span>
             <span className="font-black text-[#0e2c1e] tracking-wider">{roomId}</span>
             <button
               onClick={() => {
                 const url = `${window.location.origin}/?room=${encodeURIComponent(roomId)}`;
                 navigator.clipboard.writeText(url);
-                alert(`📋 Invite link copied to clipboard!\nShare this with your friends:\n${url}`);
+                alert(`Invite link copied to clipboard!\nShare this with your friends:\n${url}`);
               }}
-              className="text-[11px] font-bold text-[#059669] hover:text-[#047857] hover:underline ml-1 cursor-pointer"
+              className="text-[11px] font-sans font-semibold text-[#059669] hover:text-[#047857] hover:underline ml-1 cursor-pointer flex items-center gap-1"
               title="Copy Room Link"
             >
-              📋 Copy
+              <CopyIcon className="w-3 h-3 text-[#059669]" />
+              <span>Copy</span>
             </button>
             <button
               onClick={() => {
                 const url = `${window.location.origin}/?room=${encodeURIComponent(roomId)}`;
-                const msg = encodeURIComponent(`🏏 Join my Live IPL Fantasy Auction Draft!\n🏛️ Room PIN: ${roomId}\n👉 Tap to pick your franchise team: ${url}`);
+                const msg = encodeURIComponent(`Join my Live IPL Fantasy Auction Draft!\nRoom PIN: ${roomId}\nTap to pick your franchise team: ${url}`);
                 window.open(`https://wa.me/?text=${msg}`, "_blank");
               }}
-              className="text-[11px] font-bold text-[#059669] hover:text-[#047857] hover:underline ml-1 cursor-pointer"
+              className="text-[11px] font-sans font-semibold text-[#059669] hover:text-[#047857] hover:underline ml-1 cursor-pointer flex items-center gap-1"
               title="Share via WhatsApp"
             >
-              💬 WhatsApp
+              <WhatsAppIcon className="w-3 h-3 text-[#059669]" />
+              <span>WhatsApp</span>
             </button>
           </div>
 
           {/* Host / Room Authority Badge & Controls */}
           {isHost ? (
             <div className="flex items-center gap-1.5 flex-wrap">
-              <span className="inline-flex items-center gap-1 bg-[#e8f3ec] text-[#0f5132] border border-[#b8dbc4] px-2.5 py-1 rounded-2xl text-xs font-mono font-black shadow-xs">
-                <span>👑</span>
+              <span className="inline-flex items-center gap-1.5 bg-[#e8f3ec] text-[#0f5132] border border-[#b8dbc4] px-2.5 py-1 rounded-2xl text-xs font-sans font-bold shadow-xs">
+                <CrownIcon className="w-3.5 h-3.5 text-amber-600" />
                 <span>Host</span>
               </span>
 
-              <div className="flex items-center gap-1 bg-[#eaf3ec] p-1 rounded-2xl border border-[#c4ded0] text-[10px] font-mono flex-wrap">
+              <div className="flex items-center gap-1 bg-[#eaf3ec] p-1 rounded-2xl border border-[#c4ded0] text-[10px] font-sans font-semibold flex-wrap">
                 {/* ⏳ Busy / Step Away Toggle */}
                 <button
                   onClick={handleToggleAuctioneerBusy}
-                  className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer shadow-xs border ${
+                  className={`px-2 py-0.5 rounded-lg font-bold transition-all cursor-pointer shadow-xs border flex items-center gap-1 ${
                     isAuctioneerBusy
                       ? "bg-amber-500 hover:bg-amber-600 text-white border-amber-600 animate-pulse"
                       : "bg-white hover:bg-amber-50 text-amber-800 border-amber-300"
@@ -966,55 +982,70 @@ export default function Home() {
                       : "Step away temporarily. Hands hammer authority to the room until you return."
                   }
                 >
-                  {isAuctioneerBusy ? "✅ I'm Back" : "⏳ Busy"}
+                  {isAuctioneerBusy ? (
+                    <>
+                      <CheckIcon className="w-3 h-3 text-white" />
+                      <span>I'm Back</span>
+                    </>
+                  ) : (
+                    <>
+                      <ClockIcon className="w-3 h-3 text-amber-700" />
+                      <span>Busy</span>
+                    </>
+                  )}
                 </button>
 
                 <button
                   onClick={handleTogglePlayerHammer}
-                  className={`px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer ${
+                  className={`px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer flex items-center gap-1 ${
                     roomAllowPlayerHammer
                       ? "bg-[#d1fae5] text-[#065f46] border border-[#6ee7b7]"
                       : "text-[#5c7467] hover:text-[#0e2c1e]"
                   }`}
                   title="Allow non-host players to strike the hammer"
                 >
-                  🔨 Hammer: {roomAllowPlayerHammer ? "ON" : "OFF"}
+                  <GavelIcon className="w-3 h-3 text-[#065f46]" />
+                  <span>Hammer: {roomAllowPlayerHammer ? "ON" : "OFF"}</span>
                 </button>
 
                 <button
                   onClick={handleToggleRotateAuctioneer}
-                  className={`hidden sm:inline-block px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer ${
+                  className={`hidden sm:inline-flex items-center gap-1 px-2 py-0.5 rounded-lg font-bold transition-colors cursor-pointer ${
                     rotateAuctioneer
                       ? "bg-purple-100 text-purple-900 border border-purple-300"
                       : "text-[#5c7467] hover:text-[#0e2c1e]"
                   }`}
                   title="Randomly rotate auctioneer role to another player each round"
                 >
-                  🎲 Rotate: {rotateAuctioneer ? "ON" : "OFF"}
+                  <DiceIcon className="w-3 h-3 text-purple-800" />
+                  <span>Rotate: {rotateAuctioneer ? "ON" : "OFF"}</span>
                 </button>
 
                 <button
                   onClick={handlePassGavelRandomly}
-                  className="px-2 py-0.5 rounded-lg bg-white border border-[#b8dbc4] text-[#0f5132] hover:bg-[#e2efe6] font-bold transition-colors cursor-pointer shadow-xs"
+                  className="px-2 py-0.5 rounded-lg bg-white border border-[#b8dbc4] text-[#0f5132] hover:bg-[#e2efe6] font-bold transition-colors cursor-pointer shadow-xs flex items-center gap-1"
                   title="Pass gavel authority to another player now"
                 >
-                  Pass 🎲
+                  <span>Pass</span>
+                  <DiceIcon className="w-3 h-3 text-[#059669]" />
                 </button>
               </div>
             </div>
           ) : (
             <div className="flex items-center gap-1.5">
-              <span className="hidden md:inline-flex items-center gap-1.5 bg-[#eaf3ec] text-[#1c3829] border border-[#c4ded0] px-3 py-1.5 rounded-2xl text-xs font-mono font-bold">
-                <span>👑</span>
+              <span className="hidden md:inline-flex items-center gap-1.5 bg-[#eaf3ec] text-[#1c3829] border border-[#c4ded0] px-3 py-1.5 rounded-2xl text-xs font-sans font-semibold">
+                <CrownIcon className="w-3.5 h-3.5 text-amber-600" />
                 <span>Authority: {allTeams[Object.keys(allTeams).find((k) => allTeams[k].ownerUid === hostUid)]?.managerName || "Host"}</span>
               </span>
               {isAuctioneerBusy ? (
-                <span className="text-[10px] font-mono bg-amber-500 text-white px-2 py-0.5 rounded-xl font-bold animate-pulse">
-                  ⏳ Auctioneer Busy (Hammer Open)
+                <span className="text-[10px] font-sans font-bold bg-amber-500 text-white px-2 py-0.5 rounded-xl flex items-center gap-1 animate-pulse">
+                  <ClockIcon className="w-3 h-3 text-white" />
+                  <span>Auctioneer Busy</span>
                 </span>
               ) : roomAllowPlayerHammer ? (
-                <span className="text-[10px] font-mono bg-[#d1fae5] text-[#065f46] border border-[#6ee7b7] px-2 py-0.5 rounded-xl font-bold">
-                  🔨 Hammer Open to All
+                <span className="text-[10px] font-sans font-bold bg-[#d1fae5] text-[#065f46] border border-[#6ee7b7] px-2 py-0.5 rounded-xl flex items-center gap-1">
+                  <GavelIcon className="w-3 h-3 text-[#065f46]" />
+                  <span>Hammer Open to All</span>
                 </span>
               ) : null}
             </div>
@@ -1025,7 +1056,7 @@ export default function Home() {
         <div className="flex items-center gap-1.5 bg-[#e4eee6] p-1.5 rounded-2xl shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)] border border-[#cfe0d5]">
           <button
             onClick={() => setActiveTab("auction")}
-            className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`px-4 py-1.5 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
               activeTab === "auction"
                 ? "bg-white text-[#0f3d2a] shadow-[0_2px_8px_rgba(18,64,50,0.12)] border border-[#b8d8c4]"
                 : "text-[#5c7467] hover:text-[#0e2c1e]"
@@ -1036,7 +1067,7 @@ export default function Home() {
           {!teamName.startsWith("Auctioneer - ") && (
             <button
               onClick={() => setActiveTab("squad")}
-              className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              className={`px-4 py-1.5 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
                 activeTab === "squad"
                   ? "bg-white text-[#0f3d2a] shadow-[0_2px_8px_rgba(18,64,50,0.12)] border border-[#b8d8c4]"
                   : "text-[#5c7467] hover:text-[#0e2c1e]"
@@ -1047,7 +1078,7 @@ export default function Home() {
           )}
           <button
             onClick={() => setActiveTab("chat")}
-            className={`px-4 py-1.5 rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`px-4 py-1.5 rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer ${
               activeTab === "chat"
                 ? "bg-white text-[#0f3d2a] shadow-[0_2px_8px_rgba(18,64,50,0.12)] border border-[#b8d8c4]"
                 : "text-[#5c7467] hover:text-[#0e2c1e]"
@@ -1060,31 +1091,31 @@ export default function Home() {
         {/* Right: Purse + Manager Count + Mute + Exit */}
         <div className="flex items-center gap-3">
           <div className="text-right hidden sm:block bg-[#eaf3ec] border border-[#c4ded0] px-3 py-1 rounded-2xl shadow-xs">
-            <span className="text-[9px] uppercase font-mono text-[#5c7467] block font-bold leading-none">
+            <span className="text-[9px] uppercase font-sans font-semibold text-[#5c7567] block leading-none">
               Franchises
             </span>
-            <span className="text-xs font-black font-mono text-[#0e2c1e] mt-0.5">
+            <span className="text-xs font-bold font-mono text-[#0e2c1e] mt-0.5">
               {activeCount}/{roomCapacity}
             </span>
           </div>
 
           {teamName.startsWith("Auctioneer - ") ? (
             <div className="text-right bg-[#e8f3ec] border border-[#b8dbc4] px-4 py-1 rounded-2xl shadow-xs">
-              <span className="text-[9px] uppercase font-mono text-[#5c7467] block font-black leading-none">
+              <span className="text-[9px] uppercase font-sans font-semibold text-[#5c7567] block leading-none">
                 Role
               </span>
-              <span className="text-xs font-black font-mono text-[#065f46] leading-none">
+              <span className="text-xs font-bold font-sans text-[#065f46] leading-none">
                 Auctioneer
               </span>
             </div>
           ) : (
             <div className="text-right bg-gradient-to-b from-[#eaf5ed] to-[#daf0e0] border border-[#a8d7ba] px-4 py-1 rounded-2xl shadow-xs">
               <div className="flex items-center justify-end gap-1">
-                <span className="text-[9px] uppercase font-mono text-[#5c7467] block font-bold leading-none">
+                <span className="text-[9px] uppercase font-sans font-semibold text-[#5c7567] block leading-none">
                   Purse
                 </span>
                 {isHost && (
-                  <span className="text-[8px] font-mono bg-[#d1fae5] text-[#065f46] px-1 rounded font-black">
+                  <span className="text-[8px] font-sans font-bold bg-[#d1fae5] text-[#065f46] px-1 rounded">
                     Host & Gavel
                   </span>
                 )}
@@ -1099,7 +1130,7 @@ export default function Home() {
           <div className="flex items-center gap-1.5 bg-[#eaf3ec] border border-[#c4ded0] p-1 rounded-2xl shadow-xs">
             <button
               onClick={toggleSound}
-              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-mono font-bold transition-all cursor-pointer ${
+              className={`flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs font-sans font-semibold transition-all cursor-pointer ${
                 isMuted ? "text-[#5c7467]/50 hover:text-[#5c7467]" : "text-[#059669] hover:text-[#047857]"
               }`}
               title={isMuted ? "Unmute Broadcast Audio" : "Mute Broadcast Audio"}
@@ -1109,7 +1140,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => setIsSoundTestOpen(true)}
-              className="px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold text-[#0f5132] hover:text-[#065f46] bg-white hover:bg-[#dff0e5] transition-colors cursor-pointer border border-[#b8dbc4]"
+              className="px-2 py-0.5 rounded-lg text-[10px] font-sans font-bold text-[#0f5132] hover:text-[#065f46] bg-white hover:bg-[#dff0e5] transition-colors cursor-pointer border border-[#b8dbc4]"
               title="Test Web Audio Sound Synthesizer"
             >
               SFX Test
@@ -1118,7 +1149,7 @@ export default function Home() {
 
           <button
             onClick={handleLeaveRoom}
-            className="px-3.5 py-1.5 bg-gradient-to-b from-rose-50 to-rose-100 hover:to-rose-200 text-rose-700 border border-rose-300 rounded-2xl text-xs font-mono font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs active:translate-y-0.5"
+            className="px-3.5 py-1.5 bg-gradient-to-b from-rose-50 to-rose-100 hover:to-rose-200 text-rose-700 border border-rose-300 rounded-2xl text-xs font-sans font-bold uppercase tracking-wider transition-all cursor-pointer shadow-xs active:translate-y-0.5"
           >
             Exit
           </button>
@@ -1134,13 +1165,13 @@ export default function Home() {
 
       {/* 🌟 AUCTIONEER BUSY / STEPPED AWAY ANNOUNCEMENT BANNER */}
       {isAuctioneerBusy && (
-        <div className="w-full bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800 text-white py-2 px-4 md:px-6 flex flex-wrap items-center justify-between gap-2 font-mono text-xs shadow-md border-b border-amber-500 animate-fade-in shrink-0 z-20">
+        <div className="w-full bg-gradient-to-r from-amber-600 via-amber-700 to-amber-800 text-white py-2 px-4 md:px-6 flex flex-wrap items-center justify-between gap-2 font-sans text-xs shadow-md border-b border-amber-500 animate-fade-in shrink-0 z-20">
           <div className="flex items-center gap-2">
-            <span className="text-sm">⏳</span>
-            <span className="font-black uppercase tracking-wider">
+            <ClockIcon className="w-4 h-4 text-amber-100" />
+            <span className="font-extrabold uppercase tracking-wider">
               AUCTIONEER IS BUSY / STEPPED AWAY
             </span>
-            <span className="bg-black/25 px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-white/20">
+            <span className="bg-black/25 px-2.5 py-0.5 rounded-full text-[11px] font-semibold border border-white/20">
               Hammer is open to all franchise managers!
             </span>
           </div>
@@ -1148,9 +1179,10 @@ export default function Home() {
           {isHost && (
             <button
               onClick={handleToggleAuctioneerBusy}
-              className="px-3 py-1 bg-white hover:bg-amber-50 text-amber-900 font-black uppercase tracking-wider text-[11px] rounded-xl shadow-xs transition-all cursor-pointer active:translate-y-0.5"
+              className="px-3 py-1 bg-white hover:bg-amber-50 text-amber-900 font-extrabold uppercase tracking-wider text-[11px] rounded-xl shadow-xs transition-all cursor-pointer active:translate-y-0.5 flex items-center gap-1.5"
             >
-              ✅ I'm Back (Reclaim Gavel)
+              <CheckIcon className="w-3.5 h-3.5 text-amber-900" />
+              <span>I'm Back (Reclaim Gavel)</span>
             </button>
           )}
         </div>
@@ -1158,10 +1190,10 @@ export default function Home() {
 
       {/* 🌟 AUTO-NEXT LOT COUNTDOWN BANNER */}
       {autoNextSeconds !== null && (
-        <div className="w-full bg-gradient-to-r from-[#e7f3ec] via-[#f0f8f3] to-[#e7f3ec] text-[#0e2c1e] py-2 px-6 flex flex-wrap items-center justify-between gap-2 font-mono text-xs shadow-xs border-b border-[#b6d8c2] animate-fade-in shrink-0 z-20">
-          <div className="flex items-center gap-3">
-            <span className="text-sm">🔨</span>
-            <span className="font-black uppercase tracking-wider text-[#065f46]">
+        <div className="w-full bg-gradient-to-r from-[#e7f3ec] via-[#f0f8f3] to-[#e7f3ec] text-[#0e2c1e] py-2 px-6 flex flex-wrap items-center justify-between gap-2 font-sans text-xs shadow-xs border-b border-[#b6d8c2] animate-fade-in shrink-0 z-20">
+          <div className="flex items-center gap-2.5">
+            <GavelIcon className="w-4 h-4 text-[#065f46]" />
+            <span className="font-extrabold uppercase tracking-wider text-[#065f46]">
               LOT FINALIZED ({isSold ? `AWARDED AT ${formatLakhsAndCrores(currentBid, true)}` : "PASSED UNSOLD"})
             </span>
             <span className="bg-[#d1fae5] text-[#065f46] px-2.5 py-0.5 rounded-full text-[11px] font-bold border border-[#6ee7b7]">
@@ -1175,9 +1207,10 @@ export default function Home() {
                 handleNextPlayer();
                 setAutoNextSeconds(null);
               }}
-              className="px-3 py-1 bg-gradient-to-b from-[#059669] to-[#047857] hover:from-[#10b981] hover:to-[#059669] text-white font-black uppercase tracking-wider text-[11px] rounded-xl shadow-xs transition-all cursor-pointer active:translate-y-0.5"
+              className="px-3 py-1 bg-gradient-to-b from-[#059669] to-[#047857] hover:from-[#10b981] hover:to-[#059669] text-white font-extrabold uppercase tracking-wider text-[11px] rounded-xl shadow-xs transition-all cursor-pointer active:translate-y-0.5 flex items-center gap-1.5"
             >
-              Advance Immediately ⏭️
+              <span>Advance Immediately</span>
+              <NextTrackIcon className="w-3.5 h-3.5 text-white" />
             </button>
           )}
         </div>
@@ -1268,7 +1301,7 @@ export default function Home() {
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#d4be8c] via-[#059669] to-[#d4be8c] opacity-80" />
 
             {/* Panel Tab Switcher with Inset Track */}
-            <div className="flex items-center gap-1 bg-[#e4eee6] p-1 rounded-2xl shadow-inner border border-[#c2dcce] shrink-0 mb-3 font-mono">
+            <div className="flex items-center gap-1 bg-[#e4eee6] p-1 rounded-2xl shadow-inner border border-[#c2dcce] shrink-0 mb-3 font-sans">
               <button
                 onClick={() => setCockpitTab("pool")}
                 className={`flex-1 py-1.5 rounded-xl text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
@@ -1310,12 +1343,12 @@ export default function Home() {
                     placeholder="Search player or role..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="flex-1 bg-[#f4f8f5] text-[#0e2c1e] text-xs px-3.5 py-2 rounded-xl border border-[#c4ded0] focus:outline-none focus:border-[#059669] placeholder:text-[#7d9b89] shadow-inner"
+                    className="flex-1 bg-[#f4f8f5] text-[#0e2c1e] text-xs px-3.5 py-2 rounded-xl border border-[#c4ded0] focus:outline-none focus:border-[#059669] placeholder:text-[#7d9b89] shadow-inner font-sans"
                   />
                   <select
                     value={filterRole}
                     onChange={(e) => setFilterRole(e.target.value)}
-                    className="bg-[#f4f8f5] text-[#0e3524] text-xs px-2.5 py-2 rounded-xl border border-[#c4ded0] focus:outline-none font-mono shadow-inner cursor-pointer"
+                    className="bg-[#f4f8f5] text-[#0e3524] text-xs px-2.5 py-2 rounded-xl border border-[#c4ded0] focus:outline-none font-sans font-medium shadow-inner cursor-pointer"
                   >
                     <option value="All" className="bg-white text-[#0e2c1e]">All Roles</option>
                     <option value="Batsman" className="bg-white text-[#0e2c1e]">Batsmen</option>
@@ -1343,35 +1376,46 @@ export default function Home() {
                         }`}
                       >
                         <div className="flex items-center gap-2.5 min-w-0 truncate">
-                          <span className="text-sm">{p.flag}</span>
+                          {p.flag ? (
+                            <span className="text-sm">{p.flag}</span>
+                          ) : (
+                            <CricketBatIcon className="w-4 h-4 text-[#047857]" />
+                          )}
                           <div className="truncate">
                             <p className="text-xs font-bold text-[#0e2c1e] truncate">{p.name}</p>
-                            <p className="text-[10px] font-mono text-[#5c7567]">{p.role} • Base {formatLakhsAndCrores(p.basePrice, true)}</p>
+                            <p className="text-[10px] font-sans text-[#5c7567]">{p.role} • <span className="font-mono">Base {formatLakhsAndCrores(p.basePrice, true)}</span></p>
                           </div>
                         </div>
 
                         {isSoldStatus ? (
-                          <span className="text-[10px] font-mono bg-[#e6f7ee] text-[#047857] border border-[#a7f3d0] px-2 py-0.5 rounded-md font-black uppercase">
+                          <span className="text-[10px] font-sans bg-[#e6f7ee] text-[#047857] border border-[#a7f3d0] px-2 py-0.5 rounded-md font-bold uppercase">
                             Sold
                           </span>
                         ) : isUnsoldStatus ? (
-                          <span className="text-[10px] font-mono bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded-md font-black uppercase">
+                          <span className="text-[10px] font-sans bg-rose-50 text-rose-700 border border-rose-200 px-2 py-0.5 rounded-md font-bold uppercase">
                             Unsold
                           </span>
                         ) : isHost ? (
                           <button
                             onClick={() => selectPlayerForAuction(p)}
-                            className={`text-[10px] font-mono font-bold px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
+                            className={`text-[10px] font-sans font-bold px-2.5 py-1 rounded-lg transition-all cursor-pointer ${
                               isActive
-                                ? "bg-gradient-to-b from-[#059669] to-[#047857] text-white border border-[#059669] shadow-xs"
-                                : "bg-gradient-to-b from-white to-[#eef5f0] hover:bg-[#e2efe6] text-[#0e3524] border border-[#badbc6] shadow-xs active:translate-y-0.5 font-bold"
+                                ? "bg-gradient-to-b from-[#059669] to-[#047857] text-white border border-[#059669] shadow-xs flex items-center gap-1"
+                                : "bg-gradient-to-b from-white to-[#eef5f0] hover:bg-[#e2efe6] text-[#0e3524] border border-[#badbc6] shadow-xs active:translate-y-0.5"
                             }`}
                           >
-                            {isActive ? "Active ★" : "Nominate"}
+                            {isActive ? (
+                              <>
+                                <span>Active</span>
+                                <StarIcon className="w-3 h-3 text-amber-300" />
+                              </>
+                            ) : (
+                              "Nominate"
+                            )}
                           </button>
                         ) : (
                           <span
-                            className={`text-[10px] font-mono px-2 py-0.5 rounded-md border ${
+                            className={`text-[10px] font-sans px-2 py-0.5 rounded-md border ${
                               isActive
                                 ? "bg-[#e6f7ee] text-[#047857] border-[#a7f3d0] font-bold"
                                 : "bg-[#f4f8f5] text-[#5c7567] border-[#cfe2d6]"
@@ -1390,9 +1434,10 @@ export default function Home() {
                   <div className="pt-2 mt-2 border-t border-[#cfe0d5] flex justify-end shrink-0">
                     <button
                       onClick={handleNextPlayer}
-                      className="w-full py-2.5 bg-gradient-to-b from-[#059669] via-[#047857] to-[#065f46] hover:from-[#10b981] hover:to-[#047857] text-white rounded-xl text-xs font-mono font-bold uppercase tracking-wider transition-all border border-[#34d399]/60 border-b-2 border-b-[#064e3b] shadow-md active:translate-y-0.5 active:border-b-0 cursor-pointer"
+                      className="w-full py-2.5 bg-gradient-to-b from-[#059669] via-[#047857] to-[#065f46] hover:from-[#10b981] hover:to-[#047857] text-white rounded-xl text-xs font-sans font-bold uppercase tracking-wider transition-all border border-[#34d399]/60 border-b-2 border-b-[#064e3b] shadow-md active:translate-y-0.5 active:border-b-0 cursor-pointer flex items-center justify-center gap-1.5"
                     >
-                      Next Player ➝
+                      <span>Next Player</span>
+                      <ChevronRightIcon className="w-4 h-4 text-white" />
                     </button>
                   </div>
                 )}
@@ -1418,16 +1463,16 @@ export default function Home() {
                       >
                         <div className="flex justify-between items-center text-xs mb-1">
                           <span className="font-bold text-[#714b08] truncate flex items-center gap-1.5">
-                            <span>👑</span>
+                            <CrownIcon className="w-3.5 h-3.5 text-amber-600" />
                             <span>{team.replace("Auctioneer - ", "")}</span>
                             <span className="text-[10px] font-normal text-[#8d6923]">(Auctioneer)</span>
                             {isSelf && <span className="text-[#059669] font-black">(You)</span>}
                           </span>
-                          <span className="text-[9px] font-mono font-black bg-[#fef3c7] text-[#92400e] px-2 py-0.5 rounded uppercase border border-[#f59e0b]/40">
+                          <span className="text-[9px] font-sans font-bold bg-[#fef3c7] text-[#92400e] px-2 py-0.5 rounded uppercase border border-[#f59e0b]/40">
                             Room Authority
                           </span>
                         </div>
-                        <p className="text-[10px] text-[#8d6923] font-mono">
+                        <p className="text-[10px] text-[#8d6923] font-sans">
                           Dictating room bidding, nominations & gavel strikes
                         </p>
                       </div>
@@ -1447,13 +1492,14 @@ export default function Home() {
                         <span className="font-bold text-[#0e2c1e] truncate flex items-center gap-1.5">
                           <span>{getFranchiseName(team)}</span>
                           {data.managerName && (
-                            <span className="text-[10px] font-mono text-[#5c7567]">
+                            <span className="text-[10px] font-sans text-[#5c7567]">
                               • {data.managerName}
                             </span>
                           )}
                           {isRoomAuthority && (
-                            <span className="text-[9px] font-mono font-black text-[#854d0e] bg-[#fef3c7] border border-[#f59e0b]/40 px-1.5 rounded">
-                              👑 Creator
+                            <span className="inline-flex items-center gap-1 text-[9px] font-sans font-bold text-[#854d0e] bg-[#fef3c7] border border-[#f59e0b]/40 px-1.5 py-0.5 rounded">
+                              <CrownIcon className="w-2.5 h-2.5 text-amber-600" />
+                              <span>Creator</span>
                             </span>
                           )}
                           {isSelf && <span className="text-[#059669] font-black">(You)</span>}
@@ -1468,9 +1514,9 @@ export default function Home() {
                           style={{ width: `${pctLeft}%` }}
                         />
                       </div>
-                      <div className="flex justify-between text-[10px] font-mono text-[#5c7567]">
-                        <span>Squad: {squadCount}/11 players</span>
-                        <span>{pctLeft.toFixed(0)}% remaining</span>
+                      <div className="flex justify-between text-[10px] font-sans text-[#5c7567]">
+                        <span>Squad: <strong className="text-[#0e2c1e]">{squadCount}/11</strong> players</span>
+                        <span><strong className="text-[#047857]">{pctLeft.toFixed(0)}%</strong> remaining</span>
                       </div>
                     </div>
                   );
@@ -1499,7 +1545,7 @@ export default function Home() {
           {/* The Bench */}
           <div className="lg:col-span-4 bg-gradient-to-b from-white via-[#f7faf8] to-[#edf5f0] rounded-3xl p-5 border border-[#c6ded0] shadow-[0_16px_36px_rgba(18,64,50,0.08),0_2px_8px_rgba(18,64,50,0.04)] text-[#12241b] flex flex-col h-full min-h-0 overflow-hidden relative">
             <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-[#d4be8c] via-[#059669] to-[#d4be8c] opacity-80" />
-            <h3 className={`text-sm font-bold uppercase tracking-wider text-[#0e2c1e] mb-3 border-b border-[#cfe0d5] pb-2 ${oswald.className}`}>
+            <h3 className={`text-sm font-bold uppercase tracking-wider text-[#0e2c1e] mb-3 border-b border-[#cfe0d5] pb-2 ${outfit.className}`}>
               Squad Reserves / Bench ({bench.length})
             </h3>
             {bench.length === 0 ? (
@@ -1515,23 +1561,27 @@ export default function Home() {
                     className="p-3 rounded-2xl bg-white border border-[#cce1d4] flex items-center justify-between shadow-xs"
                   >
                     <div className="flex items-center gap-2.5 truncate">
-                      <span className="text-sm">{p.flag}</span>
+                      {p.flag ? (
+                        <span className="text-sm">{p.flag}</span>
+                      ) : (
+                        <CricketBatIcon className="w-4 h-4 text-[#047857]" />
+                      )}
                       <div className="truncate">
                         <p className="text-xs font-bold text-[#0e2c1e] truncate">{p.name}</p>
-                        <p className="text-[10px] font-mono text-[#5c7567]">{p.role} • {formatLakhsAndCrores(p.boughtFor, true)}</p>
+                        <p className="text-[10px] font-sans text-[#5c7567]">{p.role} • <span className="font-mono">{formatLakhsAndCrores(p.boughtFor, true)}</span></p>
                       </div>
                     </div>
 
                     <div className="flex gap-2">
                       <button
                         onClick={() => togglePlayingStatus(p)}
-                        className="bg-gradient-to-b from-[#059669] to-[#047857] hover:from-[#10b981] hover:to-[#047857] text-white text-[10px] font-mono font-bold px-2.5 py-1 rounded-lg transition-colors cursor-pointer border border-[#059669] shadow-xs"
+                        className="bg-gradient-to-b from-[#059669] to-[#047857] hover:from-[#10b981] hover:to-[#047857] text-white text-[10px] font-sans font-bold px-2.5 py-1 rounded-lg transition-colors cursor-pointer border border-[#059669] shadow-xs"
                       >
                         + XI
                       </button>
                       <button
                         onClick={() => handleReleasePlayer(p)}
-                        className="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-mono font-bold px-2 py-1 rounded-lg transition-colors cursor-pointer"
+                        className="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-[10px] font-sans font-semibold px-2 py-1 rounded-lg transition-colors cursor-pointer"
                       >
                         Release
                       </button>

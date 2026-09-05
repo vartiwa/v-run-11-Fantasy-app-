@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Oswald } from "next/font/google";
+import { Outfit } from "next/font/google";
 import { sounds } from "@/lib/soundEffects";
 import { SoundSpeakerIcon, AudioEqualizer } from "./AuctionIcons";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["600", "700"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["600", "700"] });
 
 const SOUND_EFFECTS = [
   { id: "bid", label: "Bid Chime", icon: "🔔", desc: "Warm, soft harmonic marimba chime when any team bids", action: () => sounds.playBid() },
@@ -42,7 +42,7 @@ export default function SoundTestModal({ isOpen, onClose, isMuted, onToggleMute 
               <SoundSpeakerIcon isMuted={isMuted} className="w-5 h-5" />
             </div>
             <div>
-              <h3 className={`text-lg font-bold uppercase tracking-wider text-white leading-none ${oswald.className}`}>
+              <h3 className={`text-lg font-bold uppercase tracking-wider text-white leading-none ${outfit.className}`}>
                 Subtle Audio Synthesizer
               </h3>
               <p className="text-[11px] text-white/60 mt-1">

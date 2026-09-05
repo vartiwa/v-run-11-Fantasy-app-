@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { Oswald } from "next/font/google";
+import { Outfit } from "next/font/google";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["600"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["600", "700"] });
 
 export default function ActivityFeed({ logs = [] }) {
   const scrollRef = useRef(null);
@@ -22,7 +22,7 @@ export default function ActivityFeed({ logs = [] }) {
       <div className="bg-[#eef5f1] px-4 py-2.5 border-b border-[#cfe0d5] flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-[#059669] animate-pulse shadow-[0_0_8px_#059669]" />
-          <span className={`text-xs font-bold uppercase tracking-wider text-[#0f5132] ${oswald.className}`}>
+          <span className={`text-xs font-bold uppercase tracking-wider text-[#0f5132] ${outfit.className}`}>
             Live Auction Ledger
           </span>
         </div>

@@ -1,10 +1,18 @@
 "use client";
 
-import { Oswald } from "next/font/google";
+import { Outfit } from "next/font/google";
 import { formatLakhsAndCrores } from "@/lib/formatCurrency";
 import { sounds } from "@/lib/soundEffects";
+import {
+  CrownIcon,
+  ShieldIcon,
+  DoorExitIcon,
+  CricketBatIcon,
+  BoltIcon,
+  TargetIcon,
+} from "@/components/AuctionIcons";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["400", "700"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["500", "600", "700", "800"] });
 
 export default function CricketPitch({
   playingXI = [],
@@ -39,7 +47,11 @@ export default function CricketPitch({
                 : "bg-white/95 text-[#121417] border border-[#d8d1c0] shadow-2xs"
             }`}
           >
-            <span>{player.flag || "🏏"}</span>
+            {player.flag ? (
+              <span>{player.flag}</span>
+            ) : (
+              <CricketBatIcon className="w-5 h-5 text-[#047857]" />
+            )}
 
             {isCaptain && (
               <span className="absolute -top-1.5 -right-1.5 bg-[#d4be8c] text-[#423006] text-[8px] font-black w-4 h-4 rounded-full flex items-center justify-center shadow-xs border border-white">
@@ -68,31 +80,34 @@ export default function CricketPitch({
               sounds.playClick();
               onSetCaptain(player.id);
             }}
-            className={`text-[10px] font-bold px-2.5 py-1 rounded-xl text-left cursor-pointer transition-colors ${
+            className={`text-[10px] font-bold px-2.5 py-1 rounded-xl text-left cursor-pointer transition-colors flex items-center gap-1.5 ${
               isCaptain ? "bg-[#d4be8c]/20 text-[#ebd7aa]" : "text-white/70 hover:bg-white/5 hover:text-white"
             }`}
           >
-            👑 Set Captain (2x Pts)
+            <CrownIcon className="w-3.5 h-3.5 text-amber-300" />
+            <span>Set Captain (2x Pts)</span>
           </button>
           <button
             onClick={() => {
               sounds.playClick();
               onSetViceCaptain(player.id);
             }}
-            className={`text-[10px] font-bold px-2.5 py-1 rounded-xl text-left cursor-pointer transition-colors ${
+            className={`text-[10px] font-bold px-2.5 py-1 rounded-xl text-left cursor-pointer transition-colors flex items-center gap-1.5 ${
               isViceCaptain ? "bg-sky-950/50 text-sky-300" : "text-white/70 hover:bg-white/5 hover:text-white"
             }`}
           >
-            🛡️ Set Vice-Captain (1.5x)
+            <ShieldIcon className="w-3.5 h-3.5 text-sky-300" />
+            <span>Set Vice-Captain (1.5x)</span>
           </button>
           <button
             onClick={() => {
               sounds.playClick();
               onBenchPlayer(player);
             }}
-            className="text-[10px] font-bold px-2.5 py-1 rounded-xl text-left text-rose-400 hover:bg-rose-950/40 cursor-pointer transition-colors"
+            className="text-[10px] font-bold px-2.5 py-1 rounded-xl text-left text-rose-400 hover:bg-rose-950/40 cursor-pointer transition-colors flex items-center gap-1.5"
           >
-            🪑 Move to Bench
+            <DoorExitIcon className="w-3.5 h-3.5 text-rose-400" />
+            <span>Move to Bench</span>
           </button>
         </div>
       </div>
@@ -104,22 +119,22 @@ export default function CricketPitch({
       {/* Top Composition Info Bar */}
       <div className="grid grid-cols-4 gap-3 bg-gradient-to-b from-white via-[#f7faf8] to-[#edf5f0] p-3.5 rounded-3xl border border-[#c6ded0] shadow-[0_16px_36px_rgba(18,64,50,0.08),0_2px_8px_rgba(18,64,50,0.04)] text-center shrink-0">
         <div>
-          <span className="text-[#5c7567] text-[9px] uppercase font-mono font-bold tracking-wider block">Total Runs</span>
-          <span className={`text-lg font-bold text-[#0e2c1e] ${oswald.className}`}>{totalRuns}</span>
+          <span className="text-[#5c7567] text-[10px] uppercase font-semibold tracking-wider block">Total Runs</span>
+          <span className={`text-lg font-bold text-[#0e2c1e] ${outfit.className}`}>{totalRuns}</span>
         </div>
         <div>
-          <span className="text-[#5c7567] text-[9px] uppercase font-mono font-bold tracking-wider block">Wickets</span>
-          <span className={`text-lg font-bold text-[#0e2c1e] ${oswald.className}`}>{totalWickets}</span>
+          <span className="text-[#5c7567] text-[10px] uppercase font-semibold tracking-wider block">Wickets</span>
+          <span className={`text-lg font-bold text-[#0e2c1e] ${outfit.className}`}>{totalWickets}</span>
         </div>
         <div>
-          <span className="text-[#5c7567] text-[9px] uppercase font-mono font-bold tracking-wider block">Overseas</span>
-          <span className={`text-lg font-bold ${overseasCount > 4 ? "text-rose-600" : "text-[#047857]"} ${oswald.className}`}>
+          <span className="text-[#5c7567] text-[10px] uppercase font-semibold tracking-wider block">Overseas</span>
+          <span className={`text-lg font-bold ${overseasCount > 4 ? "text-rose-600" : "text-[#047857]"} ${outfit.className}`}>
             {overseasCount}/4
           </span>
         </div>
         <div>
-          <span className="text-[#5c7567] text-[9px] uppercase font-mono font-bold tracking-wider block">Playing XI</span>
-          <span className={`text-lg font-bold text-[#0e2c1e] ${oswald.className}`}>{playingXI.length}/11</span>
+          <span className="text-[#5c7567] text-[10px] uppercase font-semibold tracking-wider block">Playing XI</span>
+          <span className={`text-lg font-bold text-[#0e2c1e] ${outfit.className}`}>{playingXI.length}/11</span>
         </div>
       </div>
 
@@ -152,8 +167,8 @@ export default function CricketPitch({
 
         {/* WICKET KEEPERS */}
         <div className="text-center relative z-10">
-          <span className="inline-block px-3 py-0.5 bg-black/40 backdrop-blur-md rounded-full text-[9px] font-mono font-bold uppercase tracking-wider text-white border border-white/20 shadow-xs mb-1">
-            🧤 Wicket-Keepers ({wicketKeepers.length})
+          <span className="inline-flex items-center gap-1.5 px-3 py-0.5 bg-black/45 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider text-emerald-100 border border-white/20 shadow-xs mb-1">
+            Wicket-Keepers ({wicketKeepers.length})
           </span>
           <div className="flex justify-center flex-wrap min-h-[44px]">
             {wicketKeepers.length > 0 ? wicketKeepers.map(renderPlayerNode) : <span className="text-[10px] text-emerald-200/80 font-mono italic my-auto">+ Add Wicket-Keeper</span>}
@@ -162,8 +177,9 @@ export default function CricketPitch({
 
         {/* BATTERS */}
         <div className="text-center relative z-10">
-          <span className="inline-block px-3 py-0.5 bg-black/40 backdrop-blur-md rounded-full text-[9px] font-mono font-bold uppercase tracking-wider text-white border border-white/20 shadow-xs mb-1">
-            🏏 Specialist Batters ({batsmen.length})
+          <span className="inline-flex items-center gap-1.5 px-3 py-0.5 bg-black/45 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider text-white border border-white/20 shadow-xs mb-1">
+            <CricketBatIcon className="w-3 h-3 text-amber-300" />
+            Specialist Batters ({batsmen.length})
           </span>
           <div className="flex justify-center flex-wrap min-h-[44px]">
             {batsmen.length > 0 ? batsmen.map(renderPlayerNode) : <span className="text-[10px] text-emerald-200/80 font-mono italic my-auto">+ Add Batters</span>}
@@ -172,8 +188,9 @@ export default function CricketPitch({
 
         {/* ALL-ROUNDERS */}
         <div className="text-center relative z-10">
-          <span className="inline-block px-3 py-0.5 bg-black/40 backdrop-blur-md rounded-full text-[9px] font-mono font-bold uppercase tracking-wider text-white border border-white/20 shadow-xs mb-1">
-            ⚡ All-Rounders ({allRounders.length})
+          <span className="inline-flex items-center gap-1.5 px-3 py-0.5 bg-black/45 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider text-white border border-white/20 shadow-xs mb-1">
+            <BoltIcon className="w-3 h-3 text-amber-300" />
+            All-Rounders ({allRounders.length})
           </span>
           <div className="flex justify-center flex-wrap min-h-[44px]">
             {allRounders.length > 0 ? allRounders.map(renderPlayerNode) : <span className="text-[10px] text-emerald-200/80 font-mono italic my-auto">+ Add All-Rounders</span>}
@@ -182,8 +199,9 @@ export default function CricketPitch({
 
         {/* BOWLERS */}
         <div className="text-center relative z-10">
-          <span className="inline-block px-3 py-0.5 bg-black/40 backdrop-blur-md rounded-full text-[9px] font-mono font-bold uppercase tracking-wider text-white border border-white/20 shadow-xs mb-1">
-            🎯 Strike Bowlers ({bowlers.length})
+          <span className="inline-flex items-center gap-1.5 px-3 py-0.5 bg-black/45 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-wider text-white border border-white/20 shadow-xs mb-1">
+            <TargetIcon className="w-3 h-3 text-emerald-300" />
+            Strike Bowlers ({bowlers.length})
           </span>
           <div className="flex justify-center flex-wrap min-h-[44px]">
             {bowlers.length > 0 ? bowlers.map(renderPlayerNode) : <span className="text-[10px] text-emerald-200/80 font-mono italic my-auto">+ Add Bowlers</span>}

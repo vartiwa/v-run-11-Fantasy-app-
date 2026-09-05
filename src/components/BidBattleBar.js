@@ -1,9 +1,10 @@
 "use client";
 
-import { Oswald } from "next/font/google";
+import { Outfit } from "next/font/google";
 import { formatLakhsAndCrores } from "@/lib/formatCurrency";
+import { TrophyIcon, CricketBatIcon, ClockIcon, BoltIcon, HandStopIcon, CrownIcon } from "./AuctionIcons";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["600", "700"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["600", "700", "800", "900"] });
 
 export default function BidBattleBar({
   highestBidder = "No Bids Yet",
@@ -44,9 +45,9 @@ export default function BidBattleBar({
 
       {/* Dynamic State Alert Ribbon if Outbid */}
       {wasOutbid && (
-        <div className="flex items-center justify-between bg-rose-600 text-white text-[11px] font-mono font-bold px-3 py-1 rounded-xl mb-2 border border-rose-500 shadow-xs">
+        <div className="flex items-center justify-between bg-rose-600 text-white text-[11px] font-bold px-3 py-1.5 rounded-xl mb-2 border border-rose-500 shadow-xs">
           <div className="flex items-center gap-2">
-            <span className="animate-bounce">⚡</span>
+            <BoltIcon className="w-4 h-4 text-white animate-bounce" />
             <span>YOU WERE OUTBID! {teamLeadName} holds current high bid at {formatLakhsAndCrores(currentBid, true)}</span>
           </div>
           {onDismissOutbid && (
@@ -62,17 +63,18 @@ export default function BidBattleBar({
 
       {/* Dynamic State Alert Ribbon if Opted Out */}
       {isOptedOut && !wasOutbid && (
-        <div className="flex items-center justify-between bg-amber-100 text-amber-900 text-[11px] font-mono font-bold px-3 py-1.5 rounded-xl mb-2 shadow-xs border border-amber-300">
+        <div className="flex items-center justify-between bg-amber-100 text-amber-900 text-[11px] font-bold px-3 py-1.5 rounded-xl mb-2 shadow-xs border border-amber-300">
           <div className="flex items-center gap-2">
-            <span>✋</span>
+            <HandStopIcon className="w-3.5 h-3.5 text-amber-900" />
             <span>YOU HAVE BACKED OFF — Your paddle is parked for this lot</span>
           </div>
           {onJumpBackIn && (
             <button
               onClick={onJumpBackIn}
-              className="px-2.5 py-0.5 bg-gradient-to-b from-[#059669] to-[#047857] hover:from-[#10b981] hover:to-[#047857] text-white rounded-lg text-[10px] font-black uppercase tracking-wider cursor-pointer shadow-xs active:translate-y-0.5 transition-all"
+              className="px-2.5 py-1 bg-gradient-to-b from-[#059669] to-[#047857] hover:from-[#10b981] hover:to-[#047857] text-white rounded-lg text-[10px] font-bold uppercase tracking-wider cursor-pointer shadow-xs active:translate-y-0.5 transition-all inline-flex items-center gap-1"
             >
-              ⚡ Jump Back In!
+              <BoltIcon className="w-3 h-3" />
+              <span>Jump Back In</span>
             </button>
           )}
         </div>
@@ -82,7 +84,7 @@ export default function BidBattleBar({
         {/* Leader Franchise & Status */}
         <div className="flex items-center gap-3 w-full sm:w-auto">
           <div
-            className={`w-11 h-11 rounded-2xl flex items-center justify-center font-black text-base shadow-sm border transition-all duration-300 shrink-0 ${
+            className={`w-11 h-11 rounded-2xl flex items-center justify-center shadow-sm border transition-all duration-300 shrink-0 ${
               isMyTeamLeading
                 ? "bg-gradient-to-b from-[#059669] to-[#047857] text-white border-[#059669] shadow-[0_0_16px_rgba(16,185,129,0.3)] scale-105"
                 : hasBids
@@ -90,35 +92,43 @@ export default function BidBattleBar({
                 : "bg-[#eef5f1] text-[#7d9b89] border border-[#cbe0d3]"
             }`}
           >
-            {isMyTeamLeading ? "👑" : hasBids ? "🏏" : "⏳"}
+            {isMyTeamLeading ? (
+              <TrophyIcon className="w-5 h-5 text-white" />
+            ) : hasBids ? (
+              <CricketBatIcon className="w-5 h-5 text-[#854d0e]" />
+            ) : (
+              <ClockIcon className="w-5 h-5 text-[#7d9b89]" />
+            )}
           </div>
 
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-[#5c7567]">
+              <span className="text-[10px] uppercase font-bold tracking-wider text-[#5c7567]">
                 Current High Paddle
               </span>
               {isMyTeamLeading ? (
-                <span className="text-[9px] font-mono bg-[#e6f7ee] text-[#047857] border border-[#a7f3d0] px-2 py-0.5 rounded-md font-black tracking-wider uppercase shadow-xs">
-                  ★ YOUR FRANCHISE LEADS
+                <span className="inline-flex items-center gap-1 text-[9px] bg-[#e6f7ee] text-[#047857] border border-[#a7f3d0] px-2 py-0.5 rounded-md font-bold tracking-wider uppercase shadow-xs">
+                  <CrownIcon className="w-2.5 h-2.5 text-[#047857]" />
+                  <span>YOUR FRANCHISE LEADS</span>
                 </span>
               ) : hasBids ? (
-                <span className="text-[9px] font-mono bg-[#fef3c7] text-[#854d0e] border border-[#f59e0b]/40 px-1.5 py-0.2 rounded font-bold">
+                <span className="text-[9px] bg-[#fef3c7] text-[#854d0e] border border-[#f59e0b]/40 px-2 py-0.5 rounded-md font-bold uppercase tracking-wider">
                   ACTIVE LEADER
                 </span>
               ) : null}
 
               {optOutCount > 0 && (
-                <span className="text-[9px] font-mono bg-[#eef5f1] text-[#5c7567] border border-[#cbe0d3] px-1.5 py-0.2 rounded font-bold">
-                  ✋ {optOutCount} Backed Off
+                <span className="inline-flex items-center gap-1 text-[9px] bg-[#eef5f1] text-[#5c7567] border border-[#cbe0d3] px-2 py-0.5 rounded-md font-semibold">
+                  <HandStopIcon className="w-2.5 h-2.5" />
+                  <span>{optOutCount} Backed Off</span>
                 </span>
               )}
             </div>
 
-            <p className={`text-base font-bold uppercase tracking-wide truncate ${isMyTeamLeading ? "text-[#047857]" : "text-[#0e2c1e]"}`}>
+            <p className={`text-base font-extrabold uppercase tracking-wide truncate ${isMyTeamLeading ? "text-[#047857]" : "text-[#0e2c1e]"} ${outfit.className}`}>
               {teamLeadName}
               {managerName && (
-                <span className="text-xs font-mono font-normal text-[#5c7567] ml-1.5 lowercase">
+                <span className="text-xs font-normal text-[#5c7567] ml-1.5 font-sans lowercase">
                   ({managerName})
                 </span>
               )}
@@ -129,10 +139,10 @@ export default function BidBattleBar({
         {/* Dynamic Bid Growth Meter & Leading Amount */}
         <div className="flex items-center gap-4 w-full sm:w-auto justify-between sm:justify-end border-t sm:border-t-0 pt-2 sm:pt-0 border-[#cfe0d5]">
           <div className="text-left sm:text-right">
-            <span className="text-[9px] text-[#5c7567] uppercase font-mono font-bold tracking-wider block">
+            <span className="text-[10px] text-[#5c7567] uppercase font-bold tracking-wider block">
               Bid Surge
             </span>
-            <span className={`text-xs font-mono font-bold ${bidIncrease > 0 ? "text-amber-700" : "text-[#5c7567]"}`}>
+            <span className={`text-xs font-bold ${bidIncrease > 0 ? "text-amber-700" : "text-[#5c7567]"}`}>
               {bidIncrease > 0 ? `+${formatLakhsAndCrores(bidIncrease, true)} (${bidMultiplier}x Base)` : "At Opening Base"}
             </span>
           </div>
@@ -140,10 +150,10 @@ export default function BidBattleBar({
           <div className="h-8 w-[1px] bg-[#cfe0d5] hidden sm:block"></div>
 
           <div className="text-right">
-            <span className="text-[9px] text-[#5c7567] uppercase font-mono font-bold tracking-wider block">
+            <span className="text-[10px] text-[#5c7567] uppercase font-bold tracking-wider block">
               Leading High Bid
             </span>
-            <span className={`text-2xl font-bold tracking-tight text-[#0f3d2a] drop-shadow-xs ${oswald.className}`}>
+            <span className={`text-2xl font-black tracking-tight text-[#0f3d2a] drop-shadow-xs font-mono ${outfit.className}`}>
               {formatLakhsAndCrores(currentBid, false)}
             </span>
           </div>
@@ -164,7 +174,6 @@ export default function BidBattleBar({
             width: `${progressPercent}%`,
           }}
         >
-          {/* Shimmer on progress */}
           <div className="absolute inset-0 bg-white/30 animate-pulse" />
         </div>
       </div>

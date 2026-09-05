@@ -1,8 +1,8 @@
 "use client";
 
-import { Oswald } from "next/font/google";
+import { Outfit } from "next/font/google";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["400", "700"] });
+const oswald = Outfit({ subsets: ["latin"], weight: ["500", "700"] });
 
 export default function FranchiseModal({ franchise, onClose }) {
   if (!franchise) return null;

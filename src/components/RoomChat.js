@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Oswald } from "next/font/google";
+import { Outfit } from "next/font/google";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["600"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["600", "700"] });
 
 export default function RoomChat({
   messages = [],
@@ -50,7 +50,7 @@ export default function RoomChat({
 
       {/* Header */}
       <div className="bg-[#eef5f1] px-4 py-2.5 border-b border-[#cfe0d5] flex items-center justify-between">
-        <span className={`text-xs font-bold uppercase tracking-wider text-[#0f5132] ${oswald.className}`}>
+        <span className={`text-xs font-bold uppercase tracking-wider text-[#0f5132] ${outfit.className}`}>
           War Room Dispatch & Banter
         </span>
         <span className="text-[10px] text-[#5c7567] font-mono bg-white px-2 py-0.5 rounded-md border border-[#cbe0d3] shadow-xs">
@@ -61,7 +61,7 @@ export default function RoomChat({
       {/* Message Stream */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-3 space-y-2.5 min-h-0 bg-[#f8faf8] shadow-inner">
         {messages.length === 0 ? (
-          <div className="h-full flex flex-col items-center justify-center text-[#5c7567] text-xs py-6 font-mono italic">
+          <div className="h-full flex flex-col items-center justify-center text-[#5c7567] text-xs py-6 font-sans italic">
             <p>War room telegraph is silent</p>
             <p className="text-[10px] text-[#7d9b89] mt-0.5 not-italic">Send a dispatch to all managers</p>
           </div>
@@ -74,12 +74,12 @@ export default function RoomChat({
                 key={msg.id || msg.timestamp}
                 className={`flex flex-col text-xs ${isMe ? "items-end" : "items-start"}`}
               >
-                <div className="flex items-center gap-1.5 mb-1 text-[10px] font-mono">
+                <div className="flex items-center gap-1.5 mb-1 text-[10px] font-sans">
                   <span className="font-bold text-[#0e2c1e]">
                     {msg.sender}
                   </span>
-                  <span className="text-[#047857]">({msg.franchise})</span>
-                  <span className="text-[#7d9b89]">{msg.time}</span>
+                  <span className="text-[#047857] font-medium">({msg.franchise})</span>
+                  <span className="text-[#7d9b89] font-mono">{msg.time}</span>
                 </div>
 
                 <div

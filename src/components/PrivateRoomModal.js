@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Oswald, Inter } from "next/font/google";
+import { Outfit, Inter } from "next/font/google";
 import {
   Gavel,
   Trophy,
@@ -14,7 +14,7 @@ import {
   Crown,
 } from "lucide-react";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["500", "600", "700"] });
+const oswald = Outfit({ subsets: ["latin"], weight: ["500", "600", "700", "800"] });
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const CAPACITY_OPTIONS = [2, 4, 6, 8];

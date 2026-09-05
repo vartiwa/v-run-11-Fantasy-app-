@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Oswald } from "next/font/google";
+import { Outfit } from "next/font/google";
 import PlayerAvatar from "./PlayerAvatar";
 import { formatLakhsAndCrores } from "@/lib/formatCurrency";
-import { RupeeCoinIcon } from "./AuctionIcons";
+import { RupeeCoinIcon, CrownIcon, StarIcon, PlaneIcon } from "./AuctionIcons";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["500", "600", "700"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["500", "600", "700", "800", "900"] });
 
 export default function PlayerCard({
   name,
@@ -47,32 +47,46 @@ export default function PlayerCard({
       {/* Top Header info */}
       <div className="flex items-center justify-between pb-3 border-b border-[#cfe0d5]">
         <div className="flex items-center gap-2 flex-wrap">
-          <div className="flex items-center gap-1.5 bg-[#eef5f1] border border-[#cbe0d3] px-2.5 py-1 rounded-xl shadow-inner text-xs font-mono font-bold text-[#0e2c1e]">
+          <div className="flex items-center gap-1.5 bg-[#eef5f1] border border-[#cbe0d3] px-2.5 py-1 rounded-xl shadow-inner text-xs font-semibold text-[#0e2c1e]">
             <span className="text-sm leading-none">{flag}</span>
             <span className="uppercase tracking-wider">{country}</span>
           </div>
           {isOverseas && (
-            <span className="text-[10px] font-mono font-black text-amber-800 bg-amber-50 border border-amber-300 px-2.5 py-0.5 rounded-lg shadow-sm">
-              ✈ OVERSEAS
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-amber-800 bg-amber-50 border border-amber-300 px-2.5 py-0.5 rounded-lg shadow-sm">
+              <PlaneIcon className="w-3 h-3 text-amber-700" />
+              <span>OVERSEAS</span>
             </span>
           )}
-          <span className={`text-[10px] font-mono font-black px-2.5 py-0.5 rounded-lg shadow-sm uppercase tracking-wider ${
+          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-lg shadow-sm uppercase tracking-wider ${
             basePrice >= 200
               ? "bg-gradient-to-r from-[#fef3c7] to-[#fde68a] text-[#854d0e] border border-[#f59e0b]/40"
               : basePrice >= 100
               ? "bg-[#e6f4ea] text-[#0f5132] border border-[#34d399]/40"
               : "bg-[#eef5f1] text-[#3b5947] border border-[#cbe0d3]"
           }`}>
-            {basePrice >= 200 ? "👑 Marquee Tier" : basePrice >= 100 ? "★ Senior Lot" : "Emerging Lot"}
+            {basePrice >= 200 ? (
+              <>
+                <CrownIcon className="w-3 h-3 text-[#854d0e]" />
+                <span>Marquee Tier</span>
+              </>
+            ) : basePrice >= 100 ? (
+              <>
+                <StarIcon className="w-2.5 h-2.5 text-[#0f5132]" />
+                <span>Senior Lot</span>
+              </>
+            ) : (
+              <span>Emerging Lot</span>
+            )}
           </span>
         </div>
 
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono font-bold text-[#0e2c1e] bg-[#eef5f1] border border-[#cbe0d3] px-2.5 py-1 rounded-xl shadow-inner">
+          <span className="text-xs font-semibold text-[#0e2c1e] bg-[#eef5f1] border border-[#cbe0d3] px-2.5 py-1 rounded-xl shadow-inner">
             {role}
           </span>
-          <span className="text-xs font-mono font-black text-[#854d0e] bg-[#fef3c7] border border-[#f59e0b]/40 px-2.5 py-1 rounded-xl shadow-sm">
-            ★ {rating} OVR
+          <span className="inline-flex items-center gap-1 text-xs font-bold text-[#854d0e] bg-[#fef3c7] border border-[#f59e0b]/40 px-2.5 py-1 rounded-xl shadow-sm">
+            <StarIcon className="w-3 h-3 text-amber-600" />
+            <span>{rating} OVR</span>
           </span>
         </div>
       </div>
@@ -93,18 +107,18 @@ export default function PlayerCard({
         </div>
 
         <div className="relative flex-1 min-w-0">
-          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#e6f7ee] text-[#047857] border border-[#a7f3d0] text-[9px] font-mono uppercase tracking-widest font-black mb-1 shadow-xs">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-[#e6f7ee] text-[#047857] border border-[#a7f3d0] text-[10px] uppercase tracking-widest font-bold mb-1 shadow-xs">
             <span className="w-1.5 h-1.5 rounded-full bg-[#059669] animate-pulse" />
             <span>ACTIVE ON BLOCK</span>
           </div>
 
-          <h3 className={`text-2xl sm:text-3xl font-bold uppercase tracking-tight truncate text-[#0e2c1e] drop-shadow-xs ${oswald.className}`}>
+          <h3 className={`text-2xl sm:text-3xl font-extrabold uppercase tracking-tight truncate text-[#0e2c1e] drop-shadow-xs ${outfit.className}`}>
             {name}
           </h3>
 
-          <div className="text-xs font-mono text-[#5c7567] mt-1.5 flex items-center gap-2">
+          <div className="text-xs text-[#5c7567] mt-1.5 flex items-center gap-2">
             <span className="text-[10px] uppercase font-bold tracking-wider">BASE NOMINATION:</span>
-            <span className="font-bold font-mono text-xs text-[#854d0e] bg-white px-2.5 py-0.5 rounded-md border border-[#badbc6] shadow-inner">
+            <span className="font-bold text-xs text-[#854d0e] bg-white px-2.5 py-0.5 rounded-md border border-[#badbc6] shadow-inner font-mono">
               {formatLakhsAndCrores(basePrice, false)}
             </span>
           </div>
@@ -114,28 +128,28 @@ export default function PlayerCard({
       {/* 3D Tactile Stats Chips */}
       <div className="grid grid-cols-3 gap-2.5 my-1">
         <div className="bg-gradient-to-b from-white via-[#f7faf8] to-[#eaf3ed] border border-[#badbc6] border-b-[3px] border-b-[#93be9f] rounded-2xl p-2.5 text-center shadow-[0_4px_12px_rgba(18,64,50,0.05)] hover:-translate-y-0.5 transition-transform">
-          <span className="text-[10px] font-mono font-bold uppercase text-[#5c7567] tracking-wider block">
+          <span className="text-[10px] font-bold uppercase text-[#5c7567] tracking-wider block">
             {isBowler ? "WICKETS" : "T20 RUNS"}
           </span>
-          <span className={`text-xl font-bold text-[#0e2c1e] block mt-0.5 leading-none ${oswald.className}`}>
+          <span className={`text-2xl font-black text-[#0e2c1e] block mt-0.5 leading-none ${outfit.className}`}>
             {isBowler ? stats?.wickets || 85 : stats?.runs || 4200}
           </span>
         </div>
 
         <div className="bg-gradient-to-b from-white via-[#f7faf8] to-[#eaf3ed] border border-[#badbc6] border-b-[3px] border-b-[#93be9f] rounded-2xl p-2.5 text-center shadow-[0_4px_12px_rgba(18,64,50,0.05)] hover:-translate-y-0.5 transition-transform">
-          <span className="text-[10px] font-mono font-bold uppercase text-[#5c7567] tracking-wider block">
+          <span className="text-[10px] font-bold uppercase text-[#5c7567] tracking-wider block">
             {isBowler ? "ECONOMY" : "STRIKE RATE"}
           </span>
-          <span className={`text-xl font-bold text-[#047857] block mt-0.5 leading-none ${oswald.className}`}>
+          <span className={`text-2xl font-black text-[#047857] block mt-0.5 leading-none ${outfit.className}`}>
             {isBowler ? stats?.economy || "7.60" : stats?.sr || "138.5"}
           </span>
         </div>
 
         <div className="bg-gradient-to-b from-white via-[#f7faf8] to-[#eaf3ed] border border-[#badbc6] border-b-[3px] border-b-[#93be9f] rounded-2xl p-2.5 text-center shadow-[0_4px_12px_rgba(18,64,50,0.05)] hover:-translate-y-0.5 transition-transform">
-          <span className="text-[10px] font-mono font-bold uppercase text-[#5c7567] tracking-wider block">
+          <span className="text-[10px] font-bold uppercase text-[#5c7567] tracking-wider block">
             {isBowler ? "AVERAGE" : isWK ? "DISMISSALS" : "AVERAGE"}
           </span>
-          <span className={`text-xl font-bold text-[#0e2c1e] block mt-0.5 leading-none ${oswald.className}`}>
+          <span className={`text-2xl font-black text-[#0e2c1e] block mt-0.5 leading-none ${outfit.className}`}>
             {isBowler ? stats?.avg || "22.4" : isWK ? stats?.catches || 110 : stats?.avg || "34.2"}
           </span>
         </div>
@@ -150,12 +164,12 @@ export default function PlayerCard({
         }`}
       >
         <div>
-          <span className="text-[10px] font-mono uppercase tracking-widest text-[#854d0e] block font-black flex items-center gap-1.5">
+          <span className="text-[10px] uppercase tracking-widest text-[#854d0e] block font-black flex items-center gap-1.5">
             <span className="w-2 h-2 rounded-full bg-[#d97706] animate-ping" />
             <RupeeCoinIcon className="w-4 h-4 text-[#d97706]" />
             <span>CURRENT HIGH BID</span>
           </span>
-          <span className="text-xs font-mono text-[#5c7567] truncate block mt-0.5 max-w-[220px]">
+          <span className="text-xs text-[#5c7567] truncate block mt-0.5 max-w-[220px]">
             {highestBidder && highestBidder !== "No Bids Yet" ? (
               <span>Held by <strong className="text-[#0e2c1e] font-black">{highestBidder.split(" - ")[0]}</strong></span>
             ) : (
@@ -165,7 +179,7 @@ export default function PlayerCard({
         </div>
 
         <div className="text-right">
-          <span className={`text-3xl sm:text-4xl font-black text-[#0f3d2a] tracking-tight leading-none block drop-shadow-xs ${oswald.className}`}>
+          <span className={`text-3xl sm:text-4xl font-black text-[#0f3d2a] tracking-tight leading-none block drop-shadow-xs font-mono ${outfit.className}`}>
             {formatLakhsAndCrores(currentBid, false)}
           </span>
         </div>

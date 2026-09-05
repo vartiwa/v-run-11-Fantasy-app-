@@ -1,8 +1,8 @@
 "use client";
 
-import { Oswald } from "next/font/google";
+import { Outfit } from "next/font/google";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["600", "700"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["600", "700", "800", "900"] });
 
 export default function CircularTimer({
   secondsLeft = 60,
@@ -62,13 +62,13 @@ export default function CircularTimer({
                 : "bg-[#059669] shadow-[0_0_8px_#059669]"
             }`}
           />
-          <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#0f5132]">
+          <span className="text-[11px] font-bold uppercase tracking-wider text-[#0f5132]">
             AUCTION CHRONOMETER
           </span>
         </div>
 
         <span
-          className={`text-[10px] font-mono font-black uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-xs transition-colors ${
+          className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-lg shadow-xs transition-colors ${
             isTimeUp
               ? "bg-rose-50 text-rose-700 border border-rose-200 animate-pulse"
               : isWarning
@@ -137,28 +137,28 @@ export default function CircularTimer({
           {/* Center Digital Clock in Circular Core */}
           <div className="absolute inset-0 flex flex-col items-center justify-center">
             <span
-              className={`text-2xl font-bold tracking-tight ${
+              className={`text-2xl font-black tracking-tight font-mono ${
                 isTimeUp ? "text-rose-600 animate-pulse" : isWarning ? "text-amber-700" : "text-[#0e2c1e]"
-              } ${oswald.className}`}
+              } ${outfit.className}`}
             >
               {formatTime(secondsLeft)}
             </span>
-            <span className="text-[9px] font-mono font-bold text-[#5c7567] uppercase tracking-wider -mt-0.5">
+            <span className="text-[9px] font-bold text-[#5c7567] uppercase tracking-wider -mt-0.5">
               REMAINING
             </span>
           </div>
         </div>
 
         {/* Chronometer Stats & Gavel Rules */}
-        <div className="flex-1 pl-4 flex flex-col justify-center space-y-1.5 font-mono">
+        <div className="flex-1 pl-4 flex flex-col justify-center space-y-1.5">
           <div className="bg-[#eef5f1] border border-[#cbe0d3] rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
-            <span className="text-[10px] text-[#5c7567] uppercase">Clock Window:</span>
-            <span className="font-bold text-[#0e2c1e]">{secondsLeft !== null ? `${secondsLeft}s` : "--"}</span>
+            <span className="text-[10px] text-[#5c7567] font-semibold uppercase">Clock Window:</span>
+            <span className="font-bold text-[#0e2c1e] font-mono">{secondsLeft !== null ? `${secondsLeft}s` : "--"}</span>
           </div>
 
           <div className="bg-[#eef5f1] border border-[#cbe0d3] rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
-            <span className="text-[10px] text-[#5c7567] uppercase">Anti-Snipe:</span>
-            <span className="font-bold text-[#047857]">+15s Fair Warning</span>
+            <span className="text-[10px] text-[#5c7567] font-semibold uppercase">Anti-Snipe:</span>
+            <span className="font-bold text-[#047857] font-sans">+15s Fair Warning</span>
           </div>
         </div>
       </div>

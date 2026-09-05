@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Oswald } from "next/font/google";
+import { Outfit } from "next/font/google";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["500", "700"] });
+const outfit = Outfit({ subsets: ["latin"], weight: ["500", "700"] });
 
 function getInitials(name = "") {
   const parts = name.trim().split(/\s+/).filter(Boolean);
@@ -173,7 +173,7 @@ export default function PlayerAvatar({
 
             {/* Monogram Display */}
             <div className="flex flex-col items-center justify-center text-center z-10 my-auto">
-              <span className={`font-bold tracking-tight text-[#121417] leading-none drop-shadow-2xs ${oswald.className}`}>
+              <span className={`font-bold tracking-tight text-[#121417] leading-none drop-shadow-2xs ${outfit.className}`}>
                 {initials}
               </span>
               {size === "lg" || size === "xl" ? (

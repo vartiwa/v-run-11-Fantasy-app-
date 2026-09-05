@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Oswald, Inter } from "next/font/google";
+import { Outfit, Inter } from "next/font/google";
 import { ref, onValue } from "firebase/database";
 import { db } from "@/lib/firebase";
 import {
@@ -14,7 +14,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
-const oswald = Oswald({ subsets: ["latin"], weight: ["500", "600", "700"] });
+const oswald = Outfit({ subsets: ["latin"], weight: ["500", "600", "700", "800"] });
 const inter = Inter({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 
 const TWO_HOURS_MS = 2 * 60 * 60 * 1000; // 2 Hours TTL
