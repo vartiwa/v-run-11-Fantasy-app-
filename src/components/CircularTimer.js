@@ -40,15 +40,18 @@ export default function CircularTimer({
   });
 
   return (
-    <div className={`relative w-full bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] border rounded-3xl p-4 flex flex-col justify-between shadow-[0_16px_36px_rgba(0,0,0,0.8),0_0_30px_rgba(18,64,50,0.25),inset_0_1px_0_rgba(255,255,255,0.08)] select-none text-white transition-all duration-300 ${
+    <div className={`relative w-full bg-gradient-to-b from-[#183d2f] via-[#133226] to-[#0e271e] border rounded-3xl p-4 flex flex-col justify-between shadow-[0_20px_45px_rgba(0,0,0,0.45),0_0_35px_rgba(46,133,101,0.22),inset_0_1px_0_rgba(255,255,255,0.18)] select-none text-white transition-all duration-300 ${
       isTimeUp
         ? "border-rose-500 ring-4 ring-rose-500/25"
         : isWarning
         ? "border-amber-400 ring-4 ring-amber-400/25"
-        : "border-[#d4be8c]/30"
+        : "border-[#3dd9a5]/35 ring-1 ring-[#d4be8c]/25"
     }`}>
+      {/* Top Hairline Sheen */}
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/50 to-transparent pointer-events-none" />
+
       {/* Top Header */}
-      <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/10">
+      <div className="flex items-center justify-between pb-2 mb-2 border-b border-white/15">
         <div className="flex items-center gap-2">
           <span
             className={`w-2.5 h-2.5 rounded-full shadow-xs ${
@@ -56,10 +59,10 @@ export default function CircularTimer({
                 ? "bg-rose-500 animate-ping"
                 : isWarning
                 ? "bg-amber-400 animate-ping"
-                : "bg-[#34d399] shadow-[0_0_8px_#34d399]"
+                : "bg-[#3dd9a5] shadow-[0_0_8px_#3dd9a5]"
             }`}
           />
-          <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#d4be8c]">
+          <span className="text-[11px] font-mono font-bold uppercase tracking-widest text-[#ebd7aa]">
             AUCTION CHRONOMETER
           </span>
         </div>
@@ -70,7 +73,7 @@ export default function CircularTimer({
               ? "bg-rose-500/20 text-rose-300 border border-rose-500/40 animate-pulse"
               : isWarning
               ? "bg-amber-500/20 text-amber-300 border border-amber-500/40 animate-pulse"
-              : "bg-[#124032] text-[#34d399] border border-[#34d399]/30"
+              : "bg-[#184a39] text-[#3dd9a5] border border-[#3dd9a5]/40"
           }`}
         >
           {isTimeUp ? "Final Call • Gavel Pending" : isWarning ? "Fair Warning (Going Twice)" : "Clock Active"}
@@ -148,14 +151,14 @@ export default function CircularTimer({
 
         {/* Chronometer Stats & Gavel Rules */}
         <div className="flex-1 pl-4 flex flex-col justify-center space-y-1.5 font-mono">
-          <div className="bg-white/5 border border-white/10 rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
-            <span className="text-[10px] text-white/40 uppercase">Clock Window:</span>
+          <div className="bg-[#10271f] border border-[#3dd9a5]/25 rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
+            <span className="text-[10px] text-white/50 uppercase">Clock Window:</span>
             <span className="font-bold text-white">{secondsLeft !== null ? `${secondsLeft}s` : "--"}</span>
           </div>
 
-          <div className="bg-white/5 border border-white/10 rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
-            <span className="text-[10px] text-white/40 uppercase">Anti-Snipe:</span>
-            <span className="font-bold text-[#34d399]">+15s Fair Warning</span>
+          <div className="bg-[#10271f] border border-[#3dd9a5]/25 rounded-xl p-2 shadow-inner flex justify-between items-center text-xs">
+            <span className="text-[10px] text-white/50 uppercase">Anti-Snipe:</span>
+            <span className="font-bold text-[#3dd9a5]">+15s Fair Warning</span>
           </div>
         </div>
       </div>

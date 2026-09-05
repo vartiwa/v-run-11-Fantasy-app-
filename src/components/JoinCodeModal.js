@@ -81,10 +81,10 @@ export default function JoinCodeModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md transition-all animate-in fade-in duration-200">
-      <div className={`relative w-full max-w-md bg-gradient-to-b from-[#0b1c15] via-[#071510] to-[#040c08] border border-[#d4be8c]/25 shadow-[0_25px_80px_rgba(0,0,0,0.9),0_0_60px_rgba(18,64,50,0.35)] rounded-3xl p-6 sm:p-8 max-h-[92vh] overflow-y-auto text-white selection:bg-[#d4be8c] selection:text-black ${inter.className}`}>
+      <div className={`relative w-full max-w-md bg-gradient-to-b from-[#183d2f] via-[#133226] to-[#0e271e] border border-[#3dd9a5]/35 shadow-[0_25px_80px_rgba(0,0,0,0.8),0_0_60px_rgba(46,133,101,0.3)] rounded-3xl p-6 sm:p-8 max-h-[92vh] overflow-y-auto text-white selection:bg-[#d4be8c] selection:text-black ${inter.className}`}>
         
         {/* Ambient Top Glow */}
-        <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#124032]/35 to-transparent pointer-events-none rounded-t-3xl" />
+        <div className="absolute top-0 inset-x-0 h-28 bg-gradient-to-b from-[#3dd9a5]/20 to-transparent pointer-events-none rounded-t-3xl" />
 
         {/* Close Button */}
         <button

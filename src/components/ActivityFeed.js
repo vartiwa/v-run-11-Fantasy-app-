@@ -15,28 +15,28 @@ export default function ActivityFeed({ logs = [] }) {
   }, [logs]);
 
   return (
-    <div className="relative bg-gradient-to-b from-[#0b1c15]/95 via-[#071510]/95 to-[#040c08] rounded-3xl border border-[#d4be8c]/25 overflow-hidden shadow-[0_12px_24px_rgba(0,0,0,0.4),inset_0_1px_0_rgba(212,190,140,0.15)] flex flex-col select-none text-white">
+    <div className="relative bg-gradient-to-b from-[#183d2f] via-[#133226] to-[#0e271e] rounded-3xl border border-[#3dd9a5]/35 overflow-hidden shadow-[0_16px_36px_rgba(0,0,0,0.4),0_0_30px_rgba(46,133,101,0.2),inset_0_1px_0_rgba(255,255,255,0.18)] ring-1 ring-[#d4be8c]/25 flex flex-col select-none text-white">
       {/* Top Hairline Sheen */}
-      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/40 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-[#d4be8c]/50 to-transparent pointer-events-none" />
 
-      <div className="bg-[#06140e] px-4 py-2.5 border-b border-white/10 flex items-center justify-between">
+      <div className="bg-[#10271f] px-4 py-2.5 border-b border-white/15 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[#34d399] animate-pulse shadow-[0_0_8px_#34d399]" />
-          <span className={`text-xs font-bold uppercase tracking-wider text-[#ecdcb8] ${oswald.className}`}>
+          <span className="w-2 h-2 rounded-full bg-[#3dd9a5] animate-pulse shadow-[0_0_8px_#3dd9a5]" />
+          <span className={`text-xs font-bold uppercase tracking-wider text-[#ebd7aa] ${oswald.className}`}>
             Live Auction Ledger
           </span>
         </div>
-        <span className="text-[10px] text-white/60 font-mono bg-[#040c08] px-2 py-0.5 rounded-md border border-white/10 shadow-xs">
+        <span className="text-[10px] text-white/70 font-mono bg-[#0d221a] px-2 py-0.5 rounded-md border border-[#3dd9a5]/25 shadow-xs">
           {logs.length} transactions
         </span>
       </div>
 
       <div
         ref={scrollRef}
-        className="max-h-28 overflow-y-auto p-3 space-y-1 divide-y divide-white/5 bg-[#040c08]/80 shadow-[inset_0_2px_6px_rgba(0,0,0,0.6)]"
+        className="max-h-28 overflow-y-auto p-3 space-y-1 divide-y divide-white/5 bg-[#0e241c]/90 shadow-[inset_0_2px_6px_rgba(0,0,0,0.4)]"
       >
         {logs.length === 0 ? (
-          <div className="py-4 text-center text-white/40 text-xs font-mono italic">
+          <div className="py-4 text-center text-white/50 text-xs font-mono italic">
             Waiting for opening bid to be recorded in ledger...
           </div>
         ) : (
@@ -52,15 +52,15 @@ export default function ActivityFeed({ logs = [] }) {
                 <div className="truncate min-w-0 font-mono">
                   <p className={`truncate text-xs ${
                     isSold
-                      ? "text-[#34d399] font-black"
+                      ? "text-[#3dd9a5] font-black"
                       : isUnsold
                       ? "text-rose-400 font-black"
-                      : "text-[#ecdcb8] font-semibold"
+                      : "text-[#ebd7aa] font-semibold"
                   }`}>
                     {item.message}
                   </p>
                 </div>
-                <span className="text-[10px] text-white/40 whitespace-nowrap font-mono shrink-0 bg-white/5 px-1.5 py-0.5 rounded border border-white/5">
+                <span className="text-[10px] text-white/50 whitespace-nowrap font-mono shrink-0 bg-[#10271f] px-1.5 py-0.5 rounded border border-white/10">
                   {item.time || "Just now"}
                 </span>
               </div>
