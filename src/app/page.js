@@ -50,16 +50,28 @@ export default function Home() {
 
   useEffect(() => {
     if (!roomId) return;
-    const unsubHammer = onValue(ref(db, `rooms/${roomId}/allowPlayerHammer`), (snap) => {
-      if (snap.exists()) setRoomAllowPlayerHammer(!!snap.val());
-    });
-    const unsubRotate = onValue(ref(db, `rooms/${roomId}/rotateAuctioneer`), (snap) => {
-      if (snap.exists()) setRotateAuctioneer(!!snap.val());
-    });
-    const unsubBusy = onValue(ref(db, `rooms/${roomId}/auctioneerBusy`), (snap) => {
-      if (snap.exists()) setIsAuctioneerBusy(!!snap.val());
-      else setIsAuctioneerBusy(false);
-    });
+    const unsubHammer = onValue(
+      ref(db, `rooms/${roomId}/allowPlayerHammer`),
+      (snap) => {
+        if (snap.exists()) setRoomAllowPlayerHammer(!!snap.val());
+      },
+      (err) => console.warn("Listener allowPlayerHammer notice:", err)
+    );
+    const unsubRotate = onValue(
+      ref(db, `rooms/${roomId}/rotateAuctioneer`),
+      (snap) => {
+        if (snap.exists()) setRotateAuctioneer(!!snap.val());
+      },
+      (err) => console.warn("Listener rotateAuctioneer notice:", err)
+    );
+    const unsubBusy = onValue(
+      ref(db, `rooms/${roomId}/auctioneerBusy`),
+      (snap) => {
+        if (snap.exists()) setIsAuctioneerBusy(!!snap.val());
+        else setIsAuctioneerBusy(false);
+      },
+      (err) => console.warn("Listener auctioneerBusy notice:", err)
+    );
     return () => {
       unsubHammer();
       unsubRotate();
@@ -301,7 +313,7 @@ export default function Home() {
   useEffect(() => {
     if (!hasJoined || !roomId || !teamName) return;
     const interval = setInterval(() => {
-      set(ref(db, `rooms/${roomId}/teams/${teamName}/lastActiveAt`), Date.now());
+      set(ref(db, `rooms/${roomId}/teams/${teamName}/lastActiveAt`), Date.now()).catch(() => {});
     }, 60 * 1000);
     return () => clearInterval(interval);
   }, [hasJoined, roomId, teamName]);
@@ -353,11 +365,14 @@ export default function Home() {
     const logItem = {
       type,
       message,
+      text: message, // 🌟 Dual compatibility for Firebase rules requiring 'text' or 'message'
       subtext,
       time: nowTime,
       timestamp: Date.now(),
     };
-    push(ref(db, `rooms/${roomId}/global/activityLog`), logItem);
+    push(ref(db, `rooms/${roomId}/global/activityLog`), logItem).catch((err) => {
+      console.warn("Activity log sync notice:", err);
+    });
   }, [roomId]);
 
   const handleSendMessage = useCallback((msgText) => {
@@ -367,15 +382,20 @@ export default function Home() {
       sender: teamName.split(" - ")[1] || "Manager",
       franchise: getFranchiseName(teamName),
       message: msgText.slice(0, 150),
+      text: msgText.slice(0, 150),
       time: nowTime,
       timestamp: Date.now(),
     };
-    push(ref(db, `rooms/${roomId}/chat`), chatItem);
+    push(ref(db, `rooms/${roomId}/chat`), chatItem).catch((err) => {
+      console.warn("Chat sync notice:", err);
+    });
   }, [roomId, teamName]);
 
   const startNewTimer = useCallback(() => {
     const target = Date.now() + TIMER_DURATION_MS;
-    set(ref(db, `rooms/${roomId}/global/timerEndsAt`), target);
+    set(ref(db, `rooms/${roomId}/global/timerEndsAt`), target).catch((err) => {
+      console.warn("Timer sync notice:", err);
+    });
   }, [roomId]);
 
   useEffect(() => {
@@ -391,16 +411,18 @@ export default function Home() {
   useEffect(() => {
     if (!hasJoined) return;
 
+    const onErr = (name) => (err) => console.warn(`Listener ${name} sync notice:`, err);
+
     const unsubs = [
-      onValue(ref(db, `rooms/${roomId}/hostUid`), (s) => setHostUid(s.exists() ? s.val() : null)),
-      onValue(ref(db, `rooms/${roomId}/capacity`), (s) => s.exists() && setRoomCapacity(s.val())),
-      onValue(ref(db, `rooms/${roomId}/global/activePlayerId`), (s) => s.exists() && setActivePlayerId(s.val())),
-      onValue(ref(db, `rooms/${roomId}/global/timerEndsAt`), (s) => setTimerEndsAt(s.exists() ? s.val() : null)),
-      onValue(ref(db, `rooms/${roomId}/auction`), (s) => s.exists() && setAuctionData(s.val())),
-      onValue(ref(db, `rooms/${roomId}/teams`), (s) => s.exists() && setAllTeams(s.val())),
+      onValue(ref(db, `rooms/${roomId}/hostUid`), (s) => setHostUid(s.exists() ? s.val() : null), onErr("hostUid")),
+      onValue(ref(db, `rooms/${roomId}/capacity`), (s) => s.exists() && setRoomCapacity(s.val()), onErr("capacity")),
+      onValue(ref(db, `rooms/${roomId}/global/activePlayerId`), (s) => s.exists() && setActivePlayerId(s.val()), onErr("activePlayerId")),
+      onValue(ref(db, `rooms/${roomId}/global/timerEndsAt`), (s) => setTimerEndsAt(s.exists() ? s.val() : null), onErr("timerEndsAt")),
+      onValue(ref(db, `rooms/${roomId}/auction`), (s) => s.exists() && setAuctionData(s.val()), onErr("auction")),
+      onValue(ref(db, `rooms/${roomId}/teams`), (s) => s.exists() && setAllTeams(s.val()), onErr("teams")),
       onValue(ref(db, `rooms/${roomId}/auction/${activePlayer.id}/optOuts`), (s) => {
         setOptOuts(s.exists() ? s.val() : {});
-      }),
+      }, onErr("optOuts")),
       onValue(ref(db, `rooms/${roomId}/auction/${activePlayer.id}/currentBid`), (s) => {
         const val = s.val() !== null ? s.val() : activePlayer.basePrice;
         if (prevBidRef.current > 0 && val > prevBidRef.current) {
@@ -408,7 +430,7 @@ export default function Home() {
         }
         prevBidRef.current = val;
         setCurrentBid(val);
-      }),
+      }, onErr("currentBid")),
       onValue(ref(db, `rooms/${roomId}/auction/${activePlayer.id}/highestBidder`), (s) => {
         const val = s.val() !== null ? s.val() : "No Bids Yet";
         if (
@@ -424,12 +446,14 @@ export default function Home() {
         }
         prevHighestBidderRef.current = val;
         setHighestBidder(val);
-      }),
+      }, onErr("highestBidder")),
       onValue(ref(db, `rooms/${roomId}/teams/${teamName}/budget`), (s) =>
-        setMyBudget(s.val() !== null ? s.val() : DEFAULT_BUDGET)
+        setMyBudget(s.val() !== null ? s.val() : DEFAULT_BUDGET),
+        onErr("budget")
       ),
       onValue(ref(db, `rooms/${roomId}/teams/${teamName}/squad`), (s) =>
-        setSquad(s.exists() ? Object.values(s.val()) : [])
+        setSquad(s.exists() ? Object.values(s.val()) : []),
+        onErr("squad")
       ),
       onValue(ref(db, `rooms/${roomId}/global/activityLog`), (s) => {
         if (s.exists()) {
@@ -437,14 +461,14 @@ export default function Home() {
           raw.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
           setActivityLogs(raw.slice(0, 25));
         }
-      }),
+      }, onErr("activityLog")),
       onValue(ref(db, `rooms/${roomId}/chat`), (s) => {
         if (s.exists()) {
           const raw = Object.entries(s.val()).map(([key, value]) => ({ id: key, ...value }));
           raw.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
           setChatMessages(raw.slice(-30));
         }
-      }),
+      }, onErr("chat")),
     ];
 
     return () => unsubs.forEach((unsub) => unsub());

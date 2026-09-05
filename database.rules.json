@@ -67,7 +67,7 @@
           "activityLog": {
             ".write": true,
             "$logId": {
-              ".validate": "newData.hasChildren(['time', 'text'])"
+              ".validate": "newData.hasChildren(['time']) && (newData.hasChildren(['message']) || newData.hasChildren(['text']))"
             }
           }
         },

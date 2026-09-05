@@ -49,13 +49,19 @@ export default function JoinCodeModal({
     if (!roomId.trim() || !isOpen) return;
     const cleanRoom = roomId.trim().toUpperCase();
     const teamRef = ref(db, `rooms/${cleanRoom}/teams`);
-    const unsub = onValue(teamRef, (snap) => {
-      if (snap.exists()) {
-        setLiveTeams(snap.val());
-      } else {
-        setLiveTeams({});
+    const unsub = onValue(
+      teamRef,
+      (snap) => {
+        if (snap.exists()) {
+          setLiveTeams(snap.val());
+        } else {
+          setLiveTeams({});
+        }
+      },
+      (err) => {
+        console.warn("JoinCodeModal teams listener notice:", err);
       }
-    });
+    );
     return () => unsub();
   }, [roomId, isOpen]);
 
